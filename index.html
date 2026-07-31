@@ -135,13 +135,27 @@
 				box-shadow:
 					inset 0 1px 0 rgba(255, 255, 255, 0.72),
 					0 3px 8px rgba(71, 44, 31, 0.08);
+				opacity: 0.44;
+				filter: saturate(0.5);
+				transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+			}
+
+			.tab-btn:not(.active):hover {
+				opacity: 0.62;
+				filter: saturate(0.68);
 			}
 
 			.tab-btn.active {
 				background: linear-gradient(135deg, #9d673f, #7a4834, #b8864d);
-				color: #fff;
+				color: #fffaf2;
 				border-color: transparent;
-				box-shadow: 0 8px 18px rgba(88, 56, 40, 0.22);
+				opacity: 1;
+				filter: saturate(1.12);
+				transform: translateY(-1px) scale(1.03);
+				box-shadow:
+					0 10px 22px rgba(88, 56, 40, 0.34),
+					inset 0 1px 0 rgba(255, 239, 219, 0.28);
+				text-shadow: 0 1px 2px rgba(34, 16, 8, 0.26);
 			}
 
 			.panel {
@@ -378,6 +392,13 @@
 				border-radius: 12px;
 				background: #fff;
 				padding: 9px 10px;
+				cursor: pointer;
+				transition: background-color 0.14s ease, border-color 0.14s ease;
+			}
+
+			.layer-item:hover {
+				background: #fff3e7;
+				border-color: #e8c5ab;
 			}
 
 			.layer-item-name {
@@ -420,6 +441,13 @@
 
 			.search-row {
 				margin: 0 0 12px;
+			}
+
+			.record-filter-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 10px 12px;
+				margin-bottom: 12px;
 			}
 
 			.count-chip {
@@ -788,6 +816,11 @@
 					gap: 6px;
 				}
 
+				.record-filter-grid {
+					grid-template-columns: 1fr;
+					gap: 8px;
+				}
+
 				.calendar-day {
 					min-height: 76px;
 				}
@@ -989,27 +1022,36 @@
 
 					<div class="record-primary-tools">
 						<span class="count-chip">총 {{ entries.length }}잔</span>
-						<span v-if="searchQuery" class="count-chip">검색 {{ filteredEntries.length }}잔</span>
+						<span v-if="searchQuery || selectedRecordMonth" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
 						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
 							{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
 						</button>
 						<span v-if="lastCommitSha" class="sha-chip">최근 SHA {{ lastCommitSha }}</span>
 					</div>
 
-					<div class="row search-row" v-if="entries.length">
-						<label for="recordSearch">기록 검색</label>
-						<input
-							id="recordSearch"
-							v-model.trim="searchQuery"
-							type="text"
-							placeholder="위스키, 날짜, 장소, 향/맛/메모로 검색"
-						/>
+					<div class="record-filter-grid" v-if="entries.length">
+						<div class="row search-row" style="margin: 0">
+							<label for="recordMonth">월별 보기</label>
+							<select id="recordMonth" v-model="selectedRecordMonth">
+								<option value="">전체 월</option>
+								<option v-for="month in recordMonthOptions" :key="month.value" :value="month.value">{{ month.label }}</option>
+							</select>
+						</div>
+						<div class="row search-row" style="margin: 0">
+							<label for="recordSearch">기록 검색</label>
+							<input
+								id="recordSearch"
+								v-model.trim="searchQuery"
+								type="text"
+								placeholder="위스키, 날짜, 장소, 향/맛/메모로 검색"
+							/>
+						</div>
 					</div>
 
 					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
 
 					<div v-else-if="filteredEntries.length" class="entry-list">
-						<article class="entry" v-for="entry in filteredEntries" :key="entry.id">
+						<article class="entry" :id="`entry-${entry.id}`" v-for="entry in filteredEntries" :key="entry.id">
 							<button class="entry-summary" type="button" @click="toggleExpanded(entry.id)">
 								<div>
 									<h3 class="whisky-name">{{ entry.whisky }}</h3>
@@ -1102,7 +1144,7 @@
 							<div class="day-layer" v-if="activeCalendarKey === cell.dateKey && cell.entries.length">
 								<p class="layer-title">{{ cell.dateKey }} 시음 기록</p>
 								<div class="layer-list">
-									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id">
+									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id" @click.stop="openRecordFromCalendar(entry.id)">
 										<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
 										<p class="layer-item-meta">{{ entry.drinker || "마신 사람 미입력" }}</p>
 									</div>
@@ -1280,6 +1322,7 @@
 						activeEntryId: null,
 						activeTab: "records",
 						searchQuery: "",
+						selectedRecordMonth: "",
 						weekLabels: WEEK_LABELS,
 						calendarMonthKey: getCurrentMonthKey(),
 						calendarHoverKey: "",
@@ -1303,11 +1346,17 @@
 					},
 					filteredEntries() {
 						const query = this.searchQuery.trim().toLowerCase();
-						if (!query) {
-							return this.sortedEntries;
-						}
+						const monthKey = this.selectedRecordMonth;
 
 						return this.sortedEntries.filter((entry) => {
+							if (monthKey && String(entry.date || "").slice(0, 7) !== monthKey) {
+								return false;
+							}
+
+							if (!query) {
+								return true;
+							}
+
 							const targets = [
 								entry.whisky,
 								entry.category,
@@ -1323,6 +1372,25 @@
 
 							return targets.some((value) => (value || "").toLowerCase().includes(query));
 						});
+					},
+					recordMonthOptions() {
+						const monthSet = new Set();
+						for (const entry of this.entries) {
+							const monthKey = String(entry.date || "").slice(0, 7);
+							if (/^\d{4}-\d{2}$/.test(monthKey)) {
+								monthSet.add(monthKey);
+							}
+						}
+
+						return [...monthSet]
+							.sort((a, b) => b.localeCompare(a))
+							.map((monthKey) => {
+								const [yearText, monthText] = monthKey.split("-");
+								return {
+									value: monthKey,
+									label: `${yearText}년 ${Number(monthText)}월`
+								};
+							});
 					},
 					entriesByDate() {
 						const grouped = {};
@@ -1568,6 +1636,28 @@
 						}
 						this.calendarPinnedKey = this.calendarPinnedKey === dateKey ? "" : dateKey;
 						this.calendarHoverKey = dateKey;
+					},
+					openRecordFromCalendar(entryId) {
+						if (!entryId) {
+							return;
+						}
+
+						const selectedEntry = this.entries.find((entry) => entry.id === entryId);
+						const monthKey = String(selectedEntry?.date || "").slice(0, 7);
+						this.selectedRecordMonth = /^\d{4}-\d{2}$/.test(monthKey) ? monthKey : "";
+
+						this.activeTab = "records";
+						this.searchQuery = "";
+						this.activeEntryId = entryId;
+						this.calendarPinnedKey = "";
+						this.calendarHoverKey = "";
+
+						this.$nextTick(() => {
+							const target = document.getElementById(`entry-${entryId}`);
+							if (target) {
+								target.scrollIntoView({ behavior: "smooth", block: "center" });
+							}
+						});
 					},
 					async addEntry() {
 						if (this.isImageUploading) {
