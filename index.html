@@ -423,6 +423,23 @@
 						</div>
 
 						<div class="row">
+							<label for="caskType">숙성 캐스크 타입</label>
+							<textarea id="caskType" v-model.trim="form.caskType" placeholder="예: ex버번, 올로로소"></textarea>
+							<div class="traits">
+								<button
+									type="button"
+									class="trait-chip"
+									:class="{ active: isTraitSelected('caskType', trait) }"
+									v-for="trait in traitCatalog.caskType"
+									:key="`cask-${trait}`"
+									@click="toggleTrait('caskType', trait)"
+								>
+									{{ trait }}
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
 							<label for="nose">향 (Nose)</label>
 							<textarea id="nose" v-model.trim="form.nose" placeholder="예: 꿀, 사과, 바닐라"></textarea>
 							<div class="traits">
@@ -518,6 +535,7 @@
 								<div class="entry-detail" v-if="isExpanded(entry.id)">
 									<div class="notes">
 										<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
+											<p class="note"><b>캐스크</b>{{ entry.caskType || "기록 없음" }}</p>
 										<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
 										<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 										<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
@@ -558,6 +576,7 @@
 				data() {
 					return {
 						traitCatalog: {
+							caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
 							nose: ["바닐라", "꿀", "사과", "배", "시트러스", "건포도", "오크", "스모크", "꽃향", "견과류"],
 							palate: ["달콤함", "몰트", "카라멜", "초콜릿", "스파이스", "시나몬", "과일", "스모키", "짭짤함", "오일리"],
 							finish: ["짧음", "중간", "김", "따뜻함", "드라이", "오크", "스파이시", "스모키", "달콤한 여운", "깔끔함"]
@@ -566,6 +585,7 @@
 							date: "",
 							place: "",
 							whisky: "",
+							caskType: "",
 							nose: "",
 							palate: "",
 							finish: "",
@@ -617,6 +637,7 @@
 							date: this.form.date,
 							place: this.form.place,
 							whisky: this.form.whisky,
+							caskType: this.form.caskType,
 							nose: this.form.nose,
 							palate: this.form.palate,
 							finish: this.form.finish,
@@ -642,6 +663,7 @@
 								date: entry.date || "",
 								place: entry.place || "",
 								whisky: entry.whisky || "",
+								caskType: entry.caskType || "",
 								nose: entry.nose || "",
 								palate: entry.palate || "",
 								finish: entry.finish || "",
@@ -688,6 +710,7 @@
 								date: entry.date || "",
 								place: entry.place || "",
 								whisky: entry.whisky || "",
+								caskType: entry.caskType || "",
 								nose: entry.nose || "",
 								palate: entry.palate || "",
 								finish: entry.finish || "",
@@ -706,6 +729,7 @@
 							date: "",
 							place: "",
 							whisky: "",
+							caskType: "",
 							nose: "",
 							palate: "",
 							finish: "",
