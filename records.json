@@ -26,29 +26,16 @@
     "memo": "소주, 맥주, 와인, 진까지 마시고 마지막 잔이라 기억이 잘 안나지만, 묵직하게 맛있게 익었다."
   },
   {
-    "id": "8b1a0291-5ebb-4ac0-8f26-978ba9ff688d",
-    "date": "2026-07-30",
-    "place": "ㄹㄹㄹㄹ",
+    "id": "167c19ca-f7b5-4be3-9b37-d0b56387efe0",
+    "date": "2026-07-08",
+    "place": "부산",
     "drinker": "진욱",
-    "whisky": "ㅅㅎㅎㅎ",
-    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260731072448-image-fsq954.webp",
-    "caskType": "ex버번",
-    "nose": "꿀",
-    "palate": "달콤함",
-    "finish": "스모키",
-    "memo": ""
-  },
-  {
-    "id": "f178cfde-6624-489f-a63b-31f053ab2ecc",
-    "date": "2026-07-17",
-    "place": "집",
-    "drinker": "",
-    "whisky": "벤로막",
-    "imageUrl": "",
-    "caskType": "올로로소, ex버번",
-    "nose": "꿀, 바닐라, 건포도, 스모크",
-    "palate": "카라멜, 초콜릿",
-    "finish": "드라이",
+    "whisky": "멕켈란40",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260731113629--2026-02-04-15.25.00-qjpsol.webp",
+    "caskType": "올로로소",
+    "nose": "시트러스, 건포도",
+    "palate": "스파이스",
+    "finish": "오크",
     "memo": ""
   }
 ]
