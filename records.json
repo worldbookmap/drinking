@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "e38ce13a-8658-4527-bccb-0eaef1634e6a",
+    "date": "2026-07-31",
+    "place": "집",
+    "drinker": "지선",
+    "whisky": "류카 뉴본 2024",
+    "category": "일본",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260731144929-image-6teszc.webp",
+    "caskType": "올로로소",
+    "nose": "시트러스, 건포도, 밀크초콜렛",
+    "palate": "몰트, 초콜릿, 시나몬, 스파이스",
+    "finish": "오크, 중간, 달콤한 여운",
+    "memo": "구라"
+  }
+]
