@@ -55,7 +55,7 @@
 				padding: 24px;
 				background-image:
 					linear-gradient(135deg, rgba(43, 28, 24, 0.62), rgba(64, 42, 35, 0.46), rgba(127, 80, 44, 0.34)),
-					url("./uploads/bg.png");
+					url("./uploads/bg.jpg");
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
@@ -656,7 +656,13 @@
 							<input ref="cameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile" style="display: none" />
 							<input ref="galleryInput" type="file" accept="image/*" @change="onPickImageFile" style="display: none" />
 							<div class="bottle-preview">
-								<img :src="resolveBottleImage(form.imageUrl, formPreviewUrl)" alt="위스키 병 미리보기" @error="onBottleImageError" />
+								<img
+									:src="resolveBottleImage(form.imageUrl, formPreviewUrl)"
+									:data-origin-src="form.imageUrl"
+									alt="위스키 병 미리보기"
+									@load="onBottleImageLoad"
+									@error="onBottleImageError"
+								/>
 							</div>
 						</div>
 
@@ -734,7 +740,9 @@
 						</div>
 
 						<div class="actions">
-							<button class="btn-add" type="submit">기록 추가</button>
+							<button class="btn-add" type="submit" :disabled="isImageUploading">
+								{{ isImageUploading ? "이미지 업로드 중..." : "기록 추가" }}
+							</button>
 							<button class="btn-reset" type="button" @click="resetForm">초기화</button>
 						</div>
 					</form>
@@ -780,7 +788,13 @@
 								<div class="entry-detail" v-if="isExpanded(entry.id)">
 									<div class="entry-body">
 										<div class="bottle-preview entry-photo">
-											<img :src="resolveBottleImage(entry.imageUrl)" alt="위스키 병 이미지" @error="onBottleImageError" />
+											<img
+												:src="resolveBottleImage(entry.imageUrl)"
+												:data-origin-src="entry.imageUrl"
+												alt="위스키 병 이미지"
+												@load="onBottleImageLoad"
+												@error="onBottleImageError"
+											/>
 										</div>
 										<div class="notes">
 											<div class="notes-top-grid">
@@ -1075,8 +1089,30 @@
 						}
 					},
 					onBottleImageError(event) {
-						if (event?.target && event.target.src !== DEFAULT_BOTTLE_IMAGE) {
-							event.target.src = DEFAULT_BOTTLE_IMAGE;
+						const target = event?.target;
+						if (!target) {
+							return;
+						}
+
+						const originSrc = (target.dataset.originSrc || "").trim();
+						const retryCount = Number(target.dataset.retryCount || "0");
+
+						if (originSrc && !originSrc.startsWith("data:") && retryCount < 2) {
+							target.dataset.retryCount = String(retryCount + 1);
+							const separator = originSrc.includes("?") ? "&" : "?";
+							setTimeout(() => {
+								target.src = `${originSrc}${separator}t=${Date.now()}`;
+							}, 800);
+							return;
+						}
+
+						if (target.src !== DEFAULT_BOTTLE_IMAGE) {
+							target.src = DEFAULT_BOTTLE_IMAGE;
+						}
+					},
+					onBottleImageLoad(event) {
+						if (event?.target?.dataset) {
+							event.target.dataset.retryCount = "0";
 						}
 					},
 					parseTraits(text) {
@@ -1103,6 +1139,11 @@
 							: [...list, trait].join(", ");
 					},
 					async addEntry() {
+						if (this.isImageUploading) {
+							this.showToast("error", "이미지 업로드가 끝난 뒤에 기록을 추가해 주세요.");
+							return;
+						}
+
 						if (!this.form.date || !this.form.whisky || !this.form.drinker || !this.form.category) {
 							return;
 						}
@@ -1185,12 +1226,13 @@
 							if (commitSha) {
 								this.lastCommitSha = commitSha;
 							}
+							await this.reloadFromRepo();
 							this.syncMessage = commitSha
-								? `GitHub records.json 저장 완료! (${commitSha})`
-								: "GitHub records.json 저장 완료!";
+								? `GitHub 저장 후 최신 내용을 다시 불러왔어요. (${commitSha})`
+								: "GitHub 저장 후 최신 내용을 다시 불러왔어요.";
 							this.showToast(
 								"success",
-								commitSha ? `GitHub 저장이 완료되었습니다. SHA ${commitSha}` : "GitHub 저장이 완료되었습니다."
+								commitSha ? `GitHub 저장 후 최신 데이터를 반영했어요. SHA ${commitSha}` : "GitHub 저장 후 최신 데이터를 반영했어요."
 							);
 						} catch (error) {
 							this.syncMessage = `저장 실패: ${error.message}`;
