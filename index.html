@@ -210,6 +210,10 @@
 				color: #7f6a63;
 			}
 
+			.storage-status b {
+				color: #5d4036;
+			}
+
 			.empty {
 				border: 2px dashed #ecd3c4;
 				border-radius: 18px;
@@ -228,7 +232,7 @@
 				border: 1px solid #ead4c7;
 				border-radius: 16px;
 				background: #fffdfa;
-				padding: 12px;
+				padding: 10px;
 				animation: slideIn 0.26s ease;
 			}
 
@@ -250,6 +254,23 @@
 				gap: 8px;
 			}
 
+			.entry-summary {
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 12px;
+				border: 0;
+				padding: 8px;
+				background: transparent;
+				border-radius: 12px;
+				text-align: left;
+			}
+
+			.entry-summary:hover {
+				background: #fff5ed;
+			}
+
 			.whisky-name {
 				margin: 0;
 				font-size: 1.02rem;
@@ -259,6 +280,39 @@
 				margin-top: 2px;
 				font-size: 0.83rem;
 				color: var(--ink-soft);
+			}
+
+			.expand-indicator {
+				font-size: 0.8rem;
+				padding: 5px 9px;
+				border-radius: 999px;
+				background: #fff4da;
+				border: 1px solid #f0d7a6;
+				color: #815d47;
+			}
+
+			.entry-detail {
+				padding: 4px 8px 8px;
+			}
+
+			.detail-slide-enter-active,
+			.detail-slide-leave-active {
+				overflow: hidden;
+				transition: max-height 0.28s ease, opacity 0.22s ease, transform 0.28s ease;
+			}
+
+			.detail-slide-enter-from,
+			.detail-slide-leave-to {
+				max-height: 0;
+				opacity: 0;
+				transform: translateY(-6px);
+			}
+
+			.detail-slide-enter-to,
+			.detail-slide-leave-from {
+				max-height: 520px;
+				opacity: 1;
+				transform: translateY(0);
 			}
 
 			.delete {
@@ -272,6 +326,12 @@
 				display: grid;
 				gap: 6px;
 				margin-top: 9px;
+			}
+
+			.detail-actions {
+				display: flex;
+				justify-content: flex-end;
+				margin-top: 10px;
 			}
 
 			.note {
@@ -430,32 +490,44 @@
 						<h2 class="panel-title" style="margin: 0">내 시음 기록</h2>
 						<div class="list-tools">
 							<span class="count-chip">총 {{ entries.length }}잔</span>
-							<button class="tool-btn" type="button" @click="exportEntries">백업 내보내기</button>
-							<button class="tool-btn" type="button" @click="openImport">백업 불러오기</button>
+							<button class="tool-btn" type="button" @click="reloadFromRepo">GitHub JSON 다시 불러오기</button>
+							<button class="tool-btn" type="button" @click="exportEntries">records.json 내보내기</button>
+							<button class="tool-btn" type="button" @click="openImport">로컬 JSON 미리보기</button>
 						</div>
 					</div>
 
-					<p class="storage-status">저장 방식: IndexedDB (이 브라우저) · 다른 기기 이전은 JSON 백업 사용</p>
+					<p class="storage-status">
+						저장 방식: <b>records.json (GitHub)</b> 읽기 기반 · 브라우저에서 수정한 값은
+						<b>records.json 내보내기</b> 후 GitHub에 커밋하면 반영됨
+					</p>
 					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 
 					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
 
 					<div v-else class="entry-list">
 						<article class="entry" v-for="entry in sortedEntries" :key="entry.id">
-							<div class="entry-top">
+							<button class="entry-summary" type="button" @click="toggleExpanded(entry.id)">
 								<div>
 									<h3 class="whisky-name">{{ entry.whisky }}</h3>
-									<p class="meta">{{ entry.date }} · {{ entry.place || "장소 미입력" }}</p>
+									<p class="meta">{{ entry.date || "날짜 미입력" }}</p>
 								</div>
-								<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
-							</div>
+								<span class="expand-indicator">{{ isExpanded(entry.id) ? "접기" : "자세히" }}</span>
+							</button>
 
-							<div class="notes">
-								<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
-								<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
-								<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
-								<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
-							</div>
+							<transition name="detail-slide">
+								<div class="entry-detail" v-if="isExpanded(entry.id)">
+									<div class="notes">
+										<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
+										<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
+										<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
+										<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
+										<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
+									</div>
+									<div class="detail-actions">
+										<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
+									</div>
+								</div>
+							</transition>
 						</article>
 					</div>
 				</section>
@@ -464,60 +536,20 @@
 
 		<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 		<script>
-			const DB_NAME = "whisky-journal-db";
-			const DB_VERSION = 1;
-			const STORE_NAME = "journal";
-			const ENTRIES_KEY = "entries";
+			const RECORDS_FILE = "./records.json";
 
-			function openDatabase() {
-				return new Promise((resolve, reject) => {
-					const request = indexedDB.open(DB_NAME, DB_VERSION);
+			async function readEntriesFromRepo() {
+				const response = await fetch(`${RECORDS_FILE}?t=${Date.now()}`, { cache: "no-store" });
+				if (!response.ok) {
+					throw new Error("records.json fetch failed");
+				}
 
-					request.onerror = () => reject(request.error);
-					request.onupgradeneeded = () => {
-						const db = request.result;
-						if (!db.objectStoreNames.contains(STORE_NAME)) {
-							db.createObjectStore(STORE_NAME);
-						}
-					};
-					request.onsuccess = () => resolve(request.result);
-				});
-			}
+				const parsed = await response.json();
+				if (!Array.isArray(parsed)) {
+					throw new Error("records.json must be array");
+				}
 
-			async function readEntriesFromDb() {
-				const db = await openDatabase();
-				return new Promise((resolve, reject) => {
-					const tx = db.transaction(STORE_NAME, "readonly");
-					const store = tx.objectStore(STORE_NAME);
-					const request = store.get(ENTRIES_KEY);
-
-					request.onerror = () => reject(request.error);
-					request.onsuccess = () => {
-						const value = request.result;
-						resolve(Array.isArray(value) ? value : []);
-					};
-
-					tx.oncomplete = () => db.close();
-					tx.onerror = () => db.close();
-				});
-			}
-
-			async function writeEntriesToDb(entries) {
-				const db = await openDatabase();
-				return new Promise((resolve, reject) => {
-					const tx = db.transaction(STORE_NAME, "readwrite");
-					const store = tx.objectStore(STORE_NAME);
-					store.put(entries, ENTRIES_KEY);
-
-					tx.oncomplete = () => {
-						db.close();
-						resolve();
-					};
-					tx.onerror = () => {
-						db.close();
-						reject(tx.error);
-					};
-				});
+				return parsed;
 			}
 
 			const { createApp } = Vue;
@@ -539,7 +571,8 @@
 							finish: "",
 							memo: ""
 						},
-						entries: []
+						entries: [],
+						activeEntryId: null
 					};
 				},
 				computed: {
@@ -548,11 +581,7 @@
 					}
 				},
 				async mounted() {
-					try {
-						this.entries = await readEntriesFromDb();
-					} catch {
-						this.entries = [];
-					}
+					await this.reloadFromRepo();
 				},
 				methods: {
 					parseTraits(text) {
@@ -563,6 +592,12 @@
 					},
 					isTraitSelected(field, trait) {
 						return this.parseTraits(this.form[field]).includes(trait);
+					},
+					isExpanded(id) {
+						return this.activeEntryId === id;
+					},
+					toggleExpanded(id) {
+						this.activeEntryId = this.activeEntryId === id ? null : id;
 					},
 					toggleTrait(field, trait) {
 						const list = this.parseTraits(this.form[field]);
@@ -577,7 +612,7 @@
 							return;
 						}
 
-						this.entries.push({
+						const newEntry = {
 							id: crypto.randomUUID(),
 							date: this.form.date,
 							place: this.form.place,
@@ -586,29 +621,49 @@
 							palate: this.form.palate,
 							finish: this.form.finish,
 							memo: this.form.memo
-						});
+						};
 
-						await this.persist();
+						this.entries.push(newEntry);
+						this.activeEntryId = newEntry.id;
+
 						this.resetForm();
 					},
 					async removeEntry(id) {
 						this.entries = this.entries.filter((entry) => entry.id !== id);
-						await this.persist();
+						if (this.activeEntryId === id) {
+							this.activeEntryId = null;
+						}
+					},
+					async reloadFromRepo() {
+						try {
+							const loaded = await readEntriesFromRepo();
+							this.entries = loaded.map((entry) => ({
+								id: entry.id || crypto.randomUUID(),
+								date: entry.date || "",
+								place: entry.place || "",
+								whisky: entry.whisky || "",
+								nose: entry.nose || "",
+								palate: entry.palate || "",
+								finish: entry.finish || "",
+								memo: entry.memo || ""
+							}));
+							this.activeEntryId = null;
+						} catch {
+							this.entries = [];
+							this.activeEntryId = null;
+							alert("records.json 파일을 읽지 못했어요. 파일 형식을 확인해 주세요.");
+						}
 					},
 					openImport() {
 						this.$refs.importInput.click();
 					},
 					exportEntries() {
-						const payload = {
-							version: 1,
-							exportedAt: new Date().toISOString(),
-							entries: this.entries
-						};
-						const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+						const sorted = [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
+						const blob = new Blob([JSON.stringify(sorted, null, 2)], { type: "application/json" });
 						const url = URL.createObjectURL(blob);
 						const a = document.createElement("a");
 						a.href = url;
-						a.download = `whisky-journal-backup-${new Date().toISOString().slice(0, 10)}.json`;
+						a.download = "records.json";
 						a.click();
 						URL.revokeObjectURL(url);
 					},
@@ -621,10 +676,10 @@
 						try {
 							const text = await file.text();
 							const parsed = JSON.parse(text);
-							const incoming = Array.isArray(parsed) ? parsed : parsed.entries;
+							const incoming = Array.isArray(parsed) ? parsed : [];
 
 							if (!Array.isArray(incoming)) {
-								alert("백업 파일 형식이 올바르지 않아요.");
+								alert("JSON 파일 형식이 올바르지 않아요.");
 								return;
 							}
 
@@ -638,10 +693,10 @@
 								finish: entry.finish || "",
 								memo: entry.memo || ""
 							}));
+							this.activeEntryId = null;
 
-							await this.persist();
 						} catch {
-							alert("백업 파일을 읽지 못했어요. JSON 파일인지 확인해 주세요.");
+							alert("JSON 파일을 읽지 못했어요.");
 						} finally {
 							event.target.value = "";
 						}
@@ -656,9 +711,6 @@
 							finish: "",
 							memo: ""
 						};
-					},
-					async persist() {
-						await writeEntriesToDb(this.entries);
 					}
 				}
 			}).mount("#app");
