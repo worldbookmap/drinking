@@ -7,23 +7,23 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Noto+Serif+KR:wght@400;600;700&display=swap"
 			rel="stylesheet"
 		/>
 		<style>
 			:root {
-				--bg-cream: #fff9ef;
-				--bg-peach: #ffd8c2;
-				--bg-mint: #dff8ef;
-				--bg-lemon: #fff3b1;
-				--ink: #3f2f2b;
-				--ink-soft: #6a5751;
-				--card: rgba(255, 255, 255, 0.75);
-				--stroke: rgba(78, 52, 46, 0.18);
-				--accent: #ff8d6a;
-				--accent-strong: #f06543;
-				--chip: #fff4da;
-				--shadow: 0 10px 30px rgba(93, 68, 56, 0.14);
+				--bg-cream: #fff7e8;
+				--bg-peach: #ffb59f;
+				--bg-mint: #bff3e1;
+				--bg-lemon: #ffe97a;
+				--ink: #3c2a24;
+				--ink-soft: #705952;
+				--card: rgba(255, 255, 255, 0.82);
+				--stroke: rgba(78, 52, 46, 0.22);
+				--accent: #ff7a59;
+				--accent-strong: #ff4f7a;
+				--chip: #ffe8b3;
+				--shadow: 0 14px 36px rgba(93, 68, 56, 0.18);
 			}
 
 			* {
@@ -36,10 +36,10 @@
 				font-family: "Gowun Dodum", sans-serif;
 				color: var(--ink);
 				background:
-					radial-gradient(circle at 12% 10%, #ffe0ce 0 18%, transparent 20%),
-					radial-gradient(circle at 85% 12%, #dcf8f0 0 15%, transparent 17%),
-					radial-gradient(circle at 80% 82%, #ffe9a8 0 14%, transparent 16%),
-					linear-gradient(140deg, var(--bg-cream), #fffef9 45%, #fff7e8);
+					radial-gradient(circle at 12% 10%, rgba(255, 178, 159, 0.95) 0 18%, transparent 20%),
+					radial-gradient(circle at 85% 12%, rgba(179, 243, 225, 0.95) 0 15%, transparent 17%),
+					radial-gradient(circle at 80% 82%, rgba(255, 233, 122, 0.9) 0 14%, transparent 16%),
+					linear-gradient(140deg, #fff6e2 0%, #fff8f1 40%, #fff0d6 100%);
 			}
 
 			.shell {
@@ -53,7 +53,7 @@
 				border: 2px dashed var(--stroke);
 				border-radius: 28px;
 				padding: 24px;
-				background: linear-gradient(135deg, rgba(255, 236, 216, 0.78), rgba(224, 250, 243, 0.78));
+				background: linear-gradient(135deg, rgba(255, 235, 210, 0.9), rgba(202, 247, 230, 0.9), rgba(255, 241, 170, 0.88));
 				box-shadow: var(--shadow);
 				overflow: hidden;
 			}
@@ -69,7 +69,8 @@
 
 			.title {
 				margin: 0;
-				font-family: "Gaegu", cursive;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 700;
 				font-size: clamp(2rem, 4vw, 3rem);
 				line-height: 1.1;
 			}
@@ -97,12 +98,13 @@
 				color: var(--ink-soft);
 				padding: 10px 14px;
 				border-radius: 999px;
-				font-family: "Gaegu", cursive;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 600;
 				font-size: 1.08rem;
 			}
 
 			.tab-btn.active {
-				background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+				background: linear-gradient(135deg, #ff7a59, #ff4f7a);
 				color: #fff;
 				border-color: transparent;
 				box-shadow: 0 8px 20px rgba(240, 101, 67, 0.24);
@@ -122,7 +124,8 @@
 
 			.panel-title {
 				margin: 0 0 14px;
-				font-family: "Gaegu", cursive;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 700;
 				font-size: 1.7rem;
 			}
 
@@ -179,9 +182,10 @@
 
 			.btn-add {
 				flex: 1;
-				background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+				background: linear-gradient(135deg, #ff7a59, #ff4f7a, #ffb54d);
 				color: #fff;
 				font-weight: 700;
+				box-shadow: 0 10px 22px rgba(255, 90, 95, 0.28);
 			}
 
 			.btn-reset {
@@ -242,7 +246,7 @@
 			}
 
 			.tool-btn.save {
-				background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+				background: linear-gradient(135deg, #ff7a59, #ff4f7a);
 				color: #fff;
 				border-color: transparent;
 			}
@@ -268,10 +272,24 @@
 				color: #5d4036;
 			}
 
+			.sha-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				margin-left: 8px;
+				padding: 5px 10px;
+				border-radius: 999px;
+				background: rgba(255, 255, 255, 0.72);
+				border: 1px solid #f1c8bc;
+				font-size: 0.78rem;
+				color: #7a4b49;
+			}
+
 			.toast {
 				position: fixed;
-				right: 16px;
-				top: 16px;
+				bottom: 24px;
+				left: 50%;
+				transform: translateX(-50%);
 				z-index: 40;
 				max-width: min(360px, calc(100vw - 32px));
 				padding: 12px 14px;
@@ -284,15 +302,15 @@
 			}
 
 			.toast.success {
-				background: rgba(224, 250, 243, 0.96);
-				border-color: #9ad9c7;
-				color: #24594d;
+				background: rgba(225, 255, 244, 0.98);
+				border-color: #67cfae;
+				color: #185245;
 			}
 
 			.toast.error {
-				background: rgba(255, 236, 232, 0.96);
-				border-color: #f2b2a8;
-				color: #8d2d26;
+				background: rgba(255, 236, 240, 0.98);
+				border-color: #ff8aa3;
+				color: #8f2142;
 			}
 
 			.empty {
@@ -690,6 +708,7 @@
 						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
 							{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
 						</button>
+						<span v-if="lastCommitSha" class="sha-chip">최근 SHA {{ lastCommitSha }}</span>
 					</div>
 
 					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
@@ -880,6 +899,7 @@
 						activeTab: "write",
 						isSaving: false,
 						isImageUploading: false,
+						lastCommitSha: "",
 						toast: {
 							visible: false,
 							type: "success",
@@ -1071,6 +1091,9 @@
 							}
 
 							const commitSha = result.commitSha ? result.commitSha.slice(0, 7) : "";
+							if (commitSha) {
+								this.lastCommitSha = commitSha;
+							}
 							this.syncMessage = commitSha
 								? `GitHub records.json 저장 완료! (${commitSha})`
 								: "GitHub records.json 저장 완료!";
