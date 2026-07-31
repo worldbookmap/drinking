@@ -138,7 +138,8 @@
 			}
 
 			input,
-			textarea {
+			textarea,
+			select {
 				width: 100%;
 				border: 1px solid #d8c5bb;
 				border-radius: 12px;
@@ -150,7 +151,8 @@
 			}
 
 			input:focus,
-			textarea:focus {
+			textarea:focus,
+			select:focus {
 				outline: none;
 				border-color: var(--accent);
 				box-shadow: 0 0 0 3px rgba(240, 101, 67, 0.16);
@@ -502,6 +504,15 @@
 						</div>
 
 						<div class="row">
+							<label for="drinker">마신 사람</label>
+							<select id="drinker" v-model="form.drinker" required>
+								<option value="" disabled>선택해 주세요</option>
+								<option value="진욱">진욱</option>
+								<option value="지선">지선</option>
+							</select>
+						</div>
+
+						<div class="row">
 							<label for="whisky">위스키 이름</label>
 							<input id="whisky" v-model.trim="form.whisky" type="text" placeholder="예: 글렌리벳 12" required />
 						</div>
@@ -638,6 +649,7 @@
 											<img :src="resolveBottleImage(entry.imageUrl)" alt="위스키 병 이미지" @error="onBottleImageError" />
 										</div>
 										<div class="notes">
+											<p class="note"><b>마신 사람</b>{{ entry.drinker || "기록 없음" }}</p>
 											<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
 											<p class="note"><b>캐스크</b>{{ entry.caskType || "기록 없음" }}</p>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
@@ -705,6 +717,7 @@
 						form: {
 							date: "",
 							place: "",
+							drinker: "",
 							whisky: "",
 							imageUrl: "",
 							caskType: "",
@@ -762,7 +775,7 @@
 							: [...list, trait].join(", ");
 					},
 					async addEntry() {
-						if (!this.form.date || !this.form.whisky) {
+						if (!this.form.date || !this.form.whisky || !this.form.drinker) {
 							return;
 						}
 
@@ -770,6 +783,7 @@
 							id: crypto.randomUUID(),
 							date: this.form.date,
 							place: this.form.place,
+							drinker: this.form.drinker,
 							whisky: this.form.whisky,
 							imageUrl: this.form.imageUrl,
 							caskType: this.form.caskType,
@@ -798,6 +812,7 @@
 								id: entry.id || crypto.randomUUID(),
 								date: entry.date || "",
 								place: entry.place || "",
+								drinker: entry.drinker || "",
 								whisky: entry.whisky || "",
 								imageUrl: entry.imageUrl || "",
 								caskType: entry.caskType || "",
@@ -877,6 +892,7 @@
 								id: entry.id || crypto.randomUUID(),
 								date: entry.date || "",
 								place: entry.place || "",
+								drinker: entry.drinker || "",
 								whisky: entry.whisky || "",
 								imageUrl: entry.imageUrl || "",
 								caskType: entry.caskType || "",
@@ -898,6 +914,7 @@
 						this.form = {
 							date: "",
 							place: "",
+							drinker: "",
 							whisky: "",
 							imageUrl: "",
 							caskType: "",

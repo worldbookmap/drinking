@@ -24,6 +24,7 @@ function normalizeEntries(entries) {
 		id: entry?.id || crypto.randomUUID(),
 		date: entry?.date || "",
 		place: entry?.place || "",
+		drinker: entry?.drinker || "",
 		whisky: entry?.whisky || "",
 		imageUrl: entry?.imageUrl || "",
 		caskType: entry?.caskType || "",
