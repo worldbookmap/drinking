@@ -25,6 +25,7 @@ function normalizeEntries(entries) {
 		date: entry?.date || "",
 		place: entry?.place || "",
 		whisky: entry?.whisky || "",
+		imageUrl: entry?.imageUrl || "",
 		caskType: entry?.caskType || "",
 		nose: entry?.nose || "",
 		palate: entry?.palate || "",

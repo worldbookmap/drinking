@@ -386,6 +386,40 @@
 				margin-right: 4px;
 			}
 
+			.bottle-preview {
+				margin-top: 8px;
+				border-radius: 14px;
+				border: 1px solid #efd7c8;
+				background: #fff8ef;
+				padding: 10px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.bottle-preview img {
+				width: min(100%, 210px);
+				height: 220px;
+				object-fit: contain;
+			}
+
+			.entry-body {
+				display: grid;
+				grid-template-columns: 200px minmax(0, 1fr);
+				gap: 10px;
+				align-items: start;
+			}
+
+			.entry-photo {
+				margin-top: 9px;
+				padding: 8px;
+			}
+
+			.entry-photo img {
+				width: 100%;
+				height: 200px;
+				object-fit: contain;
+			}
+
 			.traits {
 				display: flex;
 				flex-wrap: wrap;
@@ -431,6 +465,14 @@
 				.tab-nav {
 					flex-wrap: wrap;
 				}
+
+				.entry-body {
+					grid-template-columns: 1fr;
+				}
+
+				.entry-photo {
+					margin-top: 4px;
+				}
 			}
 		</style>
 	</head>
@@ -462,6 +504,19 @@
 						<div class="row">
 							<label for="whisky">위스키 이름</label>
 							<input id="whisky" v-model.trim="form.whisky" type="text" placeholder="예: 글렌리벳 12" required />
+						</div>
+
+						<div class="row">
+							<label for="imageUrl">위스키 사진 URL</label>
+							<input
+								id="imageUrl"
+								v-model.trim="form.imageUrl"
+								type="url"
+								placeholder="예: https://.../whisky-bottle.jpg"
+							/>
+							<div class="bottle-preview">
+								<img :src="resolveBottleImage(form.imageUrl)" alt="위스키 병 미리보기" @error="onBottleImageError" />
+							</div>
 						</div>
 
 						<div class="row">
@@ -578,13 +633,18 @@
 
 							<transition name="detail-slide">
 								<div class="entry-detail" v-if="isExpanded(entry.id)">
-									<div class="notes">
-										<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
+									<div class="entry-body">
+										<div class="bottle-preview entry-photo">
+											<img :src="resolveBottleImage(entry.imageUrl)" alt="위스키 병 이미지" @error="onBottleImageError" />
+										</div>
+										<div class="notes">
+											<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
 											<p class="note"><b>캐스크</b>{{ entry.caskType || "기록 없음" }}</p>
-										<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
-										<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
-										<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
-										<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
+											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
+											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
+											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
+											<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
+										</div>
 									</div>
 									<div class="detail-actions">
 										<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
@@ -601,6 +661,11 @@
 		<script>
 			const RECORDS_FILE = "./records.json";
 			const RECORDS_API = "/api/records";
+			const DEFAULT_BOTTLE_IMAGE =
+				"data:image/svg+xml," +
+				encodeURIComponent(
+					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 320"><rect width="220" height="320" fill="#fff7ec"/><rect x="95" y="18" width="30" height="34" rx="8" fill="#dcb78c"/><rect x="82" y="42" width="56" height="30" rx="10" fill="#f0d4ad"/><rect x="56" y="66" width="108" height="216" rx="34" fill="#f5d19c" stroke="#d7a86f" stroke-width="6"/><rect x="68" y="122" width="84" height="74" rx="16" fill="#fff4df"/><circle cx="110" cy="96" r="14" fill="#ebc48c"/><text x="110" y="165" text-anchor="middle" font-size="20" fill="#946742">WHISKY</text></svg>'
+				);
 
 			async function readEntriesFromRepo() {
 				const apiResponse = await fetch(`${RECORDS_API}?t=${Date.now()}`, { cache: "no-store" });
@@ -641,6 +706,7 @@
 							date: "",
 							place: "",
 							whisky: "",
+							imageUrl: "",
 							caskType: "",
 							nose: "",
 							palate: "",
@@ -663,6 +729,15 @@
 					await this.reloadFromRepo();
 				},
 				methods: {
+					resolveBottleImage(url) {
+						const cleaned = (url || "").trim();
+						return cleaned || DEFAULT_BOTTLE_IMAGE;
+					},
+					onBottleImageError(event) {
+						if (event?.target && event.target.src !== DEFAULT_BOTTLE_IMAGE) {
+							event.target.src = DEFAULT_BOTTLE_IMAGE;
+						}
+					},
 					parseTraits(text) {
 						return text
 							.split(",")
@@ -696,6 +771,7 @@
 							date: this.form.date,
 							place: this.form.place,
 							whisky: this.form.whisky,
+							imageUrl: this.form.imageUrl,
 							caskType: this.form.caskType,
 							nose: this.form.nose,
 							palate: this.form.palate,
@@ -723,6 +799,7 @@
 								date: entry.date || "",
 								place: entry.place || "",
 								whisky: entry.whisky || "",
+								imageUrl: entry.imageUrl || "",
 								caskType: entry.caskType || "",
 								nose: entry.nose || "",
 								palate: entry.palate || "",
@@ -801,6 +878,7 @@
 								date: entry.date || "",
 								place: entry.place || "",
 								whisky: entry.whisky || "",
+								imageUrl: entry.imageUrl || "",
 								caskType: entry.caskType || "",
 								nose: entry.nose || "",
 								palate: entry.palate || "",
@@ -821,6 +899,7 @@
 							date: "",
 							place: "",
 							whisky: "",
+							imageUrl: "",
 							caskType: "",
 							nose: "",
 							palate: "",
