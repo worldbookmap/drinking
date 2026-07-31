@@ -1,8 +1,22 @@
 [
   {
+    "id": "fe9c0a63-2eb1-4629-98cb-b442efa7cef6",
+    "date": "2026-07-31",
+    "place": "집",
+    "drinker": "진욱",
+    "whisky": "올드군기",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260731065506-image-3wfalc.webp",
+    "caskType": "ex버번",
+    "nose": "꿀",
+    "palate": "과일",
+    "finish": "중간",
+    "memo": ""
+  },
+  {
     "id": "a1277bda-a7f2-4d0b-b88b-fa0973b8e209",
     "date": "2026-07-30",
     "place": "집",
+    "drinker": "",
     "whisky": "아란 아마로네 캐스크 피니쉬",
     "imageUrl": "https://d1e2y5wc27crnp.cloudfront.net/media/smartorder_reservation/product/thumbnail/7d1b5f26-ddf7-48e5-967a-ca655725ff6a.webp",
     "caskType": "기타(아마로네 캐스크 피니쉬)",
@@ -15,6 +29,7 @@
     "id": "f178cfde-6624-489f-a63b-31f053ab2ecc",
     "date": "2026-07-17",
     "place": "집",
+    "drinker": "",
     "whisky": "벤로막",
     "imageUrl": "",
     "caskType": "올로로소, ex버번",
