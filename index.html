@@ -12,18 +12,18 @@
 		/>
 		<style>
 			:root {
-				--bg-cream: #fff7e8;
-				--bg-peach: #ffb59f;
-				--bg-mint: #bff3e1;
-				--bg-lemon: #ffe97a;
-				--ink: #3c2a24;
-				--ink-soft: #705952;
-				--card: rgba(255, 255, 255, 0.82);
-				--stroke: rgba(78, 52, 46, 0.22);
-				--accent: #ff7a59;
-				--accent-strong: #ff4f7a;
-				--chip: #ffe8b3;
-				--shadow: 0 14px 36px rgba(93, 68, 56, 0.18);
+				--bg-cream: #f6eddc;
+				--bg-peach: #c78f68;
+				--bg-mint: #8fa58c;
+				--bg-lemon: #d6b56f;
+				--ink: #34251f;
+				--ink-soft: #6b5850;
+				--card: rgba(255, 250, 245, 0.78);
+				--stroke: rgba(94, 66, 53, 0.18);
+				--accent: #b76d43;
+				--accent-strong: #7f4a35;
+				--chip: #e4cfaa;
+				--shadow: 0 18px 42px rgba(58, 40, 34, 0.14);
 			}
 
 			* {
@@ -36,10 +36,11 @@
 				font-family: "Gowun Dodum", sans-serif;
 				color: var(--ink);
 				background:
-					radial-gradient(circle at 12% 10%, rgba(255, 178, 159, 0.95) 0 18%, transparent 20%),
-					radial-gradient(circle at 85% 12%, rgba(179, 243, 225, 0.95) 0 15%, transparent 17%),
-					radial-gradient(circle at 80% 82%, rgba(255, 233, 122, 0.9) 0 14%, transparent 16%),
-					linear-gradient(140deg, #fff6e2 0%, #fff8f1 40%, #fff0d6 100%);
+					radial-gradient(circle at 14% 12%, rgba(183, 127, 83, 0.36) 0 16%, transparent 26%),
+					radial-gradient(circle at 82% 18%, rgba(120, 143, 108, 0.28) 0 14%, transparent 24%),
+					radial-gradient(circle at 76% 84%, rgba(171, 126, 66, 0.26) 0 12%, transparent 22%),
+					linear-gradient(145deg, #efe2cc 0%, #e8dac4 34%, #dccab2 68%, #d4c0a6 100%);
+				background-attachment: fixed;
 			}
 
 			.shell {
@@ -50,11 +51,11 @@
 
 			.hero {
 				position: relative;
-				border: 2px dashed var(--stroke);
+				border: 1px solid rgba(246, 226, 205, 0.28);
 				border-radius: 28px;
 				padding: 24px;
 				background-image:
-					linear-gradient(135deg, rgba(43, 28, 24, 0.62), rgba(64, 42, 35, 0.46), rgba(127, 80, 44, 0.34)),
+					linear-gradient(135deg, rgba(34, 22, 18, 0.7), rgba(58, 38, 30, 0.54), rgba(110, 73, 42, 0.28)),
 					url("./uploads/bg.jpg");
 				background-size: cover;
 				background-position: center;
@@ -63,11 +64,24 @@
 				overflow: hidden;
 			}
 
+			.hero::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(180deg, rgba(255, 245, 231, 0.08), transparent 42%, rgba(31, 19, 16, 0.18));
+				pointer-events: none;
+			}
+
+			.hero::after {
+				content: none;
+			}
+
 			.title {
 				margin: 0;
 				font-family: "Noto Serif KR", serif;
 				font-weight: 700;
 				font-size: clamp(2rem, 4vw, 3rem);
+				letter-spacing: 0.03em;
 				line-height: 1.1;
 				color: #fff9f2;
 				text-shadow: 0 3px 14px rgba(0, 0, 0, 0.38);
@@ -87,33 +101,51 @@
 
 			.tab-nav {
 				display: flex;
+				justify-content: center;
 				gap: 10px;
 				margin-top: 14px;
+				margin-left: auto;
+				margin-right: auto;
+				padding: 8px;
+				border-radius: 999px;
+				background: linear-gradient(135deg, rgba(148, 95, 59, 0.34), rgba(191, 146, 83, 0.26));
+				box-shadow: inset 0 1px 0 rgba(255, 239, 215, 0.18);
+				width: fit-content;
+				max-width: 100%;
 			}
 
 			.tab-btn {
-				border: 1px solid #e4d4cc;
-				background: #fff;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid rgba(116, 83, 66, 0.18);
+				background: linear-gradient(180deg, rgba(255, 248, 238, 0.94), rgba(239, 221, 193, 0.92));
 				color: var(--ink-soft);
 				padding: 10px 14px;
 				border-radius: 999px;
 				font-family: "Noto Serif KR", serif;
 				font-weight: 600;
 				font-size: 1.08rem;
+				letter-spacing: 0.01em;
+				text-align: center;
+				backdrop-filter: blur(8px);
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.72),
+					0 3px 8px rgba(71, 44, 31, 0.08);
 			}
 
 			.tab-btn.active {
-				background: linear-gradient(135deg, #ff7a59, #ff4f7a);
+				background: linear-gradient(135deg, #9d673f, #7a4834, #b8864d);
 				color: #fff;
 				border-color: transparent;
-				box-shadow: 0 8px 20px rgba(240, 101, 67, 0.24);
+				box-shadow: 0 8px 18px rgba(88, 56, 40, 0.22);
 			}
 
 			.panel {
 				border-radius: 24px;
 				border: 1px solid var(--stroke);
-				background: var(--card);
-				backdrop-filter: blur(6px);
+				background: rgba(255, 249, 243, 0.82);
+				backdrop-filter: blur(14px);
 				box-shadow: var(--shadow);
 			}
 
@@ -126,6 +158,9 @@
 				font-family: "Noto Serif KR", serif;
 				font-weight: 700;
 				font-size: 1.7rem;
+				letter-spacing: 0.01em;
+				text-transform: none;
+				color: #53382c;
 			}
 
 			.row {
@@ -142,6 +177,8 @@
 
 			label {
 				font-size: 0.88rem;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 600;
 				color: var(--ink-soft);
 			}
 
@@ -149,12 +186,13 @@
 			textarea,
 			select {
 				width: 100%;
-				border: 1px solid #d8c5bb;
+				border: 1px solid rgba(146, 113, 92, 0.24);
 				border-radius: 12px;
 				padding: 11px 12px;
 				font: inherit;
 				color: var(--ink);
-				background: #fffcfa;
+				background: rgba(255, 252, 248, 0.9);
+				box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
 				transition: border-color 0.15s ease, box-shadow 0.15s ease;
 			}
 
@@ -163,7 +201,7 @@
 			select:focus {
 				outline: none;
 				border-color: var(--accent);
-				box-shadow: 0 0 0 3px rgba(240, 101, 67, 0.16);
+				box-shadow: 0 0 0 3px rgba(183, 109, 67, 0.16);
 			}
 
 			textarea {
@@ -187,16 +225,17 @@
 
 			.btn-add {
 				flex: 1;
-				background: linear-gradient(135deg, #ff7a59, #ff4f7a, #ffb54d);
+				background: linear-gradient(135deg, #9e6242, #7d4934, #c1995b);
 				color: #fff;
 				font-weight: 700;
-				box-shadow: 0 10px 22px rgba(255, 90, 95, 0.28);
+				box-shadow: 0 12px 24px rgba(93, 60, 43, 0.2);
 			}
 
 			.btn-reset {
-				background: #fff;
-				border: 1px solid #e4d4cc;
+				background: rgba(255, 251, 246, 0.9);
+				border: 1px solid rgba(116, 83, 66, 0.18);
 				color: var(--ink-soft);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 			}
 
 			.list-panel {
@@ -226,6 +265,8 @@
 				font-family: "Noto Serif KR", serif;
 				font-size: 1.3rem;
 				font-weight: 700;
+				letter-spacing: 0.01em;
+				color: #5d3f31;
 			}
 
 			.calendar-grid {
@@ -245,7 +286,7 @@
 				position: relative;
 				border: 1px solid #ecd3c4;
 				border-radius: 14px;
-				background: #fffdfa;
+				background: rgba(255, 252, 247, 0.88);
 				padding: 7px;
 				min-height: 88px;
 			}
@@ -363,19 +404,21 @@
 
 			.count-chip {
 				border-radius: 999px;
-				background: var(--chip);
-				border: 1px solid #f4d39e;
+				background: rgba(228, 207, 170, 0.78);
+				border: 1px solid rgba(180, 146, 101, 0.42);
 				color: #886343;
 				padding: 6px 10px;
 				font-size: 0.82rem;
+				box-shadow: inset 0 1px 0 rgba(255, 251, 240, 0.45);
 			}
 
 			.tool-btn {
-				background: #fff;
-				border: 1px solid #e4d4cc;
+				background: rgba(255, 251, 246, 0.86);
+				border: 1px solid rgba(116, 83, 66, 0.16);
 				color: var(--ink-soft);
 				padding: 7px 11px;
 				font-size: 0.82rem;
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 			}
 
 			.tool-btn.small {
@@ -384,7 +427,7 @@
 			}
 
 			.tool-btn.save {
-				background: linear-gradient(135deg, #ff7a59, #ff4f7a);
+				background: linear-gradient(135deg, #9b5f3f, #7d4934);
 				color: #fff;
 				border-color: transparent;
 			}
