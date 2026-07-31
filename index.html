@@ -203,6 +203,135 @@
 				padding: 18px;
 			}
 
+			.calendar-panel {
+				padding: 18px;
+			}
+
+			.calendar-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
+				margin-bottom: 12px;
+			}
+
+			.calendar-nav {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+
+			.calendar-title {
+				margin: 0;
+				font-family: "Noto Serif KR", serif;
+				font-size: 1.3rem;
+				font-weight: 700;
+			}
+
+			.calendar-grid {
+				display: grid;
+				grid-template-columns: repeat(7, minmax(0, 1fr));
+				gap: 8px;
+			}
+
+			.calendar-weekday {
+				text-align: center;
+				font-size: 0.8rem;
+				color: #7b5f57;
+				font-weight: 700;
+			}
+
+			.calendar-day {
+				position: relative;
+				border: 1px solid #ecd3c4;
+				border-radius: 14px;
+				background: #fffdfa;
+				padding: 7px;
+				min-height: 88px;
+			}
+
+			.calendar-day.outside {
+				opacity: 0.45;
+				background: #fffbf7;
+			}
+
+			.calendar-day.today {
+				border-color: #ff8f6f;
+				box-shadow: inset 0 0 0 1px rgba(255, 114, 83, 0.22);
+			}
+
+			.day-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 6px;
+			}
+
+			.day-number {
+				font-weight: 700;
+				font-size: 0.88rem;
+				color: #6f4e43;
+			}
+
+			.day-count {
+				padding: 3px 7px;
+				border-radius: 999px;
+				background: #ffe8b3;
+				border: 1px solid #f4d39e;
+				font-size: 0.72rem;
+				color: #825e47;
+			}
+
+			.day-has-entry {
+				margin-top: 8px;
+				font-size: 0.73rem;
+				color: #8b5c4e;
+			}
+
+			.day-layer {
+				position: absolute;
+				left: 8px;
+				right: 8px;
+				top: calc(100% + 6px);
+				z-index: 20;
+				background: rgba(255, 252, 247, 0.98);
+				border: 1px solid #efcfbf;
+				border-radius: 12px;
+				padding: 8px;
+				box-shadow: 0 10px 22px rgba(82, 56, 46, 0.16);
+			}
+
+			.layer-title {
+				margin: 0 0 6px;
+				font-size: 0.8rem;
+				font-weight: 700;
+				color: #6f4d41;
+			}
+
+			.layer-list {
+				display: grid;
+				gap: 6px;
+			}
+
+			.layer-item {
+				border: 1px solid #f0ddcc;
+				border-radius: 10px;
+				background: #fff;
+				padding: 6px;
+			}
+
+			.layer-item-name {
+				margin: 0;
+				font-size: 0.84rem;
+				font-weight: 700;
+			}
+
+			.layer-item-meta {
+				margin: 2px 0 0;
+				font-size: 0.75rem;
+				color: #765c52;
+			}
+
 			.list-head {
 				display: flex;
 				align-items: center;
@@ -538,7 +667,8 @@
 
 			@media (max-width: 900px) {
 				.form-panel,
-				.list-panel {
+				.list-panel,
+				.calendar-panel {
 					padding: 16px;
 				}
 
@@ -577,6 +707,19 @@
 				.entry-photo {
 					margin-top: 4px;
 				}
+
+				.calendar-grid {
+					gap: 6px;
+				}
+
+				.calendar-day {
+					min-height: 76px;
+				}
+
+				.day-layer {
+					position: static;
+					margin-top: 6px;
+				}
 			}
 		</style>
 	</head>
@@ -589,6 +732,7 @@
 				<div class="tab-nav">
 					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">시음노트쓰기</button>
 					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">시음기록</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="activeTab = 'calendar'">달력</button>
 				</div>
 			</header>
 
@@ -826,6 +970,60 @@
 					</div>
 					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 				</section>
+
+				<section class="panel calendar-panel" v-if="activeTab === 'calendar'">
+					<div class="calendar-head">
+						<h2 class="panel-title" style="margin: 0">달력으로 보는 시음 기록</h2>
+						<div class="calendar-nav">
+							<button class="tool-btn small" type="button" @click="moveCalendarMonth(-1)">이전 달</button>
+							<button class="tool-btn small" type="button" @click="goToCurrentMonth">이번 달</button>
+							<button class="tool-btn small" type="button" @click="moveCalendarMonth(1)">다음 달</button>
+						</div>
+					</div>
+
+					<p class="calendar-title">{{ calendarTitle }}</p>
+
+					<div class="calendar-grid" style="margin-top: 10px">
+						<div class="calendar-weekday" v-for="day in weekLabels" :key="day">{{ day }}</div>
+					</div>
+
+					<div class="calendar-grid" style="margin-top: 6px">
+						<div
+							class="calendar-day"
+							:class="{ outside: !cell.inMonth, today: cell.dateKey === todayKey }"
+							v-for="cell in calendarCells"
+							:key="cell.dateKey"
+							@mouseenter="openCalendarLayer(cell.dateKey)"
+							@mouseleave="closeCalendarLayer(cell.dateKey)"
+						>
+							<button
+								type="button"
+								class="entry-summary"
+								style="padding: 0; align-items: flex-start"
+								@click="toggleCalendarLayer(cell.dateKey)"
+							>
+								<div class="day-top">
+									<span class="day-number">{{ cell.day }}</span>
+									<span v-if="cell.entries.length" class="day-count">{{ cell.entries.length }}잔</span>
+								</div>
+							</button>
+							<p class="day-has-entry" v-if="cell.entries.length">기록 있음</p>
+
+							<div class="day-layer" v-if="activeCalendarKey === cell.dateKey && cell.entries.length">
+								<p class="layer-title">{{ cell.dateKey }} 시음 기록</p>
+								<div class="layer-list">
+									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id">
+										<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
+										<p class="layer-item-meta">{{ entry.category || "종류 미입력" }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
+										<p class="layer-item-meta">{{ entry.place || "장소 미입력" }}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<p class="sync-status" style="margin-top: 12px">날짜 위에 마우스를 올리거나 클릭하면 해당 날짜의 시음 내용이 보여요.</p>
+				</section>
 			</main>
 		</div>
 
@@ -867,6 +1065,32 @@
 			}
 
 			const { createApp } = Vue;
+			const WEEK_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
+
+			function formatDateKey(year, monthIndex, day) {
+				const month = String(monthIndex + 1).padStart(2, "0");
+				const dayText = String(day).padStart(2, "0");
+				return `${year}-${month}-${dayText}`;
+			}
+
+			function addMonthKey(monthKey, delta) {
+				const [yearText, monthText] = String(monthKey || "").split("-");
+				const year = Number(yearText);
+				const month = Number(monthText);
+				if (!Number.isInteger(year) || !Number.isInteger(month)) {
+					const now = new Date();
+					const fallback = new Date(now.getFullYear(), now.getMonth() + delta, 1);
+					return `${fallback.getFullYear()}-${String(fallback.getMonth() + 1).padStart(2, "0")}`;
+				}
+
+				const moved = new Date(year, month - 1 + delta, 1);
+				return `${moved.getFullYear()}-${String(moved.getMonth() + 1).padStart(2, "0")}`;
+			}
+
+			function getCurrentMonthKey() {
+				const now = new Date();
+				return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+			}
 
 			function fileToDataUrl(file) {
 				return new Promise((resolve, reject) => {
@@ -967,6 +1191,10 @@
 						activeEntryId: null,
 						activeTab: "records",
 						searchQuery: "",
+						weekLabels: WEEK_LABELS,
+						calendarMonthKey: getCurrentMonthKey(),
+						calendarHoverKey: "",
+						calendarPinnedKey: "",
 						isSaving: false,
 						isImageUploading: false,
 						lastCommitSha: "",
@@ -1006,6 +1234,86 @@
 
 							return targets.some((value) => (value || "").toLowerCase().includes(query));
 						});
+					},
+					entriesByDate() {
+						const grouped = {};
+						for (const entry of this.entries) {
+							if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date || "")) {
+								continue;
+							}
+
+							if (!grouped[entry.date]) {
+								grouped[entry.date] = [];
+							}
+
+							grouped[entry.date].push(entry);
+						}
+
+						return grouped;
+					},
+					calendarTitle() {
+						const [yearText, monthText] = String(this.calendarMonthKey || "").split("-");
+						return `${yearText}년 ${Number(monthText)}월`;
+					},
+					todayKey() {
+						const now = new Date();
+						return formatDateKey(now.getFullYear(), now.getMonth(), now.getDate());
+					},
+					activeCalendarKey() {
+						return this.calendarPinnedKey || this.calendarHoverKey;
+					},
+					calendarCells() {
+						const [yearText, monthText] = String(this.calendarMonthKey || "").split("-");
+						const year = Number(yearText);
+						const month = Number(monthText);
+
+						if (!Number.isInteger(year) || !Number.isInteger(month)) {
+							return [];
+						}
+
+						const monthIndex = month - 1;
+						const firstDay = new Date(year, monthIndex, 1);
+						const startOffset = firstDay.getDay();
+						const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+						const daysInPrevMonth = new Date(year, monthIndex, 0).getDate();
+						const cells = [];
+
+						for (let index = 0; index < 42; index += 1) {
+							let cellYear = year;
+							let cellMonthIndex = monthIndex;
+							let day = 1;
+							let inMonth = true;
+
+							if (index < startOffset) {
+								inMonth = false;
+								cellMonthIndex = monthIndex - 1;
+								if (cellMonthIndex < 0) {
+									cellMonthIndex = 11;
+									cellYear -= 1;
+								}
+								day = daysInPrevMonth - startOffset + index + 1;
+							} else if (index >= startOffset + daysInMonth) {
+								inMonth = false;
+								cellMonthIndex = monthIndex + 1;
+								if (cellMonthIndex > 11) {
+									cellMonthIndex = 0;
+									cellYear += 1;
+								}
+								day = index - (startOffset + daysInMonth) + 1;
+							} else {
+								day = index - startOffset + 1;
+							}
+
+							const dateKey = formatDateKey(cellYear, cellMonthIndex, day);
+							cells.push({
+								dateKey,
+								day,
+								inMonth,
+								entries: this.entriesByDate[dateKey] || []
+							});
+						}
+
+						return cells;
 					}
 				},
 				async mounted() {
@@ -1138,6 +1446,40 @@
 							? list.filter((item) => item !== trait).join(", ")
 							: [...list, trait].join(", ");
 					},
+					moveCalendarMonth(delta) {
+						this.calendarMonthKey = addMonthKey(this.calendarMonthKey, delta);
+						this.calendarHoverKey = "";
+						this.calendarPinnedKey = "";
+					},
+					goToCurrentMonth() {
+						this.calendarMonthKey = getCurrentMonthKey();
+						this.calendarHoverKey = "";
+						this.calendarPinnedKey = "";
+					},
+					openCalendarLayer(dateKey) {
+						if (!dateKey) {
+							return;
+						}
+						this.calendarHoverKey = dateKey;
+					},
+					closeCalendarLayer(dateKey) {
+						if (!dateKey) {
+							return;
+						}
+						if (this.calendarPinnedKey === dateKey) {
+							return;
+						}
+						if (this.calendarHoverKey === dateKey) {
+							this.calendarHoverKey = "";
+						}
+					},
+					toggleCalendarLayer(dateKey) {
+						if (!dateKey) {
+							return;
+						}
+						this.calendarPinnedKey = this.calendarPinnedKey === dateKey ? "" : dateKey;
+						this.calendarHoverKey = dateKey;
+					},
 					async addEntry() {
 						if (this.isImageUploading) {
 							this.showToast("error", "이미지 업로드가 끝난 뒤에 기록을 추가해 주세요.");
@@ -1166,6 +1508,7 @@
 						this.entries.push(newEntry);
 						this.activeEntryId = newEntry.id;
 						this.activeTab = "records";
+						this.calendarMonthKey = String(newEntry.date || "").slice(0, 7) || this.calendarMonthKey;
 
 						this.resetForm();
 					},
