@@ -268,6 +268,33 @@
 				color: #5d4036;
 			}
 
+			.toast {
+				position: fixed;
+				right: 16px;
+				top: 16px;
+				z-index: 40;
+				max-width: min(360px, calc(100vw - 32px));
+				padding: 12px 14px;
+				border-radius: 16px;
+				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+				border: 1px solid transparent;
+				font-size: 0.9rem;
+				line-height: 1.4;
+				backdrop-filter: blur(8px);
+			}
+
+			.toast.success {
+				background: rgba(224, 250, 243, 0.96);
+				border-color: #9ad9c7;
+				color: #24594d;
+			}
+
+			.toast.error {
+				background: rgba(255, 236, 232, 0.96);
+				border-color: #f2b2a8;
+				color: #8d2d26;
+			}
+
 			.empty {
 				border: 2px dashed #ecd3c4;
 				border-radius: 18px;
@@ -511,6 +538,7 @@
 	</head>
 	<body>
 		<div id="app" class="shell">
+				<div v-if="toast.visible" class="toast" :class="toast.type">{{ toast.message }}</div>
 			<header class="hero">
 				<h1 class="title">위스키 한 모금 기록장</h1>
 				<p class="subtitle">오늘 마신 잔의 향, 맛, 피니시를 귀엽게 모아보자.</p>
@@ -852,6 +880,12 @@
 						activeTab: "write",
 						isSaving: false,
 						isImageUploading: false,
+						toast: {
+							visible: false,
+							type: "success",
+							message: ""
+						},
+						toastTimer: null,
 						syncMessage: "GitHub에서 records.json을 불러왔어요."
 					};
 				},
@@ -867,6 +901,21 @@
 					resolveBottleImage(url) {
 						const cleaned = (url || "").trim();
 						return cleaned || DEFAULT_BOTTLE_IMAGE;
+					},
+					showToast(type, message) {
+						if (this.toastTimer) {
+							clearTimeout(this.toastTimer);
+						}
+
+						this.toast = {
+							visible: true,
+							type,
+							message
+						};
+
+						this.toastTimer = setTimeout(() => {
+							this.toast.visible = false;
+						}, 2800);
 					},
 					openCamera() {
 						this.$refs.cameraInput.click();
@@ -1021,10 +1070,17 @@
 								throw new Error(result.error || "저장 실패");
 							}
 
-							this.syncMessage = "GitHub records.json 저장 완료!";
+							const commitSha = result.commitSha ? result.commitSha.slice(0, 7) : "";
+							this.syncMessage = commitSha
+								? `GitHub records.json 저장 완료! (${commitSha})`
+								: "GitHub records.json 저장 완료!";
+							this.showToast(
+								"success",
+								commitSha ? `GitHub 저장이 완료되었습니다. SHA ${commitSha}` : "GitHub 저장이 완료되었습니다."
+							);
 						} catch (error) {
 							this.syncMessage = `저장 실패: ${error.message}`;
-							alert(`GitHub 저장에 실패했어요.\n${error.message}`);
+							this.showToast("error", `GitHub 저장에 실패했어요. ${error.message}`);
 						} finally {
 							this.isSaving = false;
 						}
