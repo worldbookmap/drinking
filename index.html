@@ -197,9 +197,17 @@
 			.list-head {
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
+				justify-content: flex-start;
 				gap: 12px;
-				margin-bottom: 14px;
+				margin-bottom: 8px;
+			}
+
+			.record-primary-tools {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				flex-wrap: wrap;
+				margin-bottom: 12px;
 			}
 
 			.list-tools {
@@ -207,7 +215,8 @@
 				align-items: center;
 				gap: 8px;
 				flex-wrap: wrap;
-				justify-content: flex-end;
+				justify-content: flex-start;
+				margin-top: 8px;
 			}
 
 			.count-chip {
@@ -225,6 +234,11 @@
 				color: var(--ink-soft);
 				padding: 7px 11px;
 				font-size: 0.82rem;
+			}
+
+			.tool-btn.small {
+				padding: 5px 9px;
+				font-size: 0.74rem;
 			}
 
 			.tool-btn.save {
@@ -460,6 +474,10 @@
 					align-items: flex-start;
 				}
 
+				.record-primary-tools {
+					margin-bottom: 10px;
+				}
+
 				.list-tools {
 					justify-content: flex-start;
 				}
@@ -613,22 +631,14 @@
 				<section class="panel list-panel" v-if="activeTab === 'records'">
 					<div class="list-head">
 						<h2 class="panel-title" style="margin: 0">내 시음 기록</h2>
-						<div class="list-tools">
-							<span class="count-chip">총 {{ entries.length }}잔</span>
-							<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
-								{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
-							</button>
-							<button class="tool-btn" type="button" @click="reloadFromRepo">GitHub JSON 다시 불러오기</button>
-							<button class="tool-btn" type="button" @click="exportEntries">records.json 내보내기</button>
-							<button class="tool-btn" type="button" @click="openImport">로컬 JSON 미리보기</button>
-						</div>
 					</div>
 
-					<p class="storage-status">
-						저장 방식: <b>Vercel API -> GitHub records.json</b> · 웹에서 바로 저장 가능
-					</p>
-					<p class="sync-status">{{ syncMessage }}</p>
-					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
+					<div class="record-primary-tools">
+						<span class="count-chip">총 {{ entries.length }}잔</span>
+						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
+							{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
+						</button>
+					</div>
 
 					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
 
@@ -665,6 +675,17 @@
 							</transition>
 						</article>
 					</div>
+
+					<p class="storage-status">
+						저장 방식: <b>Vercel API -> GitHub records.json</b> · 웹에서 바로 저장 가능
+					</p>
+					<p class="sync-status">{{ syncMessage }}</p>
+					<div class="list-tools">
+						<button class="tool-btn small" type="button" @click="reloadFromRepo">GitHub JSON 다시 불러오기</button>
+						<button class="tool-btn small" type="button" @click="exportEntries">records.json 내보내기</button>
+						<button class="tool-btn small" type="button" @click="openImport">로컬 JSON 미리보기</button>
+					</div>
+					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 				</section>
 			</main>
 		</div>
