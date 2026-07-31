@@ -81,10 +81,31 @@
 			}
 
 			.grid {
-				display: grid;
-				grid-template-columns: 380px 1fr;
-				gap: 18px;
+				display: block;
 				margin-top: 18px;
+			}
+
+			.tab-nav {
+				display: flex;
+				gap: 10px;
+				margin-top: 14px;
+			}
+
+			.tab-btn {
+				border: 1px solid #e4d4cc;
+				background: #fff;
+				color: var(--ink-soft);
+				padding: 10px 14px;
+				border-radius: 999px;
+				font-family: "Gaegu", cursive;
+				font-size: 1.08rem;
+			}
+
+			.tab-btn.active {
+				background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+				color: #fff;
+				border-color: transparent;
+				box-shadow: 0 8px 20px rgba(240, 101, 67, 0.24);
 			}
 
 			.panel {
@@ -204,10 +225,27 @@
 				font-size: 0.82rem;
 			}
 
+			.tool-btn.save {
+				background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+				color: #fff;
+				border-color: transparent;
+			}
+
+			.tool-btn:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+			}
+
 			.storage-status {
 				margin: 0 0 10px;
 				font-size: 0.8rem;
 				color: #7f6a63;
+			}
+
+			.sync-status {
+				margin: 0 0 12px;
+				font-size: 0.82rem;
+				color: #6e574f;
 			}
 
 			.storage-status b {
@@ -373,10 +411,6 @@
 			}
 
 			@media (max-width: 900px) {
-				.grid {
-					grid-template-columns: 1fr;
-				}
-
 				.form-panel,
 				.list-panel {
 					padding: 16px;
@@ -393,6 +427,10 @@
 				.list-tools {
 					justify-content: flex-start;
 				}
+
+				.tab-nav {
+					flex-wrap: wrap;
+				}
 			}
 		</style>
 	</head>
@@ -401,10 +439,14 @@
 			<header class="hero">
 				<h1 class="title">위스키 한 모금 기록장</h1>
 				<p class="subtitle">오늘 마신 잔의 향, 맛, 피니시를 귀엽게 모아보자.</p>
+				<div class="tab-nav">
+					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">시음노트쓰기</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">시음기록</button>
+				</div>
 			</header>
 
 			<main class="grid">
-				<section class="panel form-panel">
+				<section class="panel form-panel" v-if="activeTab === 'write'">
 					<h2 class="panel-title">시음 노트 쓰기</h2>
 					<form @submit.prevent="addEntry">
 						<div class="row">
@@ -502,11 +544,14 @@
 					</form>
 				</section>
 
-				<section class="panel list-panel">
+				<section class="panel list-panel" v-if="activeTab === 'records'">
 					<div class="list-head">
 						<h2 class="panel-title" style="margin: 0">내 시음 기록</h2>
 						<div class="list-tools">
 							<span class="count-chip">총 {{ entries.length }}잔</span>
+							<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
+								{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
+							</button>
 							<button class="tool-btn" type="button" @click="reloadFromRepo">GitHub JSON 다시 불러오기</button>
 							<button class="tool-btn" type="button" @click="exportEntries">records.json 내보내기</button>
 							<button class="tool-btn" type="button" @click="openImport">로컬 JSON 미리보기</button>
@@ -514,9 +559,9 @@
 					</div>
 
 					<p class="storage-status">
-						저장 방식: <b>records.json (GitHub)</b> 읽기 기반 · 브라우저에서 수정한 값은
-						<b>records.json 내보내기</b> 후 GitHub에 커밋하면 반영됨
+						저장 방식: <b>Vercel API -> GitHub records.json</b> · 웹에서 바로 저장 가능
 					</p>
+					<p class="sync-status">{{ syncMessage }}</p>
 					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 
 					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
@@ -555,14 +600,25 @@
 		<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 		<script>
 			const RECORDS_FILE = "./records.json";
+			const RECORDS_API = "/api/records";
 
 			async function readEntriesFromRepo() {
-				const response = await fetch(`${RECORDS_FILE}?t=${Date.now()}`, { cache: "no-store" });
-				if (!response.ok) {
+				const apiResponse = await fetch(`${RECORDS_API}?t=${Date.now()}`, { cache: "no-store" });
+				if (apiResponse.ok) {
+					const data = await apiResponse.json();
+					if (!Array.isArray(data.entries)) {
+						throw new Error("api entries must be array");
+					}
+					return data.entries;
+				}
+
+				// Local preview fallback when /api route is unavailable.
+				const fileResponse = await fetch(`${RECORDS_FILE}?t=${Date.now()}`, { cache: "no-store" });
+				if (!fileResponse.ok) {
 					throw new Error("records.json fetch failed");
 				}
 
-				const parsed = await response.json();
+				const parsed = await fileResponse.json();
 				if (!Array.isArray(parsed)) {
 					throw new Error("records.json must be array");
 				}
@@ -592,7 +648,10 @@
 							memo: ""
 						},
 						entries: [],
-						activeEntryId: null
+						activeEntryId: null,
+						activeTab: "write",
+						isSaving: false,
+						syncMessage: "GitHub에서 records.json을 불러왔어요."
 					};
 				},
 				computed: {
@@ -646,6 +705,7 @@
 
 						this.entries.push(newEntry);
 						this.activeEntryId = newEntry.id;
+						this.activeTab = "records";
 
 						this.resetForm();
 					},
@@ -670,10 +730,41 @@
 								memo: entry.memo || ""
 							}));
 							this.activeEntryId = null;
+							this.syncMessage = "GitHub records.json 최신 내용을 불러왔어요.";
 						} catch {
 							this.entries = [];
 							this.activeEntryId = null;
+							this.syncMessage = "불러오기에 실패했어요. API 설정 또는 파일 형식을 확인해 주세요.";
 							alert("records.json 파일을 읽지 못했어요. 파일 형식을 확인해 주세요.");
+						}
+					},
+					async saveToGitHub() {
+						if (this.isSaving) {
+							return;
+						}
+
+						this.isSaving = true;
+						this.syncMessage = "GitHub에 저장 중이에요...";
+
+						try {
+							const payload = [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
+							const response = await fetch(RECORDS_API, {
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify({ entries: payload })
+							});
+
+							const result = await response.json();
+							if (!response.ok) {
+								throw new Error(result.error || "저장 실패");
+							}
+
+							this.syncMessage = "GitHub records.json 저장 완료!";
+						} catch (error) {
+							this.syncMessage = `저장 실패: ${error.message}`;
+							alert(`GitHub 저장에 실패했어요.\n${error.message}`);
+						} finally {
+							this.isSaving = false;
 						}
 					},
 					openImport() {
@@ -717,6 +808,7 @@
 								memo: entry.memo || ""
 							}));
 							this.activeEntryId = null;
+							this.syncMessage = "로컬 JSON을 불러왔어요. GitHub에 저장 버튼으로 반영할 수 있어요.";
 
 						} catch {
 							alert("JSON 파일을 읽지 못했어요.");
