@@ -53,18 +53,14 @@
 				border: 2px dashed var(--stroke);
 				border-radius: 28px;
 				padding: 24px;
-				background: linear-gradient(135deg, rgba(255, 235, 210, 0.9), rgba(202, 247, 230, 0.9), rgba(255, 241, 170, 0.88));
+				background-image:
+					linear-gradient(135deg, rgba(43, 28, 24, 0.62), rgba(64, 42, 35, 0.46), rgba(127, 80, 44, 0.34)),
+					url("./uploads/bg.png");
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
 				box-shadow: var(--shadow);
 				overflow: hidden;
-			}
-
-			.hero::after {
-				content: "🥃";
-				position: absolute;
-				right: 18px;
-				top: 12px;
-				font-size: 2.2rem;
-				transform: rotate(-10deg);
 			}
 
 			.title {
@@ -73,12 +69,15 @@
 				font-weight: 700;
 				font-size: clamp(2rem, 4vw, 3rem);
 				line-height: 1.1;
+				color: #fff9f2;
+				text-shadow: 0 3px 14px rgba(0, 0, 0, 0.38);
 			}
 
 			.subtitle {
 				margin: 8px 0 0;
-				color: var(--ink-soft);
+				color: #ffeed6;
 				font-size: 1rem;
+				text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
 			}
 
 			.grid {
@@ -133,6 +132,12 @@
 				display: grid;
 				gap: 6px;
 				margin-bottom: 12px;
+			}
+
+			.form-top-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 0 12px;
 			}
 
 			label {
@@ -221,6 +226,10 @@
 				flex-wrap: wrap;
 				justify-content: flex-start;
 				margin-top: 8px;
+			}
+
+			.search-row {
+				margin: 0 0 12px;
 			}
 
 			.count-chip {
@@ -423,8 +432,14 @@
 
 			.notes {
 				display: grid;
-				gap: 6px;
+				gap: 4px;
 				margin-top: 9px;
+			}
+
+			.notes-top-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 4px;
 			}
 
 			.detail-actions {
@@ -437,12 +452,15 @@
 				background: #fff8ec;
 				border: 1px solid #f5e2bf;
 				border-radius: 10px;
-				padding: 8px;
+				margin: 0;
+				padding: 6px 8px;
 				font-size: 0.9rem;
+				line-height: 1.25;
 			}
 
 			.note b {
-				font-family: "Gaegu", cursive;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 700;
 				font-size: 1.05rem;
 				margin-right: 4px;
 			}
@@ -544,7 +562,15 @@
 					flex-wrap: wrap;
 				}
 
+				.form-top-grid {
+					grid-template-columns: 1fr;
+				}
+
 				.entry-body {
+					grid-template-columns: 1fr;
+				}
+
+				.notes-top-grid {
 					grid-template-columns: 1fr;
 				}
 
@@ -558,8 +584,8 @@
 		<div id="app" class="shell">
 				<div v-if="toast.visible" class="toast" :class="toast.type">{{ toast.message }}</div>
 			<header class="hero">
-				<h1 class="title">위스키 한 모금 기록장</h1>
-				<p class="subtitle">오늘 마신 잔의 향, 맛, 피니시를 귀엽게 모아보자.</p>
+				<h1 class="title">위스키 기록장</h1>
+				<p class="subtitle">날아가는 시간이여, 이 술을 한 잔 마시게나.</p>
 				<div class="tab-nav">
 					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">시음노트쓰기</button>
 					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">시음기록</button>
@@ -570,23 +596,38 @@
 				<section class="panel form-panel" v-if="activeTab === 'write'">
 					<h2 class="panel-title">시음 노트 쓰기</h2>
 					<form @submit.prevent="addEntry">
-						<div class="row">
-							<label for="date">마신 날</label>
-							<input id="date" v-model="form.date" type="date" required />
-						</div>
+						<div class="form-top-grid">
+							<div class="row">
+								<label for="date">마신 날</label>
+								<input id="date" v-model="form.date" type="date" required />
+							</div>
 
-						<div class="row">
-							<label for="place">장소</label>
-							<input id="place" v-model.trim="form.place" type="text" placeholder="예: 집, 바, 여행지" />
-						</div>
+							<div class="row">
+								<label for="place">장소</label>
+								<input id="place" v-model.trim="form.place" type="text" placeholder="예: 집, 바, 여행지" />
+							</div>
 
-						<div class="row">
-							<label for="drinker">마신 사람</label>
-							<select id="drinker" v-model="form.drinker" required>
-								<option value="" disabled>선택해 주세요</option>
-								<option value="진욱">진욱</option>
-								<option value="지선">지선</option>
-							</select>
+							<div class="row">
+								<label for="drinker">마신 사람</label>
+								<select id="drinker" v-model="form.drinker" required>
+									<option value="" disabled>선택해 주세요</option>
+									<option value="진욱">진욱</option>
+									<option value="지선">지선</option>
+								</select>
+							</div>
+
+							<div class="row">
+								<label for="category">위스키 종류</label>
+								<select id="category" v-model="form.category" required>
+									<option value="" disabled>선택해 주세요</option>
+									<option value="버번">버번</option>
+									<option value="아메리칸">아메리칸</option>
+									<option value="스코틀랜드">스코틀랜드</option>
+									<option value="일본">일본</option>
+									<option value="대만">대만</option>
+									<option value="기타">기타</option>
+								</select>
+							</div>
 						</div>
 
 						<div class="row">
@@ -705,16 +746,27 @@
 
 					<div class="record-primary-tools">
 						<span class="count-chip">총 {{ entries.length }}잔</span>
+						<span v-if="searchQuery" class="count-chip">검색 {{ filteredEntries.length }}잔</span>
 						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
 							{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
 						</button>
 						<span v-if="lastCommitSha" class="sha-chip">최근 SHA {{ lastCommitSha }}</span>
 					</div>
 
+					<div class="row search-row" v-if="entries.length">
+						<label for="recordSearch">기록 검색</label>
+						<input
+							id="recordSearch"
+							v-model.trim="searchQuery"
+							type="text"
+							placeholder="위스키, 날짜, 장소, 향/맛/메모로 검색"
+						/>
+					</div>
+
 					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
 
-					<div v-else class="entry-list">
-						<article class="entry" v-for="entry in sortedEntries" :key="entry.id">
+					<div v-else-if="filteredEntries.length" class="entry-list">
+						<article class="entry" v-for="entry in filteredEntries" :key="entry.id">
 							<button class="entry-summary" type="button" @click="toggleExpanded(entry.id)">
 								<div>
 									<h3 class="whisky-name">{{ entry.whisky }}</h3>
@@ -730,9 +782,12 @@
 											<img :src="resolveBottleImage(entry.imageUrl)" alt="위스키 병 이미지" @error="onBottleImageError" />
 										</div>
 										<div class="notes">
-											<p class="note"><b>마신 사람</b>{{ entry.drinker || "기록 없음" }}</p>
-											<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
-											<p class="note"><b>캐스크</b>{{ entry.caskType || "기록 없음" }}</p>
+											<div class="notes-top-grid">
+												<p class="note"><b>종류</b>{{ entry.category || "기록 없음" }}</p>
+												<p class="note"><b>마신 사람</b>{{ entry.drinker || "기록 없음" }}</p>
+												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
+												<p class="note"><b>캐스크</b>{{ entry.caskType || "기록 없음" }}</p>
+											</div>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
 											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
@@ -746,10 +801,8 @@
 							</transition>
 						</article>
 					</div>
+					<p v-else class="empty">검색 결과가 없어요. 다른 키워드로 찾아보세요.</p>
 
-					<p class="storage-status">
-						저장 방식: <b>Vercel API -> GitHub records.json</b> · 웹에서 바로 저장 가능
-					</p>
 					<p class="sync-status">{{ syncMessage }}</p>
 					<div class="list-tools">
 						<button class="tool-btn small" type="button" @click="reloadFromRepo">GitHub JSON 다시 불러오기</button>
@@ -887,6 +940,7 @@
 							place: "",
 							drinker: "",
 							whisky: "",
+							category: "",
 							imageUrl: "",
 							caskType: "",
 							nose: "",
@@ -896,7 +950,8 @@
 						},
 						entries: [],
 						activeEntryId: null,
-						activeTab: "write",
+						activeTab: "records",
+						searchQuery: "",
 						isSaving: false,
 						isImageUploading: false,
 						lastCommitSha: "",
@@ -912,6 +967,29 @@
 				computed: {
 					sortedEntries() {
 						return [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
+					},
+					filteredEntries() {
+						const query = this.searchQuery.trim().toLowerCase();
+						if (!query) {
+							return this.sortedEntries;
+						}
+
+						return this.sortedEntries.filter((entry) => {
+							const targets = [
+								entry.whisky,
+								entry.category,
+								entry.date,
+								entry.place,
+								entry.drinker,
+								entry.caskType,
+								entry.nose,
+								entry.palate,
+								entry.finish,
+								entry.memo
+							];
+
+							return targets.some((value) => (value || "").toLowerCase().includes(query));
+						});
 					}
 				},
 				async mounted() {
@@ -1014,7 +1092,7 @@
 							: [...list, trait].join(", ");
 					},
 					async addEntry() {
-						if (!this.form.date || !this.form.whisky || !this.form.drinker) {
+						if (!this.form.date || !this.form.whisky || !this.form.drinker || !this.form.category) {
 							return;
 						}
 
@@ -1024,6 +1102,7 @@
 							place: this.form.place,
 							drinker: this.form.drinker,
 							whisky: this.form.whisky,
+							category: this.form.category,
 							imageUrl: this.form.imageUrl,
 							caskType: this.form.caskType,
 							nose: this.form.nose,
@@ -1053,6 +1132,7 @@
 								place: entry.place || "",
 								drinker: entry.drinker || "",
 								whisky: entry.whisky || "",
+								category: entry.category || "",
 								imageUrl: entry.imageUrl || "",
 								caskType: entry.caskType || "",
 								nose: entry.nose || "",
@@ -1143,6 +1223,7 @@
 								place: entry.place || "",
 								drinker: entry.drinker || "",
 								whisky: entry.whisky || "",
+								category: entry.category || "",
 								imageUrl: entry.imageUrl || "",
 								caskType: entry.caskType || "",
 								nose: entry.nose || "",
@@ -1165,6 +1246,7 @@
 							place: "",
 							drinker: "",
 							whisky: "",
+							category: "",
 							imageUrl: "",
 							caskType: "",
 							nose: "",
