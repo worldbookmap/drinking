@@ -640,6 +640,7 @@
 							<input
 								id="imageUrl"
 								v-model.trim="form.imageUrl"
+								@input="clearFormPreview"
 								type="url"
 								placeholder="인터넷 사진 URL 또는 아래에서 카메라/사진첩 업로드"
 							/>
@@ -655,7 +656,7 @@
 							<input ref="cameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile" style="display: none" />
 							<input ref="galleryInput" type="file" accept="image/*" @change="onPickImageFile" style="display: none" />
 							<div class="bottle-preview">
-								<img :src="resolveBottleImage(form.imageUrl)" alt="위스키 병 미리보기" @error="onBottleImageError" />
+								<img :src="resolveBottleImage(form.imageUrl, formPreviewUrl)" alt="위스키 병 미리보기" @error="onBottleImageError" />
 							</div>
 						</div>
 
@@ -955,6 +956,7 @@
 						isSaving: false,
 						isImageUploading: false,
 						lastCommitSha: "",
+						formPreviewUrl: "",
 						toast: {
 							visible: false,
 							type: "success",
@@ -996,9 +998,17 @@
 					await this.reloadFromRepo();
 				},
 				methods: {
-					resolveBottleImage(url) {
+					resolveBottleImage(url, previewUrl = "") {
+						const preview = (previewUrl || "").trim();
+						if (preview) {
+							return preview;
+						}
+
 						const cleaned = (url || "").trim();
 						return cleaned || DEFAULT_BOTTLE_IMAGE;
+					},
+					clearFormPreview() {
+						this.formPreviewUrl = "";
 					},
 					showToast(type, message) {
 						if (this.toastTimer) {
@@ -1039,6 +1049,7 @@
 
 						try {
 							const optimized = await resizeAndCompressImage(file);
+							this.formPreviewUrl = optimized.dataUrl;
 							const response = await fetch(IMAGE_UPLOAD_API, {
 								method: "POST",
 								headers: { "Content-Type": "application/json" },
@@ -1254,6 +1265,7 @@
 							finish: "",
 							memo: ""
 						};
+						this.formPreviewUrl = "";
 					}
 				}
 			}).mount("#app");
