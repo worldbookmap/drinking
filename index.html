@@ -1,1 +1,667 @@
-TEST
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>위스키 한 모금 기록장</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			:root {
+				--bg-cream: #fff9ef;
+				--bg-peach: #ffd8c2;
+				--bg-mint: #dff8ef;
+				--bg-lemon: #fff3b1;
+				--ink: #3f2f2b;
+				--ink-soft: #6a5751;
+				--card: rgba(255, 255, 255, 0.75);
+				--stroke: rgba(78, 52, 46, 0.18);
+				--accent: #ff8d6a;
+				--accent-strong: #f06543;
+				--chip: #fff4da;
+				--shadow: 0 10px 30px rgba(93, 68, 56, 0.14);
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				font-family: "Gowun Dodum", sans-serif;
+				color: var(--ink);
+				background:
+					radial-gradient(circle at 12% 10%, #ffe0ce 0 18%, transparent 20%),
+					radial-gradient(circle at 85% 12%, #dcf8f0 0 15%, transparent 17%),
+					radial-gradient(circle at 80% 82%, #ffe9a8 0 14%, transparent 16%),
+					linear-gradient(140deg, var(--bg-cream), #fffef9 45%, #fff7e8);
+			}
+
+			.shell {
+				max-width: 1100px;
+				margin: 0 auto;
+				padding: 28px 18px 42px;
+			}
+
+			.hero {
+				position: relative;
+				border: 2px dashed var(--stroke);
+				border-radius: 28px;
+				padding: 24px;
+				background: linear-gradient(135deg, rgba(255, 236, 216, 0.78), rgba(224, 250, 243, 0.78));
+				box-shadow: var(--shadow);
+				overflow: hidden;
+			}
+
+			.hero::after {
+				content: "🥃";
+				position: absolute;
+				right: 18px;
+				top: 12px;
+				font-size: 2.2rem;
+				transform: rotate(-10deg);
+			}
+
+			.title {
+				margin: 0;
+				font-family: "Gaegu", cursive;
+				font-size: clamp(2rem, 4vw, 3rem);
+				line-height: 1.1;
+			}
+
+			.subtitle {
+				margin: 8px 0 0;
+				color: var(--ink-soft);
+				font-size: 1rem;
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: 380px 1fr;
+				gap: 18px;
+				margin-top: 18px;
+			}
+
+			.panel {
+				border-radius: 24px;
+				border: 1px solid var(--stroke);
+				background: var(--card);
+				backdrop-filter: blur(6px);
+				box-shadow: var(--shadow);
+			}
+
+			.form-panel {
+				padding: 18px;
+			}
+
+			.panel-title {
+				margin: 0 0 14px;
+				font-family: "Gaegu", cursive;
+				font-size: 1.7rem;
+			}
+
+			.row {
+				display: grid;
+				gap: 6px;
+				margin-bottom: 12px;
+			}
+
+			label {
+				font-size: 0.88rem;
+				color: var(--ink-soft);
+			}
+
+			input,
+			textarea {
+				width: 100%;
+				border: 1px solid #d8c5bb;
+				border-radius: 12px;
+				padding: 11px 12px;
+				font: inherit;
+				color: var(--ink);
+				background: #fffcfa;
+				transition: border-color 0.15s ease, box-shadow 0.15s ease;
+			}
+
+			input:focus,
+			textarea:focus {
+				outline: none;
+				border-color: var(--accent);
+				box-shadow: 0 0 0 3px rgba(240, 101, 67, 0.16);
+			}
+
+			textarea {
+				resize: vertical;
+				min-height: 86px;
+			}
+
+			.actions {
+				display: flex;
+				gap: 8px;
+				margin-top: 8px;
+			}
+
+			button {
+				border: 0;
+				border-radius: 999px;
+				padding: 10px 14px;
+				font: inherit;
+				cursor: pointer;
+			}
+
+			.btn-add {
+				flex: 1;
+				background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+				color: #fff;
+				font-weight: 700;
+			}
+
+			.btn-reset {
+				background: #fff;
+				border: 1px solid #e4d4cc;
+				color: var(--ink-soft);
+			}
+
+			.list-panel {
+				padding: 18px;
+			}
+
+			.list-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				margin-bottom: 14px;
+			}
+
+			.list-tools {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				flex-wrap: wrap;
+				justify-content: flex-end;
+			}
+
+			.count-chip {
+				border-radius: 999px;
+				background: var(--chip);
+				border: 1px solid #f4d39e;
+				color: #886343;
+				padding: 6px 10px;
+				font-size: 0.82rem;
+			}
+
+			.tool-btn {
+				background: #fff;
+				border: 1px solid #e4d4cc;
+				color: var(--ink-soft);
+				padding: 7px 11px;
+				font-size: 0.82rem;
+			}
+
+			.storage-status {
+				margin: 0 0 10px;
+				font-size: 0.8rem;
+				color: #7f6a63;
+			}
+
+			.empty {
+				border: 2px dashed #ecd3c4;
+				border-radius: 18px;
+				padding: 22px;
+				color: var(--ink-soft);
+				text-align: center;
+				background: rgba(255, 255, 255, 0.7);
+			}
+
+			.entry-list {
+				display: grid;
+				gap: 10px;
+			}
+
+			.entry {
+				border: 1px solid #ead4c7;
+				border-radius: 16px;
+				background: #fffdfa;
+				padding: 12px;
+				animation: slideIn 0.26s ease;
+			}
+
+			@keyframes slideIn {
+				from {
+					opacity: 0;
+					transform: translateY(10px) scale(0.99);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0) scale(1);
+				}
+			}
+
+			.entry-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 8px;
+			}
+
+			.whisky-name {
+				margin: 0;
+				font-size: 1.02rem;
+			}
+
+			.meta {
+				margin-top: 2px;
+				font-size: 0.83rem;
+				color: var(--ink-soft);
+			}
+
+			.delete {
+				background: #fff3ef;
+				color: #a55744;
+				border: 1px solid #f1c8bc;
+				padding: 6px 9px;
+			}
+
+			.notes {
+				display: grid;
+				gap: 6px;
+				margin-top: 9px;
+			}
+
+			.note {
+				background: #fff8ec;
+				border: 1px solid #f5e2bf;
+				border-radius: 10px;
+				padding: 8px;
+				font-size: 0.9rem;
+			}
+
+			.note b {
+				font-family: "Gaegu", cursive;
+				font-size: 1.05rem;
+				margin-right: 4px;
+			}
+
+			.traits {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+				margin-top: 8px;
+			}
+
+			.trait-chip {
+				background: #fff7e9;
+				border: 1px solid #f1d9b5;
+				color: #7a594b;
+				padding: 6px 10px;
+				border-radius: 999px;
+				font-size: 0.78rem;
+				line-height: 1;
+			}
+
+			.trait-chip.active {
+				background: #ffd8c2;
+				border-color: #ffb691;
+				color: #5d3629;
+				font-weight: 700;
+			}
+
+			@media (max-width: 900px) {
+				.grid {
+					grid-template-columns: 1fr;
+				}
+
+				.form-panel,
+				.list-panel {
+					padding: 16px;
+				}
+
+				.hero {
+					padding: 20px;
+				}
+
+				.list-head {
+					align-items: flex-start;
+				}
+
+				.list-tools {
+					justify-content: flex-start;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app" class="shell">
+			<header class="hero">
+				<h1 class="title">위스키 한 모금 기록장</h1>
+				<p class="subtitle">오늘 마신 잔의 향, 맛, 피니시를 귀엽게 모아보자.</p>
+			</header>
+
+			<main class="grid">
+				<section class="panel form-panel">
+					<h2 class="panel-title">시음 노트 쓰기</h2>
+					<form @submit.prevent="addEntry">
+						<div class="row">
+							<label for="date">마신 날</label>
+							<input id="date" v-model="form.date" type="date" required />
+						</div>
+
+						<div class="row">
+							<label for="place">장소</label>
+							<input id="place" v-model.trim="form.place" type="text" placeholder="예: 집, 바, 여행지" />
+						</div>
+
+						<div class="row">
+							<label for="whisky">위스키 이름</label>
+							<input id="whisky" v-model.trim="form.whisky" type="text" placeholder="예: 글렌리벳 12" required />
+						</div>
+
+						<div class="row">
+							<label for="nose">향 (Nose)</label>
+							<textarea id="nose" v-model.trim="form.nose" placeholder="예: 꿀, 사과, 바닐라"></textarea>
+							<div class="traits">
+								<button
+									type="button"
+									class="trait-chip"
+									:class="{ active: isTraitSelected('nose', trait) }"
+									v-for="trait in traitCatalog.nose"
+									:key="`nose-${trait}`"
+									@click="toggleTrait('nose', trait)"
+								>
+									{{ trait }}
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
+							<label for="palate">맛 (Palate)</label>
+							<textarea id="palate" v-model.trim="form.palate" placeholder="예: 몰트 단맛, 시나몬, 약한 스모크"></textarea>
+							<div class="traits">
+								<button
+									type="button"
+									class="trait-chip"
+									:class="{ active: isTraitSelected('palate', trait) }"
+									v-for="trait in traitCatalog.palate"
+									:key="`palate-${trait}`"
+									@click="toggleTrait('palate', trait)"
+								>
+									{{ trait }}
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
+							<label for="finish">피니시 (Finish)</label>
+							<textarea id="finish" v-model.trim="form.finish" placeholder="예: 길고 따뜻함, 오크 향 lingering"></textarea>
+							<div class="traits">
+								<button
+									type="button"
+									class="trait-chip"
+									:class="{ active: isTraitSelected('finish', trait) }"
+									v-for="trait in traitCatalog.finish"
+									:key="`finish-${trait}`"
+									@click="toggleTrait('finish', trait)"
+								>
+									{{ trait }}
+								</button>
+							</div>
+						</div>
+
+						<div class="row">
+							<label for="memo">기타 메모</label>
+							<textarea id="memo" v-model.trim="form.memo" placeholder="그날 기분, 페어링 음식, 가격 등"></textarea>
+						</div>
+
+						<div class="actions">
+							<button class="btn-add" type="submit">기록 추가</button>
+							<button class="btn-reset" type="button" @click="resetForm">초기화</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="panel list-panel">
+					<div class="list-head">
+						<h2 class="panel-title" style="margin: 0">내 시음 기록</h2>
+						<div class="list-tools">
+							<span class="count-chip">총 {{ entries.length }}잔</span>
+							<button class="tool-btn" type="button" @click="exportEntries">백업 내보내기</button>
+							<button class="tool-btn" type="button" @click="openImport">백업 불러오기</button>
+						</div>
+					</div>
+
+					<p class="storage-status">저장 방식: IndexedDB (이 브라우저) · 다른 기기 이전은 JSON 백업 사용</p>
+					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
+
+					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
+
+					<div v-else class="entry-list">
+						<article class="entry" v-for="entry in sortedEntries" :key="entry.id">
+							<div class="entry-top">
+								<div>
+									<h3 class="whisky-name">{{ entry.whisky }}</h3>
+									<p class="meta">{{ entry.date }} · {{ entry.place || "장소 미입력" }}</p>
+								</div>
+								<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
+							</div>
+
+							<div class="notes">
+								<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
+								<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
+								<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
+								<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
+							</div>
+						</article>
+					</div>
+				</section>
+			</main>
+		</div>
+
+		<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+		<script>
+			const DB_NAME = "whisky-journal-db";
+			const DB_VERSION = 1;
+			const STORE_NAME = "journal";
+			const ENTRIES_KEY = "entries";
+
+			function openDatabase() {
+				return new Promise((resolve, reject) => {
+					const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+					request.onerror = () => reject(request.error);
+					request.onupgradeneeded = () => {
+						const db = request.result;
+						if (!db.objectStoreNames.contains(STORE_NAME)) {
+							db.createObjectStore(STORE_NAME);
+						}
+					};
+					request.onsuccess = () => resolve(request.result);
+				});
+			}
+
+			async function readEntriesFromDb() {
+				const db = await openDatabase();
+				return new Promise((resolve, reject) => {
+					const tx = db.transaction(STORE_NAME, "readonly");
+					const store = tx.objectStore(STORE_NAME);
+					const request = store.get(ENTRIES_KEY);
+
+					request.onerror = () => reject(request.error);
+					request.onsuccess = () => {
+						const value = request.result;
+						resolve(Array.isArray(value) ? value : []);
+					};
+
+					tx.oncomplete = () => db.close();
+					tx.onerror = () => db.close();
+				});
+			}
+
+			async function writeEntriesToDb(entries) {
+				const db = await openDatabase();
+				return new Promise((resolve, reject) => {
+					const tx = db.transaction(STORE_NAME, "readwrite");
+					const store = tx.objectStore(STORE_NAME);
+					store.put(entries, ENTRIES_KEY);
+
+					tx.oncomplete = () => {
+						db.close();
+						resolve();
+					};
+					tx.onerror = () => {
+						db.close();
+						reject(tx.error);
+					};
+				});
+			}
+
+			const { createApp } = Vue;
+
+			createApp({
+				data() {
+					return {
+						traitCatalog: {
+							nose: ["바닐라", "꿀", "사과", "배", "시트러스", "건포도", "오크", "스모크", "꽃향", "견과류"],
+							palate: ["달콤함", "몰트", "카라멜", "초콜릿", "스파이스", "시나몬", "과일", "스모키", "짭짤함", "오일리"],
+							finish: ["짧음", "중간", "김", "따뜻함", "드라이", "오크", "스파이시", "스모키", "달콤한 여운", "깔끔함"]
+						},
+						form: {
+							date: "",
+							place: "",
+							whisky: "",
+							nose: "",
+							palate: "",
+							finish: "",
+							memo: ""
+						},
+						entries: []
+					};
+				},
+				computed: {
+					sortedEntries() {
+						return [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
+					}
+				},
+				async mounted() {
+					try {
+						this.entries = await readEntriesFromDb();
+					} catch {
+						this.entries = [];
+					}
+				},
+				methods: {
+					parseTraits(text) {
+						return text
+							.split(",")
+							.map((item) => item.trim())
+							.filter(Boolean);
+					},
+					isTraitSelected(field, trait) {
+						return this.parseTraits(this.form[field]).includes(trait);
+					},
+					toggleTrait(field, trait) {
+						const list = this.parseTraits(this.form[field]);
+						const hasTrait = list.includes(trait);
+
+						this.form[field] = hasTrait
+							? list.filter((item) => item !== trait).join(", ")
+							: [...list, trait].join(", ");
+					},
+					async addEntry() {
+						if (!this.form.date || !this.form.whisky) {
+							return;
+						}
+
+						this.entries.push({
+							id: crypto.randomUUID(),
+							date: this.form.date,
+							place: this.form.place,
+							whisky: this.form.whisky,
+							nose: this.form.nose,
+							palate: this.form.palate,
+							finish: this.form.finish,
+							memo: this.form.memo
+						});
+
+						await this.persist();
+						this.resetForm();
+					},
+					async removeEntry(id) {
+						this.entries = this.entries.filter((entry) => entry.id !== id);
+						await this.persist();
+					},
+					openImport() {
+						this.$refs.importInput.click();
+					},
+					exportEntries() {
+						const payload = {
+							version: 1,
+							exportedAt: new Date().toISOString(),
+							entries: this.entries
+						};
+						const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+						const url = URL.createObjectURL(blob);
+						const a = document.createElement("a");
+						a.href = url;
+						a.download = `whisky-journal-backup-${new Date().toISOString().slice(0, 10)}.json`;
+						a.click();
+						URL.revokeObjectURL(url);
+					},
+					async importEntries(event) {
+						const [file] = event.target.files || [];
+						if (!file) {
+							return;
+						}
+
+						try {
+							const text = await file.text();
+							const parsed = JSON.parse(text);
+							const incoming = Array.isArray(parsed) ? parsed : parsed.entries;
+
+							if (!Array.isArray(incoming)) {
+								alert("백업 파일 형식이 올바르지 않아요.");
+								return;
+							}
+
+							this.entries = incoming.map((entry) => ({
+								id: entry.id || crypto.randomUUID(),
+								date: entry.date || "",
+								place: entry.place || "",
+								whisky: entry.whisky || "",
+								nose: entry.nose || "",
+								palate: entry.palate || "",
+								finish: entry.finish || "",
+								memo: entry.memo || ""
+							}));
+
+							await this.persist();
+						} catch {
+							alert("백업 파일을 읽지 못했어요. JSON 파일인지 확인해 주세요.");
+						} finally {
+							event.target.value = "";
+						}
+					},
+					resetForm() {
+						this.form = {
+							date: "",
+							place: "",
+							whisky: "",
+							nose: "",
+							palate: "",
+							finish: "",
+							memo: ""
+						};
+					},
+					async persist() {
+						await writeEntriesToDb(this.entries);
+					}
+				}
+			}).mount("#app");
+		</script>
+	</body>
+</html>
