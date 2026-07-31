@@ -121,13 +121,16 @@
 				border: 1px solid rgba(116, 83, 66, 0.18);
 				background: linear-gradient(180deg, rgba(255, 248, 238, 0.94), rgba(239, 221, 193, 0.92));
 				color: var(--ink-soft);
-				padding: 10px 14px;
+				padding: 8px 11px;
 				border-radius: 999px;
 				font-family: "Noto Serif KR", serif;
 				font-weight: 600;
-				font-size: 1.08rem;
+				font-size: 0.96rem;
 				letter-spacing: 0.01em;
 				text-align: center;
+				white-space: nowrap;
+				line-height: 1.1;
+				flex-shrink: 0;
 				backdrop-filter: blur(8px);
 				box-shadow:
 					inset 0 1px 0 rgba(255, 255, 255, 0.72),
@@ -335,11 +338,24 @@
 				right: 8px;
 				top: calc(100% + 6px);
 				z-index: 20;
-				background: rgba(255, 252, 247, 0.98);
-				border: 1px solid #efcfbf;
-				border-radius: 12px;
-				padding: 8px;
-				box-shadow: 0 10px 22px rgba(82, 56, 46, 0.16);
+				background: rgba(255, 251, 245, 0.98);
+				border: 1px solid #ebc8b8;
+				border-radius: 14px;
+				padding: 10px;
+				box-shadow: 0 14px 28px rgba(82, 56, 46, 0.2);
+				animation: layerPop 0.16s ease-out;
+				transform-origin: top center;
+			}
+
+			@keyframes layerPop {
+				from {
+					opacity: 0;
+					transform: translateY(-4px) scale(0.98);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0) scale(1);
+				}
 			}
 
 			.layer-title {
@@ -363,13 +379,13 @@
 
 			.layer-item-name {
 				margin: 0;
-				font-size: 0.84rem;
+				font-size: 0.82rem;
 				font-weight: 700;
 			}
 
 			.layer-item-meta {
-				margin: 2px 0 0;
-				font-size: 0.75rem;
+				margin: 3px 0 0;
+				font-size: 0.76rem;
 				color: #765c52;
 			}
 
@@ -732,7 +748,20 @@
 				}
 
 				.tab-nav {
-					flex-wrap: wrap;
+					flex-wrap: nowrap;
+					overflow-x: auto;
+					justify-content: flex-start;
+					padding-bottom: 10px;
+					scrollbar-width: thin;
+				}
+
+				.tab-nav::-webkit-scrollbar {
+					height: 6px;
+				}
+
+				.tab-nav::-webkit-scrollbar-thumb {
+					background: rgba(127, 92, 69, 0.35);
+					border-radius: 999px;
 				}
 
 				.form-top-grid {
@@ -760,8 +789,11 @@
 				}
 
 				.day-layer {
-					position: static;
+					position: absolute;
+					left: 4px;
+					right: 4px;
 					margin-top: 6px;
+					top: calc(100% + 4px);
 				}
 			}
 		</style>
@@ -1057,8 +1089,7 @@
 								<div class="layer-list">
 									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id">
 										<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
-										<p class="layer-item-meta">{{ entry.category || "종류 미입력" }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
-										<p class="layer-item-meta">{{ entry.place || "장소 미입력" }}</p>
+										<p class="layer-item-meta">{{ entry.drinker || "마신 사람 미입력" }}</p>
 									</div>
 								</div>
 							</div>
