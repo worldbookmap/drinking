@@ -1,9 +1,22 @@
 [
   {
+    "id": "a1277bda-a7f2-4d0b-b88b-fa0973b8e209",
+    "date": "2026-07-30",
+    "place": "집",
+    "whisky": "아란 아마로네 캐스크 피니쉬",
+    "imageUrl": "https://d1e2y5wc27crnp.cloudfront.net/media/smartorder_reservation/product/thumbnail/7d1b5f26-ddf7-48e5-967a-ca655725ff6a.webp",
+    "caskType": "기타(아마로네 캐스크 피니쉬)",
+    "nose": "꿀, 건포도",
+    "palate": "스파이스, 달콤함, 건포도, 과일",
+    "finish": "중간, 드라이, 스파이시",
+    "memo": "소주, 맥주, 와인, 진까지 마시고 마지막 잔이라 기억이 잘 안나지만, 묵직하게 맛있게 익었다."
+  },
+  {
     "id": "f178cfde-6624-489f-a63b-31f053ab2ecc",
     "date": "2026-07-17",
     "place": "집",
     "whisky": "벤로막",
+    "imageUrl": "",
     "caskType": "올로로소, ex버번",
     "nose": "꿀, 바닐라, 건포도, 스모크",
     "palate": "카라멜, 초콜릿",
