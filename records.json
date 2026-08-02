@@ -1,5 +1,19 @@
 [
   {
+    "id": "b09f8ca7-612a-4577-a8da-07a91db95912",
+    "date": "2026-08-02",
+    "place": "집",
+    "drinker": "진욱",
+    "whisky": "모엣 샹동",
+    "category": "스파클링",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260802104039-image-5asvgc.webp",
+    "caskType": "",
+    "nose": "서양배, 시트러스, 아주 약한 빵향, 복숭아",
+    "palate": "탄산, 드라이",
+    "finish": "중간, 드라이, 오크",
+    "memo": "페어링: 감자튀김 시오콘부 버터 볶음, 아보카도, 빵\n지선이 회복 후 와인 마시고 싶다고 찡찡"
+  },
+  {
     "id": "e38ce13a-8658-4527-bccb-0eaef1634e6a",
     "date": "2026-07-31",
     "place": "집",
