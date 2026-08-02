@@ -1360,6 +1360,9 @@
 			const WRITE_TAB_ORDER = ["whisky", "wine", "tea"];
 			const WINE_COUNTRY_OPTIONS = ["프랑스", "스페인", "포르투칼", "조지아", "미국", "칠레", "아르헨티나", "호주", "기타 직접입력"];
 			const TEA_SUBCATEGORY_OPTIONS = ["육보차", "고수차", "무이암차", "보이차", "단총"];
+			const WINE_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.wine.categoryOptions);
+			const TEA_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.tea.categoryOptions);
+			const TEA_SUBCATEGORY_SET = new Set(TEA_SUBCATEGORY_OPTIONS);
 
 			function formatDateKey(year, monthIndex, day) {
 				const month = String(monthIndex + 1).padStart(2, "0");
@@ -1386,8 +1389,41 @@
 				return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 			}
 
+			function hasText(value) {
+				return Boolean(String(value || "").trim());
+			}
+
+			function inferLegacyDrinkCategory(entry) {
+				const category = String(entry?.category || "").trim();
+				const detailLabel = String(entry?.detailLabel || "").trim();
+				const caskType = String(entry?.caskType || "").trim();
+
+				if (hasText(entry?.wineCountry) || hasText(entry?.wineCountryCustom) || detailLabel === "국가") {
+					return "wine";
+				}
+
+				if (hasText(entry?.teaSubcategory) || detailLabel === "하위카테고리" || TEA_SUBCATEGORY_SET.has(caskType)) {
+					return "tea";
+				}
+
+				if (WINE_CATEGORY_SET.has(category)) {
+					return "wine";
+				}
+
+				if (TEA_CATEGORY_SET.has(category)) {
+					return "tea";
+				}
+
+				return "whisky";
+			}
+
 			function getEntryDrinkCategory(entry) {
-				return entry?.drinkCategory || entry?.drinkType || "whisky";
+				const explicit = String(entry?.drinkCategory || entry?.drinkType || "").trim();
+				if (explicit === "whisky" || explicit === "wine" || explicit === "tea") {
+					return explicit;
+				}
+
+				return inferLegacyDrinkCategory(entry);
 			}
 
 			function getDrinkTypeLabel(drinkType) {
