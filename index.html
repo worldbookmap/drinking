@@ -244,6 +244,10 @@
 				gap: 0 12px;
 			}
 
+			.form-top-grid > * {
+				min-width: 0;
+			}
+
 			label {
 				font-size: 0.88rem;
 				font-family: "Noto Serif KR", serif;
@@ -255,6 +259,8 @@
 			textarea,
 			select {
 				width: 100%;
+				max-width: 100%;
+				min-width: 0;
 				border: 1px solid rgba(146, 113, 92, 0.24);
 				border: 1px solid rgba(104, 96, 90, 0.18);
 				border-radius: 12px;
@@ -1183,7 +1189,7 @@
 							<button class="entry-summary" type="button" @click="toggleExpanded(entry.id)">
 								<div>
 									<h3 class="whisky-name">{{ entry.whisky }}</h3>
-									<p class="meta">{{ getDrinkTypeLabel(entry.drinkType) }} · {{ entry.date || "날짜 미입력" }}</p>
+									<p class="meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.date || "날짜 미입력" }}</p>
 								</div>
 								<span class="expand-indicator">{{ isExpanded(entry.id) ? "접기" : "자세히" }}</span>
 							</button>
@@ -1274,7 +1280,7 @@
 								<div class="layer-list">
 									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id" @click.stop="openRecordFromCalendar(entry.id)">
 										<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
-										<p class="layer-item-meta">{{ getDrinkTypeLabel(entry.drinkType) }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
+										<p class="layer-item-meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
 									</div>
 								</div>
 							</div>
@@ -1380,6 +1386,10 @@
 				return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 			}
 
+			function getEntryDrinkCategory(entry) {
+				return entry?.drinkCategory || entry?.drinkType || "whisky";
+			}
+
 			function getDrinkTypeLabel(drinkType) {
 				return WRITE_TAB_CONFIGS[drinkType]?.label || WRITE_TAB_CONFIGS.whisky.label;
 			}
@@ -1389,7 +1399,7 @@
 					return entry.detailLabel;
 				}
 
-				return WRITE_TAB_CONFIGS[entry?.drinkType || "whisky"]?.extraLabel || WRITE_TAB_CONFIGS.whisky.extraLabel;
+				return WRITE_TAB_CONFIGS[getEntryDrinkCategory(entry)]?.extraLabel || WRITE_TAB_CONFIGS.whisky.extraLabel;
 			}
 
 			function getDrinkDetailValue(entry) {
@@ -1397,15 +1407,17 @@
 					return entry.detailValue;
 				}
 
-				if ((entry?.drinkType || "whisky") === "whisky") {
+				const drinkCategory = getEntryDrinkCategory(entry);
+
+				if (drinkCategory === "whisky") {
 					return entry?.caskType || "";
 				}
 
-				if ((entry?.drinkType || "whisky") === "wine") {
+				if (drinkCategory === "wine") {
 					return entry?.wineCountryCustom || entry?.wineCountry || "";
 				}
 
-				if ((entry?.drinkType || "whisky") === "tea") {
+				if (drinkCategory === "tea") {
 					return entry?.teaSubcategory || "";
 				}
 
@@ -1413,22 +1425,23 @@
 			}
 
 			function normalizeEntry(entry) {
-				const drinkType = entry.drinkType || "whisky";
+				const drinkCategory = getEntryDrinkCategory(entry);
 				return {
 					id: entry.id || crypto.randomUUID(),
 					date: entry.date || "",
 					place: entry.place || "",
 					drinker: entry.drinker || "",
 					whisky: entry.whisky || "",
-					drinkType,
+					drinkCategory,
+					drinkType: drinkCategory,
 					category: entry.category || "",
 					imageUrl: entry.imageUrl || "",
 					caskType: entry.caskType || "",
 					wineCountry: entry.wineCountry || "",
 					wineCountryCustom: entry.wineCountryCustom || "",
 					teaSubcategory: entry.teaSubcategory || "",
-					detailLabel: entry.detailLabel || getDrinkDetailLabel({ ...entry, drinkType }),
-					detailValue: entry.detailValue || getDrinkDetailValue({ ...entry, drinkType }),
+					detailLabel: entry.detailLabel || getDrinkDetailLabel({ ...entry, drinkCategory }),
+					detailValue: entry.detailValue || getDrinkDetailValue({ ...entry, drinkCategory }),
 					nose: entry.nose || "",
 					palate: entry.palate || "",
 					finish: entry.finish || "",
@@ -1594,7 +1607,7 @@
 						const drinkFilter = this.recordDrinkFilter;
 
 						return this.sortedEntries.filter((entry) => {
-							if (drinkFilter !== "all" && (entry.drinkType || "whisky") !== drinkFilter) {
+							if (drinkFilter !== "all" && this.getEntryDrinkCategory(entry) !== drinkFilter) {
 								return false;
 							}
 
@@ -1608,6 +1621,7 @@
 
 							const targets = [
 								entry.whisky,
+								entry.drinkCategory,
 								entry.drinkType,
 								entry.category,
 								entry.date,
@@ -1741,6 +1755,9 @@
 					}
 				},
 				methods: {
+					getEntryDrinkCategory(entry) {
+						return getEntryDrinkCategory(entry);
+					},
 					syncWriteTheme() {
 						document.body.classList.remove("theme-wine", "theme-tea", "theme-whisky");
 						document.body.classList.add(`theme-${this.activeWriteTab || "whisky"}`);
@@ -1978,6 +1995,7 @@
 							place: this.form.place,
 							drinker: this.form.drinker,
 							whisky: this.form.whisky,
+							drinkCategory: drinkType,
 							drinkType,
 							category: this.form.category,
 							imageUrl: this.form.imageUrl,
