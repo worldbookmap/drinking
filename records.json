@@ -21,6 +21,27 @@
     "memo": "페어링: 감자튀김 시오콘부 버터 볶음, 아보카도, 빵\n지선이 회복 후 와인 마시고 싶다고 찡찡"
   },
   {
+    "id": "921a49dd-9f1d-4e9a-9762-489afaf8ca77",
+    "date": "2026-08-02",
+    "place": "집",
+    "drinker": "지선",
+    "whisky": "육보차",
+    "drinkCategory": "tea",
+    "drinkType": "tea",
+    "category": "흑차",
+    "imageUrl": "",
+    "caskType": "",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "육보차",
+    "detailLabel": "하위카테고리",
+    "detailValue": "육보차",
+    "nose": "나무향, 꽃향",
+    "palate": "단맛, 묵직함",
+    "finish": "김, 달큰함, 여운",
+    "memo": ""
+  },
+  {
     "id": "e38ce13a-8658-4527-bccb-0eaef1634e6a",
     "date": "2026-07-31",
     "place": "집",
