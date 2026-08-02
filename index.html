@@ -326,7 +326,7 @@
 			.calendar-head {
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
+				justify-content: flex-end;
 				gap: 10px;
 				margin-bottom: 12px;
 			}
@@ -426,23 +426,44 @@
 				display: inline-flex;
 			}
 
-			.day-layer {
-				position: absolute;
-				left: 50%;
-				width: min(260px, calc(100vw - 36px));
-				transform: translateX(-50%);
-				bottom: calc(100% + 6px);
-				z-index: 20;
-				background: rgba(255, 251, 245, 0.98);
+			.calendar-modal-backdrop {
+				position: fixed;
+				inset: 0;
+				z-index: 90;
+				background: rgba(24, 23, 22, 0.32);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 14px;
+			}
+
+			.calendar-modal {
+				width: min(380px, calc(100vw - 28px));
 				background: rgba(248, 245, 239, 0.98);
 				border: 1px solid rgba(102, 95, 88, 0.16);
 				border-radius: 16px;
 				padding: 12px;
-				box-shadow: 0 14px 28px rgba(60, 55, 50, 0.14);
+				box-shadow: 0 14px 28px rgba(60, 55, 50, 0.24);
 				animation: layerPop 0.16s ease-out;
-				transform-origin: bottom center;
-				max-height: min(320px, 58vh);
+				max-height: min(460px, 72vh);
 				overflow-y: auto;
+			}
+
+			.calendar-modal-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				margin-bottom: 8px;
+			}
+
+			.modal-close {
+				border: 1px solid rgba(120, 110, 101, 0.22);
+				background: rgba(255, 252, 247, 0.9);
+				border-radius: 999px;
+				padding: 4px 10px;
+				font-size: 0.86rem;
+				line-height: 1;
 			}
 
 			@keyframes layerPop {
@@ -939,15 +960,13 @@
 					min-height: 76px;
 				}
 
-				.day-layer {
-					position: absolute;
-					left: 50%;
-					width: min(250px, calc(100vw - 28px));
-					transform: translateX(-50%);
-					margin-top: 6px;
-					bottom: calc(100% + 4px);
-					max-height: min(300px, 56vh);
-					padding: 11px;
+				.calendar-modal-backdrop {
+					padding: 10px;
+				}
+
+				.calendar-modal {
+					width: min(360px, calc(100vw - 20px));
+					max-height: min(520px, 80vh);
 				}
 
 				.layer-item-name {
@@ -997,8 +1016,7 @@
 								<label for="drinker">마신 사람</label>
 								<select id="drinker" v-model="form.drinker" required>
 									<option value="" disabled>선택해 주세요</option>
-									<option value="진욱">진욱</option>
-									<option value="지선">지선</option>
+									<option v-for="drinker in drinkerOptions" :key="drinker" :value="drinker">{{ drinker }}</option>
 								</select>
 							</div>
 
@@ -1223,7 +1241,7 @@
 												@error="onBottleImageError"
 											/>
 										</div>
-										<div class="notes">
+										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
 												<p class="note"><b>종류</b>{{ entry.category || "기록 없음" }}</p>
 												<p class="note"><b>마신 사람</b>{{ entry.drinker || "기록 없음" }}</p>
@@ -1235,8 +1253,89 @@
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
 											<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
 										</div>
+										<div class="notes" v-else>
+											<div class="notes-top-grid">
+												<div class="row" style="margin: 0">
+													<label>마신 날</label>
+													<input v-model="editForm.date" type="date" required />
+												</div>
+												<div class="row" style="margin: 0">
+													<label>마신 사람</label>
+													<select v-model="editForm.drinker" required>
+														<option value="" disabled>선택해 주세요</option>
+														<option v-for="drinker in drinkerOptions" :key="`edit-${drinker}`" :value="drinker">{{ drinker }}</option>
+													</select>
+												</div>
+												<div class="row" style="margin: 0">
+													<label>음료</label>
+													<select v-model="editForm.drinkCategory">
+														<option v-for="type in writeTabOrder" :key="`edit-type-${type}`" :value="type">{{ getDrinkTypeLabel(type) }}</option>
+													</select>
+												</div>
+												<div class="row" style="margin: 0">
+													<label>{{ editWriteConfig.categoryLabel }}</label>
+													<select v-model="editForm.category" required>
+														<option value="" disabled>선택해 주세요</option>
+														<option v-for="option in editWriteConfig.categoryOptions" :key="`edit-category-${option}`" :value="option">{{ option }}</option>
+													</select>
+												</div>
+											</div>
+											<div class="row" style="margin: 0">
+												<label>{{ editWriteConfig.nameLabel }}</label>
+												<input v-model.trim="editForm.whisky" type="text" :placeholder="editWriteConfig.namePlaceholder" required />
+											</div>
+											<div class="row" style="margin: 0">
+												<label>장소</label>
+												<input v-model.trim="editForm.place" type="text" placeholder="예: 집, 바, 여행지" />
+											</div>
+											<div class="row" style="margin: 0">
+												<label>{{ editWriteConfig.label }} 사진 URL</label>
+												<input v-model.trim="editForm.imageUrl" type="url" placeholder="https://..." />
+											</div>
+											<div v-if="editForm.drinkCategory === 'whisky'" class="row" style="margin: 0">
+												<label>숙성 캐스크 타입</label>
+												<textarea v-model.trim="editForm.caskType" placeholder="예: ex버번, 올로로소"></textarea>
+											</div>
+											<div v-else-if="editForm.drinkCategory === 'wine'" class="row" style="margin: 0">
+												<label>국가</label>
+												<select v-model="editForm.wineCountry" required>
+													<option value="" disabled>선택해 주세요</option>
+													<option v-for="country in wineCountryOptions" :key="`edit-country-${country}`" :value="country">{{ country }}</option>
+												</select>
+												<input
+													v-if="editForm.wineCountry === '기타 직접입력'"
+													v-model.trim="editForm.wineCountryCustom"
+													type="text"
+													placeholder="국가를 직접 입력해 주세요"
+												/>
+											</div>
+											<div v-else class="row" style="margin: 0">
+												<label>하위카테고리</label>
+												<textarea v-model.trim="editForm.teaSubcategory" placeholder="예: 육보차, 보이차"></textarea>
+											</div>
+											<p class="note" style="margin-top: 8px"><b>{{ getEntryDetailLabel(editForm) }}</b>{{ getEntryDetailValue(editForm) || "기록 없음" }}</p>
+											<div class="row" style="margin: 0">
+												<label>향</label>
+												<textarea v-model.trim="editForm.nose" placeholder="예: 꿀, 사과, 바닐라"></textarea>
+											</div>
+											<div class="row" style="margin: 0">
+												<label>맛</label>
+												<textarea v-model.trim="editForm.palate" placeholder="예: 몰트 단맛, 시나몬"></textarea>
+											</div>
+											<div class="row" style="margin: 0">
+												<label>피니시</label>
+												<textarea v-model.trim="editForm.finish" placeholder="예: 중간, 따뜻함"></textarea>
+											</div>
+											<div class="row" style="margin: 0">
+												<label>메모</label>
+												<textarea v-model.trim="editForm.memo" placeholder="느낌, 페어링, 다음에 마실 때 참고할 점"></textarea>
+											</div>
+										</div>
 									</div>
 									<div class="detail-actions">
+										<button v-if="editingEntryId !== entry.id" class="tool-btn small" type="button" @click="startEditEntry(entry)">수정</button>
+										<button v-else class="tool-btn small" type="button" @click="saveEditedEntry(entry.id)">저장</button>
+										<button v-if="editingEntryId === entry.id" class="tool-btn small" type="button" @click="cancelEditEntry">취소</button>
 										<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
 									</div>
 								</div>
@@ -1256,7 +1355,6 @@
 
 				<section class="panel calendar-panel" v-if="activeTab === 'calendar'">
 					<div class="calendar-head">
-						<h2 class="panel-title" style="margin: 0">달력으로 보는 시음 기록</h2>
 						<div class="calendar-nav">
 							<button class="tool-btn small" type="button" @click="moveCalendarMonth(-1)">이전 달</button>
 							<button class="tool-btn small" type="button" @click="goToCurrentMonth">이번 달</button>
@@ -1279,14 +1377,12 @@
 							]"
 							v-for="cell in calendarCells"
 							:key="cell.dateKey"
-							@mouseenter="openCalendarLayer(cell.dateKey)"
-							@mouseleave="closeCalendarLayer(cell.dateKey)"
 						>
 							<button
 								type="button"
 								class="entry-summary"
 								style="padding: 0; align-items: flex-start"
-								@click="toggleCalendarLayer(cell.dateKey)"
+								@click="openCalendarModal(cell.dateKey)"
 							>
 								<div class="day-top">
 									<span class="day-number">{{ cell.day }}</span>
@@ -1295,20 +1391,25 @@
 									</span>
 								</div>
 							</button>
+						</div>
+					</div>
 
-							<div class="day-layer" v-if="activeCalendarKey === cell.dateKey && cell.entries.length">
-								<p class="layer-title">{{ cell.dateKey }} 시음 기록</p>
-								<div class="layer-list">
-									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id" @click.stop="openRecordFromCalendar(entry.id)">
-										<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
-										<p class="layer-item-meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
-									</div>
+					<div class="calendar-modal-backdrop" v-if="activeCalendarEntries.length" @click="closeCalendarModal">
+						<div class="calendar-modal" @click.stop>
+							<div class="calendar-modal-head">
+								<p class="layer-title" style="margin: 0">{{ activeCalendarKey }} 시음 기록</p>
+								<button class="modal-close" type="button" @click="closeCalendarModal">X</button>
+							</div>
+							<div class="layer-list">
+								<div class="layer-item" v-for="entry in activeCalendarEntries" :key="entry.id" @click="openRecordFromCalendar(entry.id)">
+									<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
+									<p class="layer-item-meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<p class="sync-status" style="margin-top: 12px">날짜 위에 마우스를 올리거나 클릭하면 해당 날짜의 시음 내용이 보여요.</p>
+					<p class="sync-status" style="margin-top: 12px">날짜를 클릭하면 해당 날짜의 시음 내용이 중앙에 보여요.</p>
 				</section>
 			</main>
 		</div>
@@ -1379,6 +1480,7 @@
 				}
 			};
 			const WRITE_TAB_ORDER = ["whisky", "wine", "tea"];
+			const DRINKER_OPTIONS = ["진욱", "지선", "함께"];
 			const WINE_COUNTRY_OPTIONS = ["프랑스", "스페인", "포르투칼", "조지아", "미국", "칠레", "아르헨티나", "호주", "기타 직접입력"];
 			const TEA_SUBCATEGORY_OPTIONS = ["육보차", "고수차", "무이암차", "보이차", "단총"];
 			const WINE_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.wine.categoryOptions);
@@ -1621,14 +1723,15 @@
 						},
 						entries: [],
 						activeEntryId: null,
+						editingEntryId: null,
+						editForm: null,
 						activeTab: "records",
 						recordDrinkFilter: "all",
 						searchQuery: "",
 						selectedRecordMonth: "",
 						weekLabels: WEEK_LABELS,
 						calendarMonthKey: getCurrentMonthKey(),
-						calendarHoverKey: "",
-						calendarPinnedKey: "",
+						activeCalendarKey: "",
 						isSaving: false,
 						isImageUploading: false,
 						lastCommitSha: "",
@@ -1652,8 +1755,18 @@
 					wineCountryOptions() {
 						return WINE_COUNTRY_OPTIONS;
 					},
+					drinkerOptions() {
+						return DRINKER_OPTIONS;
+					},
+					writeTabOrder() {
+						return WRITE_TAB_ORDER;
+					},
 					teaSubcategoryOptions() {
 						return TEA_SUBCATEGORY_OPTIONS;
+					},
+					editWriteConfig() {
+						const drinkType = this.editForm?.drinkCategory || "whisky";
+						return WRITE_TAB_CONFIGS[drinkType] || WRITE_TAB_CONFIGS.whisky;
 					},
 					sortedEntries() {
 						return [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
@@ -1745,8 +1858,12 @@
 						const now = new Date();
 						return formatDateKey(now.getFullYear(), now.getMonth(), now.getDate());
 					},
-					activeCalendarKey() {
-						return this.calendarPinnedKey || this.calendarHoverKey;
+					activeCalendarEntries() {
+						if (!this.activeCalendarKey) {
+							return [];
+						}
+
+						return this.entriesByDate[this.activeCalendarKey] || [];
 					},
 					calendarCells() {
 						const [yearText, monthText] = String(this.calendarMonthKey || "").split("-");
@@ -1804,7 +1921,11 @@
 				},
 				async mounted() {
 					this.syncWriteTheme();
+					window.addEventListener("keydown", this.onGlobalKeydown);
 					await this.reloadFromRepo();
+				},
+				beforeUnmount() {
+					window.removeEventListener("keydown", this.onGlobalKeydown);
 				},
 				watch: {
 					activeWriteTab() {
@@ -1814,6 +1935,139 @@
 				methods: {
 					getEntryDrinkCategory(entry) {
 						return getEntryDrinkCategory(entry);
+					},
+					onGlobalKeydown(event) {
+						if (event.key !== "Escape") {
+							return;
+						}
+
+						if (this.activeCalendarEntries.length) {
+							this.closeCalendarModal();
+							return;
+						}
+
+						if (this.editingEntryId) {
+							this.cancelEditEntry();
+						}
+					},
+					buildEditForm(entry) {
+						const normalized = normalizeEntry(entry || {});
+						const detailValue = getDrinkDetailValue(normalized);
+						let caskType = normalized.caskType;
+						let wineCountry = normalized.wineCountry;
+						let wineCountryCustom = normalized.wineCountryCustom;
+						let teaSubcategory = normalized.teaSubcategory;
+
+						if (normalized.drinkCategory === "whisky" && !caskType && detailValue) {
+							caskType = detailValue;
+						}
+
+						if (normalized.drinkCategory === "wine" && !wineCountry && detailValue) {
+							if (WINE_COUNTRY_OPTIONS.includes(detailValue)) {
+								wineCountry = detailValue;
+							} else {
+								wineCountry = "기타 직접입력";
+								wineCountryCustom = detailValue;
+							}
+						}
+
+						if (normalized.drinkCategory === "tea" && !teaSubcategory && detailValue) {
+							teaSubcategory = detailValue;
+						}
+
+						return {
+							date: normalized.date,
+							place: normalized.place,
+							drinker: normalized.drinker,
+							whisky: normalized.whisky,
+							drinkCategory: normalized.drinkCategory,
+							category: normalized.category,
+							imageUrl: normalized.imageUrl,
+							caskType,
+							wineCountry,
+							wineCountryCustom,
+							teaSubcategory,
+							nose: normalized.nose,
+							palate: normalized.palate,
+							finish: normalized.finish,
+							memo: normalized.memo
+						};
+					},
+					startEditEntry(entry) {
+						if (!entry?.id) {
+							return;
+						}
+
+						this.editingEntryId = entry.id;
+						this.editForm = this.buildEditForm(entry);
+					},
+					cancelEditEntry() {
+						this.editingEntryId = null;
+						this.editForm = null;
+					},
+					saveEditedEntry(entryId) {
+						if (!entryId || this.editingEntryId !== entryId || !this.editForm) {
+							return;
+						}
+
+						if (!this.editForm.date || !this.editForm.whisky || !this.editForm.drinker || !this.editForm.category) {
+							this.showToast("error", "마신 날, 마신 사람, 이름, 종류를 입력해 주세요.");
+							return;
+						}
+
+						const drinkType = this.editForm.drinkCategory || "whisky";
+						const writeConfig = WRITE_TAB_CONFIGS[drinkType] || WRITE_TAB_CONFIGS.whisky;
+						if (!writeConfig.categoryOptions.includes(this.editForm.category)) {
+							this.showToast("error", `${writeConfig.categoryLabel} 선택해 주세요.`);
+							return;
+						}
+
+						let detailValue = "";
+						if (drinkType === "whisky") {
+							detailValue = this.editForm.caskType;
+						} else if (drinkType === "wine") {
+							detailValue = this.editForm.wineCountry === "기타 직접입력"
+								? this.editForm.wineCountryCustom.trim()
+								: this.editForm.wineCountry;
+							if (this.editForm.wineCountry === "기타 직접입력" && !detailValue) {
+								this.showToast("error", "기타 직접입력 국가를 적어 주세요.");
+								return;
+							}
+						} else if (drinkType === "tea") {
+							detailValue = this.editForm.teaSubcategory;
+						}
+
+						const index = this.entries.findIndex((entry) => entry.id === entryId);
+						if (index < 0) {
+							this.cancelEditEntry();
+							return;
+						}
+
+						const merged = {
+							...this.entries[index],
+							date: this.editForm.date,
+							place: this.editForm.place,
+							drinker: this.editForm.drinker,
+							whisky: this.editForm.whisky,
+							drinkCategory: drinkType,
+							drinkType: drinkType,
+							category: this.editForm.category,
+							imageUrl: this.editForm.imageUrl,
+							caskType: this.editForm.caskType,
+							wineCountry: this.editForm.wineCountry,
+							wineCountryCustom: this.editForm.wineCountryCustom,
+							teaSubcategory: this.editForm.teaSubcategory,
+							detailLabel: writeConfig.extraLabel,
+							detailValue,
+							nose: this.editForm.nose,
+							palate: this.editForm.palate,
+							finish: this.editForm.finish,
+							memo: this.editForm.memo
+						};
+
+						this.entries.splice(index, 1, normalizeEntry(merged));
+						this.cancelEditEntry();
+						this.showToast("success", "기록을 수정했어요.");
 					},
 					syncWriteTheme() {
 						document.body.classList.remove("theme-wine", "theme-tea", "theme-whisky");
@@ -1970,6 +2224,9 @@
 						return this.activeEntryId === id;
 					},
 					toggleExpanded(id) {
+						if (this.activeEntryId === id && this.editingEntryId === id) {
+							this.cancelEditEntry();
+						}
 						this.activeEntryId = this.activeEntryId === id ? null : id;
 					},
 					toggleTrait(field, trait) {
@@ -1982,37 +2239,26 @@
 					},
 					moveCalendarMonth(delta) {
 						this.calendarMonthKey = addMonthKey(this.calendarMonthKey, delta);
-						this.calendarHoverKey = "";
-						this.calendarPinnedKey = "";
+						this.activeCalendarKey = "";
 					},
 					goToCurrentMonth() {
 						this.calendarMonthKey = getCurrentMonthKey();
-						this.calendarHoverKey = "";
-						this.calendarPinnedKey = "";
+						this.activeCalendarKey = "";
 					},
-					openCalendarLayer(dateKey) {
+					openCalendarModal(dateKey) {
 						if (!dateKey) {
 							return;
 						}
-						this.calendarHoverKey = dateKey;
+
+						const hasEntries = (this.entriesByDate[dateKey] || []).length > 0;
+						if (!hasEntries) {
+							return;
+						}
+
+						this.activeCalendarKey = dateKey;
 					},
-					closeCalendarLayer(dateKey) {
-						if (!dateKey) {
-							return;
-						}
-						if (this.calendarPinnedKey === dateKey) {
-							return;
-						}
-						if (this.calendarHoverKey === dateKey) {
-							this.calendarHoverKey = "";
-						}
-					},
-					toggleCalendarLayer(dateKey) {
-						if (!dateKey) {
-							return;
-						}
-						this.calendarPinnedKey = this.calendarPinnedKey === dateKey ? "" : dateKey;
-						this.calendarHoverKey = dateKey;
+					closeCalendarModal() {
+						this.activeCalendarKey = "";
 					},
 					openRecordFromCalendar(entryId) {
 						if (!entryId) {
@@ -2026,8 +2272,7 @@
 						this.activeTab = "records";
 						this.searchQuery = "";
 						this.activeEntryId = entryId;
-						this.calendarPinnedKey = "";
-						this.calendarHoverKey = "";
+						this.activeCalendarKey = "";
 
 						this.$nextTick(() => {
 							const target = document.getElementById(`entry-${entryId}`);
@@ -2106,16 +2351,21 @@
 						if (this.activeEntryId === id) {
 							this.activeEntryId = null;
 						}
+						if (this.editingEntryId === id) {
+							this.cancelEditEntry();
+						}
 					},
 					async reloadFromRepo() {
 						try {
 							const loaded = await readEntriesFromRepo();
 							this.entries = loaded.map((entry) => normalizeEntry(entry));
 							this.activeEntryId = null;
+							this.cancelEditEntry();
 							this.syncMessage = "GitHub records.json 최신 내용을 불러왔어요.";
 						} catch {
 							this.entries = [];
 							this.activeEntryId = null;
+							this.cancelEditEntry();
 							this.syncMessage = "불러오기에 실패했어요. API 설정 또는 파일 형식을 확인해 주세요.";
 							alert("records.json 파일을 읽지 못했어요. 파일 형식을 확인해 주세요.");
 						}
@@ -2191,6 +2441,7 @@
 
 							this.entries = incoming.map((entry) => normalizeEntry(entry));
 							this.activeEntryId = null;
+							this.cancelEditEntry();
 							this.syncMessage = "로컬 JSON을 불러왔어요. GitHub에 저장 버튼으로 반영할 수 있어요.";
 
 						} catch {
