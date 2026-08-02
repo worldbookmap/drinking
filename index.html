@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>위스키 한 모금 기록장</title>
+		<title>향과 맛을 즐기자</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -12,18 +12,64 @@
 		/>
 		<style>
 			:root {
-				--bg-cream: #f6eddc;
-				--bg-peach: #c78f68;
-				--bg-mint: #8fa58c;
-				--bg-lemon: #d6b56f;
-				--ink: #34251f;
-				--ink-soft: #6b5850;
-				--card: rgba(255, 250, 245, 0.78);
-				--stroke: rgba(94, 66, 53, 0.18);
-				--accent: #b76d43;
-				--accent-strong: #7f4a35;
-				--chip: #e4cfaa;
-				--shadow: 0 18px 42px rgba(58, 40, 34, 0.14);
+				--bg-cream: #f4efe7;
+				--bg-peach: #8d7f73;
+				--bg-mint: #7f9187;
+				--bg-lemon: #a9a094;
+				--ink: #2d2a27;
+				--ink-soft: #6b665f;
+				--card: rgba(248, 245, 239, 0.82);
+				--stroke: rgba(73, 64, 59, 0.16);
+				--accent: #6f665f;
+				--accent-strong: #47413c;
+				--chip: #d8d2c8;
+				--shadow: 0 16px 34px rgba(53, 48, 44, 0.11);
+				--page-bg-1: radial-gradient(circle at 18% 14%, rgba(110, 105, 98, 0.14) 0 15%, transparent 27%);
+				--page-bg-2: radial-gradient(circle at 78% 20%, rgba(140, 132, 123, 0.12) 0 13%, transparent 24%);
+				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(96, 91, 84, 0.1) 0 11%, transparent 22%);
+				--page-bg-base: linear-gradient(145deg, #f7f4ef 0%, #efe9e0 36%, #e7e0d6 70%, #ddd6cb 100%);
+				--hero-overlay: linear-gradient(135deg, rgba(34, 32, 30, 0.68), rgba(82, 77, 71, 0.46), rgba(150, 145, 136, 0.16));
+				--hero-image: url("./uploads/bg.jpg");
+				--panel-bg: rgba(248, 245, 239, 0.86);
+				--panel-stroke: rgba(73, 64, 59, 0.16);
+				--hero-title: #f7f4ee;
+				--hero-subtitle: #e8e1d7;
+				--tab-active-bg: linear-gradient(135deg, #68615b, #4e4944, #8b8379);
+				--tab-active-shadow: 0 10px 22px rgba(88, 56, 40, 0.34);
+			}
+
+			body.theme-wine {
+				--page-bg-1: radial-gradient(circle at 18% 14%, rgba(159, 60, 47, 0.2) 0 15%, transparent 27%);
+				--page-bg-2: radial-gradient(circle at 78% 20%, rgba(115, 32, 27, 0.16) 0 13%, transparent 24%);
+				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(184, 121, 94, 0.14) 0 11%, transparent 22%);
+				--page-bg-base: linear-gradient(145deg, #f6ece8 0%, #ecd6d0 36%, #dfbbb2 70%, #d3a39a 100%);
+				--hero-overlay: linear-gradient(135deg, rgba(93, 20, 19, 0.72), rgba(141, 45, 41, 0.56), rgba(201, 124, 108, 0.18));
+				--hero-image: url("./uploads/bgwine.jpg");
+				--panel-bg: rgba(255, 245, 243, 0.84);
+				--panel-stroke: rgba(123, 53, 49, 0.18);
+				--hero-title: #fff6f1;
+				--hero-subtitle: #fde5dd;
+				--tab-active-bg: linear-gradient(135deg, #9c3d33, #7c2d2a, #c16557);
+				--tab-active-shadow: 0 10px 22px rgba(121, 50, 42, 0.34);
+				--accent: #9a5148;
+				--accent-strong: #6f312c;
+			}
+
+			body.theme-tea {
+				--page-bg-1: radial-gradient(circle at 20% 18%, rgba(18, 18, 18, 0.22) 0 13%, transparent 27%);
+				--page-bg-2: radial-gradient(circle at 78% 20%, rgba(36, 36, 36, 0.16) 0 11%, transparent 24%);
+				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(0, 0, 0, 0.12) 0 10%, transparent 22%);
+				--page-bg-base: linear-gradient(145deg, #f2f0eb 0%, #e6e1d9 38%, #d8d2c9 72%, #c9c2b8 100%);
+				--hero-overlay: linear-gradient(135deg, rgba(24, 24, 24, 0.84), rgba(52, 52, 52, 0.7), rgba(101, 101, 101, 0.34));
+				--hero-image: url("./uploads/bgtea.jpg");
+				--panel-bg: rgba(247, 246, 243, 0.88);
+				--panel-stroke: rgba(56, 54, 52, 0.18);
+				--hero-title: #f4f3ef;
+				--hero-subtitle: #d8d5cf;
+				--tab-active-bg: linear-gradient(135deg, #3b3a39, #242424, #5e5d5b);
+				--tab-active-shadow: 0 10px 22px rgba(26, 26, 26, 0.34);
+				--accent: #5b5956;
+				--accent-strong: #343230;
 			}
 
 			* {
@@ -36,10 +82,10 @@
 				font-family: "Gowun Dodum", sans-serif;
 				color: var(--ink);
 				background:
-					radial-gradient(circle at 14% 12%, rgba(183, 127, 83, 0.36) 0 16%, transparent 26%),
-					radial-gradient(circle at 82% 18%, rgba(120, 143, 108, 0.28) 0 14%, transparent 24%),
-					radial-gradient(circle at 76% 84%, rgba(171, 126, 66, 0.26) 0 12%, transparent 22%),
-					linear-gradient(145deg, #efe2cc 0%, #e8dac4 34%, #dccab2 68%, #d4c0a6 100%);
+					var(--page-bg-1),
+					var(--page-bg-2),
+					var(--page-bg-3),
+					var(--page-bg-base);
 				background-attachment: fixed;
 			}
 
@@ -51,12 +97,10 @@
 
 			.hero {
 				position: relative;
-				border: 1px solid rgba(246, 226, 205, 0.28);
+				border: 1px solid rgba(78, 70, 65, 0.12);
 				border-radius: 28px;
 				padding: 24px;
-				background-image:
-					linear-gradient(135deg, rgba(34, 22, 18, 0.7), rgba(58, 38, 30, 0.54), rgba(110, 73, 42, 0.28)),
-					url("./uploads/bg.jpg");
+				background-image: var(--hero-overlay), var(--hero-image);
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
@@ -68,7 +112,9 @@
 				content: "";
 				position: absolute;
 				inset: 0;
-				background: linear-gradient(180deg, rgba(255, 245, 231, 0.08), transparent 42%, rgba(31, 19, 16, 0.18));
+				background:
+					radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.08) 0 12%, transparent 26%),
+					linear-gradient(180deg, rgba(255, 249, 240, 0.12), transparent 45%, rgba(19, 17, 15, 0.22));
 				pointer-events: none;
 			}
 
@@ -83,15 +129,15 @@
 				font-size: clamp(2rem, 4vw, 3rem);
 				letter-spacing: 0.03em;
 				line-height: 1.1;
-				color: #fff9f2;
-				text-shadow: 0 3px 14px rgba(0, 0, 0, 0.38);
+				color: var(--hero-title);
+				text-shadow: 0 3px 14px rgba(0, 0, 0, 0.34);
 			}
 
 			.subtitle {
 				margin: 8px 0 0;
-				color: #ffeed6;
+				color: var(--hero-subtitle);
 				font-size: 1rem;
-				text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
+				text-shadow: 0 2px 10px rgba(0, 0, 0, 0.24);
 			}
 
 			.grid {
@@ -108,8 +154,8 @@
 				margin-right: auto;
 				padding: 8px;
 				border-radius: 999px;
-				background: linear-gradient(135deg, rgba(148, 95, 59, 0.34), rgba(191, 146, 83, 0.26));
-				box-shadow: inset 0 1px 0 rgba(255, 239, 215, 0.18);
+				background: linear-gradient(135deg, rgba(95, 90, 85, 0.18), rgba(146, 138, 131, 0.14));
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32);
 				width: fit-content;
 				max-width: 100%;
 			}
@@ -119,7 +165,7 @@
 				align-items: center;
 				justify-content: center;
 				border: 1px solid rgba(116, 83, 66, 0.18);
-				background: linear-gradient(180deg, rgba(255, 248, 238, 0.94), rgba(239, 221, 193, 0.92));
+				background: linear-gradient(180deg, rgba(255, 252, 247, 0.95), rgba(236, 231, 223, 0.94));
 				color: var(--ink-soft);
 				padding: 8px 11px;
 				border-radius: 999px;
@@ -133,8 +179,8 @@
 				flex-shrink: 0;
 				backdrop-filter: blur(8px);
 				box-shadow:
-					inset 0 1px 0 rgba(255, 255, 255, 0.72),
-					0 3px 8px rgba(71, 44, 31, 0.08);
+					inset 0 1px 0 rgba(255, 255, 255, 0.74),
+					0 3px 8px rgba(60, 55, 50, 0.07);
 				opacity: 0.44;
 				filter: saturate(0.5);
 				transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
@@ -146,14 +192,14 @@
 			}
 
 			.tab-btn.active {
-				background: linear-gradient(135deg, #9d673f, #7a4834, #b8864d);
+				background: var(--tab-active-bg);
 				color: #fffaf2;
 				border-color: transparent;
 				opacity: 1;
 				filter: saturate(1.12);
 				transform: translateY(-1px) scale(1.03);
 				box-shadow:
-					0 10px 22px rgba(88, 56, 40, 0.34),
+					var(--tab-active-shadow),
 					inset 0 1px 0 rgba(255, 239, 219, 0.28);
 				text-shadow: 0 1px 2px rgba(34, 16, 8, 0.26);
 			}
@@ -162,12 +208,17 @@
 				border-radius: 24px;
 				border: 1px solid var(--stroke);
 				background: rgba(255, 249, 243, 0.82);
+				background: var(--panel-bg);
 				backdrop-filter: blur(14px);
 				box-shadow: var(--shadow);
 			}
 
 			.form-panel {
 				padding: 18px;
+			}
+
+			.write-tab-nav {
+				margin: 0 0 16px;
 			}
 
 			.panel-title {
@@ -178,6 +229,7 @@
 				letter-spacing: 0.01em;
 				text-transform: none;
 				color: #53382c;
+				color: #4a4540;
 			}
 
 			.row {
@@ -204,12 +256,13 @@
 			select {
 				width: 100%;
 				border: 1px solid rgba(146, 113, 92, 0.24);
+				border: 1px solid rgba(104, 96, 90, 0.18);
 				border-radius: 12px;
 				padding: 11px 12px;
 				font: inherit;
 				color: var(--ink);
-				background: rgba(255, 252, 248, 0.9);
-				box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+				background: rgba(252, 250, 246, 0.92);
+				box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.62);
 				transition: border-color 0.15s ease, box-shadow 0.15s ease;
 			}
 
@@ -218,7 +271,7 @@
 			select:focus {
 				outline: none;
 				border-color: var(--accent);
-				box-shadow: 0 0 0 3px rgba(183, 109, 67, 0.16);
+				box-shadow: 0 0 0 3px rgba(111, 102, 95, 0.14);
 			}
 
 			textarea {
@@ -243,6 +296,7 @@
 			.btn-add {
 				flex: 1;
 				background: linear-gradient(135deg, #9e6242, #7d4934, #c1995b);
+				background: linear-gradient(135deg, #66605a, #4f4a45, #8a8178);
 				color: #fff;
 				font-weight: 700;
 				box-shadow: 0 12px 24px rgba(93, 60, 43, 0.2);
@@ -250,7 +304,7 @@
 
 			.btn-reset {
 				background: rgba(255, 251, 246, 0.9);
-				border: 1px solid rgba(116, 83, 66, 0.18);
+				border: 1px solid rgba(116, 111, 105, 0.18);
 				color: var(--ink-soft);
 				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 			}
@@ -302,8 +356,9 @@
 			.calendar-day {
 				position: relative;
 				border: 1px solid #ecd3c4;
+				border: 1px solid rgba(109, 101, 94, 0.16);
 				border-radius: 14px;
-				background: rgba(255, 252, 247, 0.88);
+				background: rgba(250, 248, 244, 0.9);
 				padding: 7px;
 				min-height: 88px;
 			}
@@ -311,11 +366,12 @@
 			.calendar-day.outside {
 				opacity: 0.45;
 				background: #fffbf7;
+				background: rgba(242, 239, 232, 0.78);
 			}
 
 			.calendar-day.today {
 				border-color: #ff8f6f;
-				box-shadow: inset 0 0 0 1px rgba(255, 114, 83, 0.22);
+				box-shadow: inset 0 0 0 1px rgba(110, 102, 96, 0.16);
 			}
 
 			.day-top {
@@ -335,9 +391,10 @@
 				padding: 3px 7px;
 				border-radius: 999px;
 				background: #ffe8b3;
-				border: 1px solid #f4d39e;
+				background: rgba(220, 213, 201, 0.86);
+				border: 1px solid rgba(157, 149, 139, 0.24);
 				font-size: 0.72rem;
-				color: #825e47;
+				color: #5d5852;
 			}
 
 			.day-has-entry {
@@ -354,10 +411,11 @@
 				bottom: calc(100% + 6px);
 				z-index: 20;
 				background: rgba(255, 251, 245, 0.98);
-				border: 1px solid #ebc8b8;
+				background: rgba(248, 245, 239, 0.98);
+				border: 1px solid rgba(102, 95, 88, 0.16);
 				border-radius: 16px;
 				padding: 12px;
-				box-shadow: 0 14px 28px rgba(82, 56, 46, 0.2);
+				box-shadow: 0 14px 28px rgba(60, 55, 50, 0.14);
 				animation: layerPop 0.16s ease-out;
 				transform-origin: bottom center;
 				max-height: min(320px, 58vh);
@@ -380,6 +438,7 @@
 				font-size: 0.9rem;
 				font-weight: 700;
 				color: #6f4d41;
+				color: #5a554f;
 			}
 
 			.layer-list {
@@ -389,8 +448,9 @@
 
 			.layer-item {
 				border: 1px solid #f0ddcc;
+				border: 1px solid rgba(121, 113, 106, 0.14);
 				border-radius: 12px;
-				background: #fff;
+				background: rgba(252, 250, 246, 0.94);
 				padding: 9px 10px;
 				cursor: pointer;
 				transition: background-color 0.14s ease, border-color 0.14s ease;
@@ -398,13 +458,15 @@
 
 			.layer-item:hover {
 				background: #fff3e7;
-				border-color: #e8c5ab;
+				background: rgba(239, 235, 229, 0.95);
+				border-color: rgba(124, 115, 108, 0.18);
 			}
 
 			.layer-item-name {
 				margin: 0;
 				font-size: 0.95rem;
 				font-weight: 700;
+				color: #3f3b37;
 			}
 
 			.layer-item-meta {
@@ -412,6 +474,7 @@
 				font-size: 0.86rem;
 				line-height: 1.35;
 				color: #765c52;
+				color: #6b665f;
 			}
 
 			.list-head {
@@ -429,6 +492,13 @@
 				flex-wrap: wrap;
 				margin-bottom: 12px;
 			}
+
+				.record-type-filter {
+					display: flex;
+					align-items: center;
+					gap: 8px;
+					flex-wrap: wrap;
+				}
 
 			.list-tools {
 				display: flex;
@@ -451,18 +521,38 @@
 			}
 
 			.count-chip {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
 				border-radius: 999px;
 				background: rgba(228, 207, 170, 0.78);
-				border: 1px solid rgba(180, 146, 101, 0.42);
-				color: #886343;
+				background: rgba(225, 220, 212, 0.9);
+				border: 1px solid rgba(132, 123, 114, 0.24);
+				color: #5d5852;
 				padding: 6px 10px;
 				font-size: 0.82rem;
 				box-shadow: inset 0 1px 0 rgba(255, 251, 240, 0.45);
 			}
 
+				.count-chip.filter-btn {
+					cursor: pointer;
+					transition: transform 0.14s ease, background-color 0.14s ease, border-color 0.14s ease;
+				}
+
+				.count-chip.filter-btn:hover {
+					transform: translateY(-1px);
+					background: rgba(235, 215, 183, 0.92);
+				}
+
+				.count-chip.filter-btn.active {
+					background: linear-gradient(135deg, #9b5f3f, #7d4934);
+					border-color: transparent;
+					color: #fff;
+				}
+
 			.tool-btn {
 				background: rgba(255, 251, 246, 0.86);
-				border: 1px solid rgba(116, 83, 66, 0.16);
+				border: 1px solid rgba(118, 111, 104, 0.16);
 				color: var(--ink-soft);
 				padding: 7px 11px;
 				font-size: 0.82rem;
@@ -476,6 +566,7 @@
 
 			.tool-btn.save {
 				background: linear-gradient(135deg, #9b5f3f, #7d4934);
+				background: linear-gradient(135deg, #5e5954, #45413d);
 				color: #fff;
 				border-color: transparent;
 			}
@@ -850,8 +941,8 @@
 		<div id="app" class="shell">
 				<div v-if="toast.visible" class="toast" :class="toast.type">{{ toast.message }}</div>
 			<header class="hero">
-				<h1 class="title">위스키 기록장</h1>
-				<p class="subtitle">날아가는 시간이여, 이 술을 한 잔 마시게나.</p>
+				<h1 class="title">향과 맛을 즐기자</h1>
+				<p class="subtitle">위스키, 와인, 차의 향과 맛을 한곳에 기록해요.</p>
 				<div class="tab-nav">
 					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">시음노트쓰기</button>
 					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">시음기록</button>
@@ -862,6 +953,11 @@
 			<main class="grid">
 				<section class="panel form-panel" v-if="activeTab === 'write'">
 					<h2 class="panel-title">시음 노트 쓰기</h2>
+					<div class="tab-nav write-tab-nav">
+						<button class="tab-btn" :class="{ active: activeWriteTab === 'whisky' }" type="button" @click="activeWriteTab = 'whisky'">위스키</button>
+						<button class="tab-btn" :class="{ active: activeWriteTab === 'wine' }" type="button" @click="activeWriteTab = 'wine'">와인</button>
+						<button class="tab-btn" :class="{ active: activeWriteTab === 'tea' }" type="button" @click="activeWriteTab = 'tea'">차</button>
+					</div>
 					<form @submit.prevent="addEntry">
 						<div class="form-top-grid">
 							<div class="row">
@@ -884,26 +980,21 @@
 							</div>
 
 							<div class="row">
-								<label for="category">위스키 종류</label>
+								<label for="category">{{ currentWriteConfig.categoryLabel }}</label>
 								<select id="category" v-model="form.category" required>
 									<option value="" disabled>선택해 주세요</option>
-									<option value="버번">버번</option>
-									<option value="아메리칸">아메리칸</option>
-									<option value="스코틀랜드">스코틀랜드</option>
-									<option value="일본">일본</option>
-									<option value="대만">대만</option>
-									<option value="기타">기타</option>
+									<option v-for="option in currentWriteConfig.categoryOptions" :key="option" :value="option">{{ option }}</option>
 								</select>
 							</div>
 						</div>
 
 						<div class="row">
-							<label for="whisky">위스키 이름</label>
-							<input id="whisky" v-model.trim="form.whisky" type="text" placeholder="예: 글렌리벳 12" required />
+							<label for="whisky">{{ currentWriteConfig.nameLabel }}</label>
+							<input id="whisky" v-model.trim="form.whisky" type="text" :placeholder="currentWriteConfig.namePlaceholder" required />
 						</div>
 
 						<div class="row">
-							<label for="imageUrl">위스키 사진 URL</label>
+							<label for="imageUrl">{{ currentWriteConfig.label }} 사진 URL</label>
 							<input
 								id="imageUrl"
 								v-model.trim="form.imageUrl"
@@ -926,14 +1017,14 @@
 								<img
 									:src="resolveBottleImage(form.imageUrl, formPreviewUrl)"
 									:data-origin-src="form.imageUrl"
-									alt="위스키 병 미리보기"
+									:alt="`${currentWriteConfig.label} 미리보기`"
 									@load="onBottleImageLoad"
 									@error="onBottleImageError"
 								/>
 							</div>
 						</div>
 
-						<div class="row">
+						<div v-if="activeWriteTab === 'whisky'" class="row">
 							<label for="caskType">숙성 캐스크 타입</label>
 							<textarea id="caskType" v-model.trim="form.caskType" placeholder="예: ex버번, 올로로소"></textarea>
 							<div class="traits">
@@ -941,11 +1032,42 @@
 									type="button"
 									class="trait-chip"
 									:class="{ active: isTraitSelected('caskType', trait) }"
-									v-for="trait in traitCatalog.caskType"
+									v-for="trait in currentTraitCatalog.caskType"
 									:key="`cask-${trait}`"
 									@click="toggleTrait('caskType', trait)"
 								>
 									{{ trait }}
+								</button>
+							</div>
+						</div>
+
+						<div v-else-if="activeWriteTab === 'wine'" class="row">
+							<label for="wineCountry">국가</label>
+							<select id="wineCountry" v-model="form.wineCountry" required>
+								<option value="" disabled>선택해 주세요</option>
+								<option v-for="country in wineCountryOptions" :key="country" :value="country">{{ country }}</option>
+							</select>
+							<input
+								v-if="form.wineCountry === '기타 직접입력'"
+								v-model.trim="form.wineCountryCustom"
+								type="text"
+								placeholder="국가를 직접 입력해 주세요"
+							/>
+						</div>
+
+						<div v-else class="row">
+							<label for="teaSubcategory">하위카테고리</label>
+							<textarea id="teaSubcategory" v-model.trim="form.teaSubcategory" placeholder="예: 육보차, 보이차"></textarea>
+							<div class="traits">
+								<button
+									type="button"
+									class="trait-chip"
+									:class="{ active: isTraitSelected('teaSubcategory', subcategory) }"
+									v-for="subcategory in teaSubcategoryOptions"
+									:key="`tea-${subcategory}`"
+									@click="toggleTrait('teaSubcategory', subcategory)"
+								>
+									{{ subcategory }}
 								</button>
 							</div>
 						</div>
@@ -958,7 +1080,7 @@
 									type="button"
 									class="trait-chip"
 									:class="{ active: isTraitSelected('nose', trait) }"
-									v-for="trait in traitCatalog.nose"
+									v-for="trait in currentTraitCatalog.nose"
 									:key="`nose-${trait}`"
 									@click="toggleTrait('nose', trait)"
 								>
@@ -975,7 +1097,7 @@
 									type="button"
 									class="trait-chip"
 									:class="{ active: isTraitSelected('palate', trait) }"
-									v-for="trait in traitCatalog.palate"
+									v-for="trait in currentTraitCatalog.palate"
 									:key="`palate-${trait}`"
 									@click="toggleTrait('palate', trait)"
 								>
@@ -992,7 +1114,7 @@
 									type="button"
 									class="trait-chip"
 									:class="{ active: isTraitSelected('finish', trait) }"
-									v-for="trait in traitCatalog.finish"
+									v-for="trait in currentTraitCatalog.finish"
 									:key="`finish-${trait}`"
 									@click="toggleTrait('finish', trait)"
 								>
@@ -1008,7 +1130,7 @@
 
 						<div class="actions">
 							<button class="btn-add" type="submit" :disabled="isImageUploading">
-								{{ isImageUploading ? "이미지 업로드 중..." : "기록 추가" }}
+								{{ isImageUploading ? "이미지 업로드 중..." : `${currentWriteConfig.label} 기록 추가` }}
 							</button>
 							<button class="btn-reset" type="button" @click="resetForm">초기화</button>
 						</div>
@@ -1022,7 +1144,13 @@
 
 					<div class="record-primary-tools">
 						<span class="count-chip">총 {{ entries.length }}잔</span>
-						<span v-if="searchQuery || selectedRecordMonth" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
+						<span v-if="hasRecordFilters" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
+						<div class="record-type-filter">
+							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'all' }" type="button" @click="recordDrinkFilter = 'all'">전체</button>
+							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'whisky' }" type="button" @click="recordDrinkFilter = 'whisky'">위스키</button>
+							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'wine' }" type="button" @click="recordDrinkFilter = 'wine'">와인</button>
+							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'tea' }" type="button" @click="recordDrinkFilter = 'tea'">차</button>
+						</div>
 						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
 							{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
 						</button>
@@ -1043,19 +1171,19 @@
 								id="recordSearch"
 								v-model.trim="searchQuery"
 								type="text"
-								placeholder="위스키, 날짜, 장소, 향/맛/메모로 검색"
+									placeholder="위스키, 와인, 차, 날짜, 장소, 향/맛/메모로 검색"
 							/>
 						</div>
 					</div>
 
-					<p v-if="!entries.length" class="empty">첫 위스키 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
+					<p v-if="!entries.length" class="empty">첫 시음 기록을 남겨보세요. 한 잔의 기억이 모이면 취향 지도가 됩니다.</p>
 
 					<div v-else-if="filteredEntries.length" class="entry-list">
 						<article class="entry" :id="`entry-${entry.id}`" v-for="entry in filteredEntries" :key="entry.id">
 							<button class="entry-summary" type="button" @click="toggleExpanded(entry.id)">
 								<div>
 									<h3 class="whisky-name">{{ entry.whisky }}</h3>
-									<p class="meta">{{ entry.date || "날짜 미입력" }}</p>
+									<p class="meta">{{ getDrinkTypeLabel(entry.drinkType) }} · {{ entry.date || "날짜 미입력" }}</p>
 								</div>
 								<span class="expand-indicator">{{ isExpanded(entry.id) ? "접기" : "자세히" }}</span>
 							</button>
@@ -1077,7 +1205,7 @@
 												<p class="note"><b>종류</b>{{ entry.category || "기록 없음" }}</p>
 												<p class="note"><b>마신 사람</b>{{ entry.drinker || "기록 없음" }}</p>
 												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
-												<p class="note"><b>캐스크</b>{{ entry.caskType || "기록 없음" }}</p>
+												<p class="note"><b>{{ getEntryDetailLabel(entry) }}</b>{{ getEntryDetailValue(entry) || "기록 없음" }}</p>
 											</div>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
 											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
@@ -1146,7 +1274,7 @@
 								<div class="layer-list">
 									<div class="layer-item" v-for="entry in cell.entries" :key="entry.id" @click.stop="openRecordFromCalendar(entry.id)">
 										<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
-										<p class="layer-item-meta">{{ entry.drinker || "마신 사람 미입력" }}</p>
+										<p class="layer-item-meta">{{ getDrinkTypeLabel(entry.drinkType) }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
 									</div>
 								</div>
 							</div>
@@ -1197,6 +1325,35 @@
 
 			const { createApp } = Vue;
 			const WEEK_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
+			const WRITE_TAB_CONFIGS = {
+				whisky: {
+					label: "위스키",
+					nameLabel: "위스키 이름",
+					namePlaceholder: "예: 글렌리벳 12",
+					categoryLabel: "위스키 종류",
+					categoryOptions: ["버번", "아메리칸", "스코틀랜드", "일본", "대만", "기타"],
+					extraLabel: "캐스크"
+				},
+				wine: {
+					label: "와인",
+					nameLabel: "와인 이름",
+					namePlaceholder: "예: 샤또 마고",
+					categoryLabel: "와인 종류",
+					categoryOptions: ["스파클링", "화이트", "레드", "디저트"],
+					extraLabel: "국가"
+				},
+				tea: {
+					label: "차",
+					nameLabel: "차 이름",
+					namePlaceholder: "예: 우전",
+					categoryLabel: "차 종류",
+					categoryOptions: ["녹차", "백차", "황차", "청차", "홍차", "흑차"],
+					extraLabel: "하위카테고리"
+				}
+			};
+			const WRITE_TAB_ORDER = ["whisky", "wine", "tea"];
+			const WINE_COUNTRY_OPTIONS = ["프랑스", "스페인", "포르투칼", "조지아", "미국", "칠레", "아르헨티나", "호주", "기타 직접입력"];
+			const TEA_SUBCATEGORY_OPTIONS = ["육보차", "고수차", "무이암차", "보이차", "단총"];
 
 			function formatDateKey(year, monthIndex, day) {
 				const month = String(monthIndex + 1).padStart(2, "0");
@@ -1221,6 +1378,62 @@
 			function getCurrentMonthKey() {
 				const now = new Date();
 				return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+			}
+
+			function getDrinkTypeLabel(drinkType) {
+				return WRITE_TAB_CONFIGS[drinkType]?.label || WRITE_TAB_CONFIGS.whisky.label;
+			}
+
+			function getDrinkDetailLabel(entry) {
+				if (entry?.detailLabel) {
+					return entry.detailLabel;
+				}
+
+				return WRITE_TAB_CONFIGS[entry?.drinkType || "whisky"]?.extraLabel || WRITE_TAB_CONFIGS.whisky.extraLabel;
+			}
+
+			function getDrinkDetailValue(entry) {
+				if (entry?.detailValue) {
+					return entry.detailValue;
+				}
+
+				if ((entry?.drinkType || "whisky") === "whisky") {
+					return entry?.caskType || "";
+				}
+
+				if ((entry?.drinkType || "whisky") === "wine") {
+					return entry?.wineCountryCustom || entry?.wineCountry || "";
+				}
+
+				if ((entry?.drinkType || "whisky") === "tea") {
+					return entry?.teaSubcategory || "";
+				}
+
+				return entry?.caskType || "";
+			}
+
+			function normalizeEntry(entry) {
+				const drinkType = entry.drinkType || "whisky";
+				return {
+					id: entry.id || crypto.randomUUID(),
+					date: entry.date || "",
+					place: entry.place || "",
+					drinker: entry.drinker || "",
+					whisky: entry.whisky || "",
+					drinkType,
+					category: entry.category || "",
+					imageUrl: entry.imageUrl || "",
+					caskType: entry.caskType || "",
+					wineCountry: entry.wineCountry || "",
+					wineCountryCustom: entry.wineCountryCustom || "",
+					teaSubcategory: entry.teaSubcategory || "",
+					detailLabel: entry.detailLabel || getDrinkDetailLabel({ ...entry, drinkType }),
+					detailValue: entry.detailValue || getDrinkDetailValue({ ...entry, drinkType }),
+					nose: entry.nose || "",
+					palate: entry.palate || "",
+					finish: entry.finish || "",
+					memo: entry.memo || ""
+				};
 			}
 
 			function fileToDataUrl(file) {
@@ -1299,11 +1512,26 @@
 			createApp({
 				data() {
 					return {
-						traitCatalog: {
-							caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
-							nose: ["바닐라", "꿀", "사과", "배", "시트러스", "건포도", "오크", "스모크", "꽃향", "견과류"],
-							palate: ["달콤함", "몰트", "카라멜", "초콜릿", "스파이스", "시나몬", "과일", "스모키", "짭짤함", "오일리"],
-							finish: ["짧음", "중간", "김", "따뜻함", "드라이", "오크", "스파이시", "스모키", "달콤한 여운", "깔끔함"]
+						activeWriteTab: "whisky",
+						traitCatalogs: {
+							whisky: {
+								caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
+								nose: ["바닐라", "꿀", "사과", "배", "시트러스", "건포도", "오크", "스모크", "꽃향", "견과류"],
+								palate: ["달콤함", "몰트", "카라멜", "초콜릿", "바닐라", "과일", "스파이스", "시나몬", "스모키", "오일리"],
+								finish: ["짧음", "중간", "김", "아주 김", "따뜻함", "드라이", "오크", "스파이시", "스모키", "깔끔함"]
+							},
+							wine: {
+								caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
+								nose: ["레드과일", "체리", "자두", "블랙베리", "시트러스", "꽃향", "바닐라", "오크", "허브", "미네랄"],
+								palate: ["드라이", "산미", "탄닌", "오크", "과일맛", "체리", "자두", "스파이스", "바디감", "밸런스"],
+								finish: ["짧음", "중간", "김", "아주 김", "드라이", "탄닌", "오크", "스파이시", "부드러움", "미네랄"]
+							},
+							tea: {
+								caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
+								nose: ["꽃향", "난향", "난초", "견과류", "청향", "풀향", "꿀", "과일향", "나무향", "연기"],
+								palate: ["단맛", "떫은맛", "감칠맛", "구수함", "꽃맛", "청량감", "묵직함", "산뜻함", "견과류", "미네랄"],
+								finish: ["짧음", "중간", "김", "아주 김", "깔끔함", "달큰함", "여운", "구수함", "떫은 여운", "상쾌함"]
+							}
 						},
 						form: {
 							date: "",
@@ -1313,6 +1541,9 @@
 							category: "",
 							imageUrl: "",
 							caskType: "",
+							wineCountry: "",
+							wineCountryCustom: "",
+							teaSubcategory: "",
 							nose: "",
 							palate: "",
 							finish: "",
@@ -1321,6 +1552,7 @@
 						entries: [],
 						activeEntryId: null,
 						activeTab: "records",
+						recordDrinkFilter: "all",
 						searchQuery: "",
 						selectedRecordMonth: "",
 						weekLabels: WEEK_LABELS,
@@ -1341,14 +1573,31 @@
 					};
 				},
 				computed: {
+					currentWriteConfig() {
+						return WRITE_TAB_CONFIGS[this.activeWriteTab] || WRITE_TAB_CONFIGS.whisky;
+					},
+					currentTraitCatalog() {
+						return this.traitCatalogs[this.activeWriteTab] || this.traitCatalogs.whisky;
+					},
+					wineCountryOptions() {
+						return WINE_COUNTRY_OPTIONS;
+					},
+					teaSubcategoryOptions() {
+						return TEA_SUBCATEGORY_OPTIONS;
+					},
 					sortedEntries() {
 						return [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
 					},
 					filteredEntries() {
 						const query = this.searchQuery.trim().toLowerCase();
 						const monthKey = this.selectedRecordMonth;
+						const drinkFilter = this.recordDrinkFilter;
 
 						return this.sortedEntries.filter((entry) => {
+							if (drinkFilter !== "all" && (entry.drinkType || "whisky") !== drinkFilter) {
+								return false;
+							}
+
 							if (monthKey && String(entry.date || "").slice(0, 7) !== monthKey) {
 								return false;
 							}
@@ -1359,11 +1608,17 @@
 
 							const targets = [
 								entry.whisky,
+								entry.drinkType,
 								entry.category,
 								entry.date,
 								entry.place,
 								entry.drinker,
 								entry.caskType,
+								entry.wineCountry,
+								entry.wineCountryCustom,
+								entry.teaSubcategory,
+								entry.detailLabel,
+								entry.detailValue,
 								entry.nose,
 								entry.palate,
 								entry.finish,
@@ -1372,6 +1627,9 @@
 
 							return targets.some((value) => (value || "").toLowerCase().includes(query));
 						});
+					},
+					hasRecordFilters() {
+						return this.recordDrinkFilter !== "all" || Boolean(this.searchQuery.trim()) || Boolean(this.selectedRecordMonth);
 					},
 					recordMonthOptions() {
 						const monthSet = new Set();
@@ -1474,9 +1732,28 @@
 					}
 				},
 				async mounted() {
+					this.syncWriteTheme();
 					await this.reloadFromRepo();
 				},
+				watch: {
+					activeWriteTab() {
+						this.syncWriteTheme();
+					}
+				},
 				methods: {
+					syncWriteTheme() {
+						document.body.classList.remove("theme-wine", "theme-tea", "theme-whisky");
+						document.body.classList.add(`theme-${this.activeWriteTab || "whisky"}`);
+					},
+					getDrinkTypeLabel(drinkType) {
+						return getDrinkTypeLabel(drinkType);
+					},
+					getEntryDetailLabel(entry) {
+						return getDrinkDetailLabel(entry);
+					},
+					getEntryDetailValue(entry) {
+						return getDrinkDetailValue(entry);
+					},
 					resolveBottleImage(url, previewUrl = "") {
 						const preview = (previewUrl || "").trim();
 						if (preview) {
@@ -1669,15 +1946,47 @@
 							return;
 						}
 
+						const drinkType = this.activeWriteTab || "whisky";
+						if (!this.currentWriteConfig.categoryOptions.includes(this.form.category)) {
+							this.showToast("error", `${this.currentWriteConfig.categoryLabel} 선택해 주세요.`);
+							return;
+						}
+
+						const detailLabel = this.currentWriteConfig.extraLabel;
+						let detailValue = "";
+
+						if (drinkType === "whisky") {
+							detailValue = this.form.caskType;
+						} else if (drinkType === "wine") {
+							detailValue = this.form.wineCountry === "기타 직접입력" ? this.form.wineCountryCustom.trim() : this.form.wineCountry;
+							if (this.form.wineCountry === "기타 직접입력" && !detailValue) {
+								this.showToast("error", "기타 직접입력 국가를 적어 주세요.");
+								return;
+							}
+						} else if (drinkType === "tea") {
+							detailValue = this.form.teaSubcategory;
+						}
+
+						if (drinkType !== "whisky" && !detailValue) {
+							this.showToast("error", `${detailLabel} 선택해 주세요.`);
+							return;
+						}
+
 						const newEntry = {
 							id: crypto.randomUUID(),
 							date: this.form.date,
 							place: this.form.place,
 							drinker: this.form.drinker,
 							whisky: this.form.whisky,
+							drinkType,
 							category: this.form.category,
 							imageUrl: this.form.imageUrl,
 							caskType: this.form.caskType,
+							wineCountry: this.form.wineCountry,
+							wineCountryCustom: this.form.wineCountryCustom,
+							teaSubcategory: this.form.teaSubcategory,
+							detailLabel,
+							detailValue,
 							nose: this.form.nose,
 							palate: this.form.palate,
 							finish: this.form.finish,
@@ -1700,20 +2009,7 @@
 					async reloadFromRepo() {
 						try {
 							const loaded = await readEntriesFromRepo();
-							this.entries = loaded.map((entry) => ({
-								id: entry.id || crypto.randomUUID(),
-								date: entry.date || "",
-								place: entry.place || "",
-								drinker: entry.drinker || "",
-								whisky: entry.whisky || "",
-								category: entry.category || "",
-								imageUrl: entry.imageUrl || "",
-								caskType: entry.caskType || "",
-								nose: entry.nose || "",
-								palate: entry.palate || "",
-								finish: entry.finish || "",
-								memo: entry.memo || ""
-							}));
+							this.entries = loaded.map((entry) => normalizeEntry(entry));
 							this.activeEntryId = null;
 							this.syncMessage = "GitHub records.json 최신 내용을 불러왔어요.";
 						} catch {
@@ -1792,20 +2088,7 @@
 								return;
 							}
 
-							this.entries = incoming.map((entry) => ({
-								id: entry.id || crypto.randomUUID(),
-								date: entry.date || "",
-								place: entry.place || "",
-								drinker: entry.drinker || "",
-								whisky: entry.whisky || "",
-								category: entry.category || "",
-								imageUrl: entry.imageUrl || "",
-								caskType: entry.caskType || "",
-								nose: entry.nose || "",
-								palate: entry.palate || "",
-								finish: entry.finish || "",
-								memo: entry.memo || ""
-							}));
+							this.entries = incoming.map((entry) => normalizeEntry(entry));
 							this.activeEntryId = null;
 							this.syncMessage = "로컬 JSON을 불러왔어요. GitHub에 저장 버튼으로 반영할 수 있어요.";
 
@@ -1824,12 +2107,16 @@
 							category: "",
 							imageUrl: "",
 							caskType: "",
+							wineCountry: "",
+							wineCountryCustom: "",
+							teaSubcategory: "",
 							nose: "",
 							palate: "",
 							finish: "",
 							memo: ""
 						};
 						this.formPreviewUrl = "";
+						this.activeWriteTab = "whisky";
 					}
 				}
 			}).mount("#app");
