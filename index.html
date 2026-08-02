@@ -367,6 +367,27 @@
 				background: rgba(250, 248, 244, 0.9);
 				padding: 7px;
 				min-height: 88px;
+				transition: background-color 0.16s ease, border-color 0.16s ease;
+			}
+
+			.calendar-day.has-entry {
+				background: rgba(228, 226, 219, 0.9);
+				border-color: rgba(100, 94, 88, 0.34);
+			}
+
+			.calendar-day.has-entry.entry-wine {
+				background: rgba(244, 218, 214, 0.9);
+				border-color: rgba(148, 67, 58, 0.34);
+			}
+
+			.calendar-day.has-entry.entry-whisky {
+				background: rgba(239, 227, 205, 0.92);
+				border-color: rgba(147, 117, 77, 0.34);
+			}
+
+			.calendar-day.has-entry.entry-tea {
+				background: rgba(219, 231, 222, 0.9);
+				border-color: rgba(86, 120, 99, 0.34);
 			}
 
 			.calendar-day.outside {
@@ -393,20 +414,16 @@
 				color: #6f4e43;
 			}
 
-			.day-count {
-				padding: 3px 7px;
-				border-radius: 999px;
-				background: #ffe8b3;
-				background: rgba(220, 213, 201, 0.86);
-				border: 1px solid rgba(157, 149, 139, 0.24);
-				font-size: 0.72rem;
-				color: #5d5852;
+			.day-icons {
+				display: inline-flex;
+				align-items: center;
+				gap: 2px;
+				font-size: 0.92rem;
+				line-height: 1;
 			}
 
-			.day-has-entry {
-				margin-top: 8px;
-				font-size: 0.73rem;
-				color: #8b5c4e;
+			.day-icon {
+				display: inline-flex;
 			}
 
 			.day-layer {
@@ -1256,7 +1273,10 @@
 					<div class="calendar-grid" style="margin-top: 6px">
 						<div
 							class="calendar-day"
-							:class="{ outside: !cell.inMonth, today: cell.dateKey === todayKey }"
+							:class="[
+								{ outside: !cell.inMonth, today: cell.dateKey === todayKey, 'has-entry': cell.entries.length },
+								getCalendarDayToneClass(cell.entries)
+							]"
 							v-for="cell in calendarCells"
 							:key="cell.dateKey"
 							@mouseenter="openCalendarLayer(cell.dateKey)"
@@ -1270,10 +1290,11 @@
 							>
 								<div class="day-top">
 									<span class="day-number">{{ cell.day }}</span>
-									<span v-if="cell.entries.length" class="day-count">{{ cell.entries.length }}잔</span>
+									<span v-if="cell.entries.length" class="day-icons">
+										<span class="day-icon" v-for="emoji in getCalendarDrinkEmojis(cell.entries)" :key="`${cell.dateKey}-${emoji}`">{{ emoji }}</span>
+									</span>
 								</div>
 							</button>
-							<p class="day-has-entry" v-if="cell.entries.length">기록 있음</p>
 
 							<div class="day-layer" v-if="activeCalendarKey === cell.dateKey && cell.entries.length">
 								<p class="layer-title">{{ cell.dateKey }} 시음 기록</p>
@@ -1800,6 +1821,32 @@
 					},
 					getDrinkTypeLabel(drinkType) {
 						return getDrinkTypeLabel(drinkType);
+					},
+					getCalendarDrinkEmojis(entries) {
+						const uniqueKinds = [...new Set((entries || []).map((entry) => this.getEntryDrinkCategory(entry)))];
+						const iconMap = {
+							whisky: "🥃",
+							wine: "🍷",
+							tea: "🍵"
+						};
+
+						return uniqueKinds
+							.filter((kind) => iconMap[kind])
+							.map((kind) => iconMap[kind]);
+					},
+					getCalendarDayToneClass(entries) {
+						const uniqueKinds = [...new Set((entries || []).map((entry) => this.getEntryDrinkCategory(entry)))];
+						if (uniqueKinds.length !== 1) {
+							return "";
+						}
+
+						const toneMap = {
+							whisky: "entry-whisky",
+							wine: "entry-wine",
+							tea: "entry-tea"
+						};
+
+						return toneMap[uniqueKinds[0]] || "";
 					},
 					getEntryDetailLabel(entry) {
 						return getDrinkDetailLabel(entry);
