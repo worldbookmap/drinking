@@ -1,4 +1,78 @@
 const API_BASE = "https://api.github.com";
+const WINE_CATEGORIES = new Set(["스파클링", "화이트", "레드", "디저트"]);
+const TEA_CATEGORIES = new Set(["녹차", "백차", "황차", "청차", "홍차", "흑차"]);
+const TEA_SUBCATEGORIES = new Set(["육보차", "고수차", "무이암차", "보이차", "단총"]);
+
+function hasText(value) {
+	return Boolean(String(value || "").trim());
+}
+
+function inferLegacyDrinkCategory(entry) {
+	const category = String(entry?.category || "").trim();
+	const detailLabel = String(entry?.detailLabel || "").trim();
+	const caskType = String(entry?.caskType || "").trim();
+
+	if (hasText(entry?.wineCountry) || hasText(entry?.wineCountryCustom) || detailLabel === "국가") {
+		return "wine";
+	}
+
+	if (hasText(entry?.teaSubcategory) || detailLabel === "하위카테고리" || TEA_SUBCATEGORIES.has(caskType)) {
+		return "tea";
+	}
+
+	if (WINE_CATEGORIES.has(category)) {
+		return "wine";
+	}
+
+	if (TEA_CATEGORIES.has(category)) {
+		return "tea";
+	}
+
+	return "whisky";
+}
+
+function getEntryDrinkCategory(entry) {
+	const explicit = String(entry?.drinkCategory || entry?.drinkType || "").trim();
+	if (explicit === "whisky" || explicit === "wine" || explicit === "tea") {
+		return explicit;
+	}
+
+	return inferLegacyDrinkCategory(entry);
+}
+
+function getDrinkDetailLabel(entry) {
+	if (hasText(entry?.detailLabel)) {
+		return entry.detailLabel;
+	}
+
+	const drinkCategory = getEntryDrinkCategory(entry);
+	if (drinkCategory === "wine") {
+		return "국가";
+	}
+
+	if (drinkCategory === "tea") {
+		return "하위카테고리";
+	}
+
+	return "캐스크";
+}
+
+function getDrinkDetailValue(entry) {
+	if (hasText(entry?.detailValue)) {
+		return String(entry.detailValue).trim();
+	}
+
+	const drinkCategory = getEntryDrinkCategory(entry);
+	if (drinkCategory === "wine") {
+		return String(entry?.wineCountryCustom || entry?.wineCountry || "").trim();
+	}
+
+	if (drinkCategory === "tea") {
+		return String(entry?.teaSubcategory || "").trim();
+	}
+
+	return String(entry?.caskType || "").trim();
+}
 
 function getConfig() {
 	return {
@@ -20,20 +94,30 @@ function normalizeEntries(entries) {
 		return [];
 	}
 
-	return entries.map((entry) => ({
-		id: entry?.id || crypto.randomUUID(),
-		date: entry?.date || "",
-		place: entry?.place || "",
-		drinker: entry?.drinker || "",
-		whisky: entry?.whisky || "",
-		category: entry?.category || "",
-		imageUrl: entry?.imageUrl || "",
-		caskType: entry?.caskType || "",
-		nose: entry?.nose || "",
-		palate: entry?.palate || "",
-		finish: entry?.finish || "",
-		memo: entry?.memo || ""
-	}));
+	return entries.map((entry) => {
+		const drinkCategory = getEntryDrinkCategory(entry);
+		return {
+			id: entry?.id || crypto.randomUUID(),
+			date: entry?.date || "",
+			place: entry?.place || "",
+			drinker: entry?.drinker || "",
+			whisky: entry?.whisky || "",
+			drinkCategory,
+			drinkType: drinkCategory,
+			category: entry?.category || "",
+			imageUrl: entry?.imageUrl || "",
+			caskType: entry?.caskType || "",
+			wineCountry: entry?.wineCountry || "",
+			wineCountryCustom: entry?.wineCountryCustom || "",
+			teaSubcategory: entry?.teaSubcategory || "",
+			detailLabel: getDrinkDetailLabel(entry),
+			detailValue: getDrinkDetailValue(entry),
+			nose: entry?.nose || "",
+			palate: entry?.palate || "",
+			finish: entry?.finish || "",
+			memo: entry?.memo || ""
+		};
+	});
 }
 
 async function githubRequest(path, options = {}) {
