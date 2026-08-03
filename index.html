@@ -272,6 +272,16 @@
 				transition: border-color 0.15s ease, box-shadow 0.15s ease;
 			}
 
+			/* iOS Safari date input can keep intrinsic width; force full-width within form grid. */
+			input[type="date"] {
+				display: block;
+				width: 100%;
+				max-width: 100%;
+				min-width: 0;
+				-webkit-appearance: none;
+				appearance: none;
+			}
+
 			input:focus,
 			textarea:focus,
 			select:focus {
