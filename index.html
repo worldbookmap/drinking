@@ -320,7 +320,7 @@
 			}
 
 			.calendar-panel {
-				padding: 18px;
+				padding: 14px 12px;
 			}
 
 			.calendar-head {
@@ -349,7 +349,7 @@
 			.calendar-grid {
 				display: grid;
 				grid-template-columns: repeat(7, minmax(0, 1fr));
-				gap: 8px;
+				gap: 5px;
 			}
 
 			.calendar-weekday {
@@ -365,10 +365,24 @@
 				border: 1px solid rgba(109, 101, 94, 0.16);
 				border-radius: 14px;
 				background: rgba(250, 248, 244, 0.9);
-				padding: 7px;
-				min-height: 88px;
+				padding: 0;
+				min-height: 86px;
 				overflow: hidden;
 				transition: background-color 0.16s ease, border-color 0.16s ease;
+			}
+
+			.calendar-day-button {
+				position: relative;
+				display: block;
+				width: 100%;
+				height: 100%;
+				min-height: inherit;
+				padding: 0 !important;
+				border-radius: inherit;
+			}
+
+			.calendar-day-button:hover {
+				background: transparent;
 			}
 
 			.calendar-day.has-entry {
@@ -403,30 +417,42 @@
 			}
 
 			.day-top {
-				display: flex;
-				justify-content: space-between;
-				align-items: flex-start;
-				gap: 6px;
-				min-width: 0;
+				position: absolute;
+				inset: 0;
 			}
 
 			.day-number {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
 				font-weight: 700;
-				font-size: 0.88rem;
+				font-size: 0.98rem;
 				color: #6f4e43;
-				flex: 0 0 auto;
+				line-height: 1;
+				text-align: center;
+				z-index: 3;
+				text-shadow: 0 1px 0 rgba(255, 252, 247, 0.9);
 			}
 
 			.day-icons {
+				position: absolute;
+				top: 50%;
+				left: 0;
+				transform: translateY(-50%);
 				display: flex;
 				align-items: flex-start;
-				justify-content: flex-end;
+				justify-content: center;
 				flex-wrap: wrap;
-				gap: 2px;
-				font-size: 0.92rem;
+				gap: 1px;
+				font-size: 0.96rem;
 				line-height: 1;
-				max-width: calc(100% - 22px);
+				width: 100%;
+				padding: 0 1px;
 				overflow: hidden;
+				z-index: 1;
+				opacity: 0.6;
+				filter: saturate(0.85);
 			}
 
 			.day-icon {
@@ -904,10 +930,14 @@
 			}
 
 			@media (max-width: 900px) {
+				.shell {
+					padding: 20px 8px 34px;
+				}
+
 				.form-panel,
 				.list-panel,
 				.calendar-panel {
-					padding: 16px;
+					padding: 12px 8px;
 				}
 
 				.hero {
@@ -960,7 +990,7 @@
 				}
 
 				.calendar-grid {
-					gap: 6px;
+					gap: 2px;
 				}
 
 				.record-filter-grid {
@@ -969,7 +999,17 @@
 				}
 
 				.calendar-day {
-					min-height: 76px;
+					min-height: 62px;
+				}
+
+				.day-number {
+					font-size: 0.9rem;
+				}
+
+				.day-icons {
+					font-size: 0.82rem;
+					padding: 0;
+					opacity: 0.6;
 				}
 
 				.calendar-modal-backdrop {
@@ -1392,8 +1432,7 @@
 						>
 							<button
 								type="button"
-								class="entry-summary"
-								style="padding: 0; align-items: flex-start"
+								class="entry-summary calendar-day-button"
 								@click="openCalendarModal(cell.dateKey)"
 							>
 								<div class="day-top">
