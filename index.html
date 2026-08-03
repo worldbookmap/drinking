@@ -367,6 +367,7 @@
 				background: rgba(250, 248, 244, 0.9);
 				padding: 7px;
 				min-height: 88px;
+				overflow: hidden;
 				transition: background-color 0.16s ease, border-color 0.16s ease;
 			}
 
@@ -404,26 +405,33 @@
 			.day-top {
 				display: flex;
 				justify-content: space-between;
-				align-items: center;
+				align-items: flex-start;
 				gap: 6px;
+				min-width: 0;
 			}
 
 			.day-number {
 				font-weight: 700;
 				font-size: 0.88rem;
 				color: #6f4e43;
+				flex: 0 0 auto;
 			}
 
 			.day-icons {
-				display: inline-flex;
-				align-items: center;
+				display: flex;
+				align-items: flex-start;
+				justify-content: flex-end;
+				flex-wrap: wrap;
 				gap: 2px;
 				font-size: 0.92rem;
 				line-height: 1;
+				max-width: calc(100% - 22px);
+				overflow: hidden;
 			}
 
 			.day-icon {
 				display: inline-flex;
+				flex: 0 0 auto;
 			}
 
 			.calendar-modal-backdrop {
@@ -811,6 +819,10 @@
 				padding: 6px 8px;
 				font-size: 0.9rem;
 				line-height: 1.25;
+			}
+
+			.note-memo {
+				white-space: pre-line;
 			}
 
 			.note b {
@@ -1251,7 +1263,7 @@
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
 											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
-											<p class="note"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
+											<p class="note note-memo"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
 										</div>
 										<div class="notes" v-else>
 											<div class="notes-top-grid">
@@ -2135,6 +2147,11 @@
 							this.toast.visible = false;
 						}, 2800);
 					},
+					wait(ms) {
+						return new Promise((resolve) => {
+							setTimeout(resolve, ms);
+						});
+					},
 					openCamera() {
 						this.$refs.cameraInput.click();
 					},
@@ -2355,19 +2372,26 @@
 							this.cancelEditEntry();
 						}
 					},
-					async reloadFromRepo() {
+					async reloadFromRepo(options = {}) {
+						const { silent = false, preserveOnError = false } = options;
 						try {
 							const loaded = await readEntriesFromRepo();
 							this.entries = loaded.map((entry) => normalizeEntry(entry));
 							this.activeEntryId = null;
 							this.cancelEditEntry();
 							this.syncMessage = "GitHub records.json 최신 내용을 불러왔어요.";
+							return true;
 						} catch {
-							this.entries = [];
-							this.activeEntryId = null;
-							this.cancelEditEntry();
+							if (!preserveOnError) {
+								this.entries = [];
+								this.activeEntryId = null;
+								this.cancelEditEntry();
+							}
 							this.syncMessage = "불러오기에 실패했어요. API 설정 또는 파일 형식을 확인해 주세요.";
-							alert("records.json 파일을 읽지 못했어요. 파일 형식을 확인해 주세요.");
+							if (!silent) {
+								alert("records.json 파일을 읽지 못했어요. 파일 형식을 확인해 주세요.");
+							}
+							return false;
 						}
 					},
 					async saveToGitHub() {
@@ -2395,13 +2419,28 @@
 							if (commitSha) {
 								this.lastCommitSha = commitSha;
 							}
-							await this.reloadFromRepo();
+
+							let reloaded = false;
+							for (const delay of [250, 900, 1800]) {
+								await this.wait(delay);
+								reloaded = await this.reloadFromRepo({ silent: true, preserveOnError: true });
+								if (reloaded) {
+									break;
+								}
+							}
+
+							if (!reloaded) {
+								this.entries = payload.map((entry) => normalizeEntry(entry));
+							}
+
 							this.syncMessage = commitSha
-								? `GitHub 저장 후 최신 내용을 다시 불러왔어요. (${commitSha})`
-								: "GitHub 저장 후 최신 내용을 다시 불러왔어요.";
+								? `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요. (${commitSha})`
+								: "GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요.";
 							this.showToast(
 								"success",
-								commitSha ? `GitHub 저장 후 최신 데이터를 반영했어요. SHA ${commitSha}` : "GitHub 저장 후 최신 데이터를 반영했어요."
+								commitSha
+									? `GitHub 저장 후 최신 데이터를 자동 반영했어요. SHA ${commitSha}`
+									: "GitHub 저장 후 최신 데이터를 자동 반영했어요."
 							);
 						} catch (error) {
 							this.syncMessage = `저장 실패: ${error.message}`;
