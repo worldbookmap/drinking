@@ -21,6 +21,27 @@
     "memo": "페어몬트 호캉스\n페어링: 쓰리페퍼 치킨, 오렌지 치킨,"
   },
   {
+    "id": "5ed10b6e-ca7b-4ce2-8144-a3ad4f760a73",
+    "date": "2026-08-03",
+    "place": "요츠바",
+    "drinker": "함께",
+    "whisky": "TSCL 쿨일라 라프로익캐스크 13y",
+    "drinkCategory": "whisky",
+    "drinkType": "whisky",
+    "category": "스코틀랜드",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260803112946-image-7apg7t.webp",
+    "caskType": "ex버번",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "캐스크",
+    "detailValue": "ex버번",
+    "nose": "꿀, 피트",
+    "palate": "꿀에 절인 담뱃재, 꿀 질감, 카라멜 팝콘,",
+    "finish": "달콤한 여운, 따뜻함",
+    "memo": ""
+  },
+  {
     "id": "b09f8ca7-612a-4577-a8da-07a91db95912",
     "date": "2026-08-02",
     "place": "집",
