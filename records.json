@@ -1,5 +1,26 @@
 [
   {
+    "id": "fe1380cc-6853-4222-8e74-190186700128",
+    "date": "2026-08-03",
+    "place": "페어몬트 호텔룸",
+    "drinker": "함께",
+    "whisky": "Baron D'Arignac",
+    "drinkCategory": "wine",
+    "drinkType": "wine",
+    "category": "스파클링",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260803073939-image-gf8uvn.webp",
+    "caskType": "",
+    "wineCountry": "프랑스",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "국가",
+    "detailValue": "프랑스",
+    "nose": "노란 사과, 시트러스, 미네랄, 용과, 서양배, 복숭아, 꽃향(흰꽃, 인동초)",
+    "palate": "드라이, 산미, 미네랄",
+    "finish": "중간, 드라이, 상쾌한 과일",
+    "memo": "페어몬트 호캉스\n페어링: 쓰리페퍼 치킨, 오렌지 치킨,"
+  },
+  {
     "id": "b09f8ca7-612a-4577-a8da-07a91db95912",
     "date": "2026-08-02",
     "place": "집",
