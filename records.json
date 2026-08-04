@@ -82,26 +82,5 @@
     "palate": "탄산, 드라이",
     "finish": "중간, 드라이, 오크",
     "memo": "페어링: 감자튀김 시오콘부 버터 볶음, 아보카도, 빵\n지선이 회복 후 와인 마시고 싶다고 찡찡"
-  },
-  {
-    "id": "e38ce13a-8658-4527-bccb-0eaef1634e6a",
-    "date": "2026-07-31",
-    "place": "집",
-    "drinker": "지선",
-    "whisky": "류카 뉴본 2024",
-    "drinkCategory": "whisky",
-    "drinkType": "whisky",
-    "category": "일본",
-    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260731144929-image-6teszc.webp",
-    "caskType": "올로로소",
-    "wineCountry": "",
-    "wineCountryCustom": "",
-    "teaSubcategory": "",
-    "detailLabel": "캐스크",
-    "detailValue": "올로로소",
-    "nose": "시트러스, 건포도, 밀크초콜렛",
-    "palate": "몰트, 초콜릿, 시나몬, 스파이스",
-    "finish": "오크, 중간, 달콤한 여운",
-    "memo": "구라"
   }
 ]
