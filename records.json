@@ -22,6 +22,28 @@
     "memo": "직관적이지 않고 섬세하고 우아하고 은근함\n\n동목촌: 지역이름, 마속: 세부 마을 이름\n명전: 절기이름"
   },
   {
+    "id": "9ffaad68-629f-422d-8ccb-bc16471f8f9c",
+    "createdAt": "2026-08-05T12:33:44.235Z",
+    "date": "2026-08-05",
+    "place": "집",
+    "drinker": "함께",
+    "whisky": "동목촌 마속 특급 정산소종",
+    "drinkCategory": "tea",
+    "drinkType": "tea",
+    "category": "홍차",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260805123201-img_6940-h02866.webp",
+    "caskType": "",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "정산소종",
+    "detailLabel": "하위카테고리",
+    "detailValue": "정산소종",
+    "nose": "꽃향, 목질, 나무향, 단향",
+    "palate": "목질, 단맛, 떫은맛(탄닌)",
+    "finish": "중간, 구수함",
+    "memo": ""
+  },
+  {
     "id": "c4419e63-f6e9-459d-8d31-83eb518e2bd2",
     "createdAt": "",
     "date": "2026-08-04",
