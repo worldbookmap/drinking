@@ -750,15 +750,17 @@
 
 			.entry-list {
 				display: grid;
-				gap: 10px;
+				gap: 0;
 			}
 
 			.entry {
-				border: 1px solid #ead4c7;
-				border-radius: 16px;
-				background: #fffdfa;
-				padding: 10px;
+				border-bottom: 1px solid rgba(109, 101, 94, 0.14);
+				padding: 2px 0;
 				animation: slideIn 0.26s ease;
+			}
+
+			.entry:last-child {
+				border-bottom: 0;
 			}
 
 			@keyframes slideIn {
@@ -786,38 +788,55 @@
 				align-items: center;
 				gap: 12px;
 				border: 0;
-				padding: 8px;
+				padding: 10px 2px;
 				background: transparent;
-				border-radius: 12px;
+				border-radius: 0;
 				text-align: left;
 			}
 
 			.entry-summary:hover {
-				background: #fff5ed;
+				background: rgba(255, 250, 244, 0.72);
 			}
 
-			.whisky-name {
-				margin: 0;
-				font-size: 1.02rem;
+			.entry-line {
+				min-width: 0;
+				font-size: 0.96rem;
+				line-height: 1.45;
+				color: var(--ink);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
-			.meta {
-				margin-top: 2px;
-				font-size: 0.83rem;
+			.entry-date {
+				font-weight: 700;
+				color: var(--accent-strong);
+			}
+
+			.entry-separator {
+				margin: 0 4px;
 				color: var(--ink-soft);
 			}
 
+			.entry-category {
+				color: var(--ink-soft);
+			}
+
+			.entry-name {
+				font-weight: 600;
+			}
+
 			.expand-indicator {
+				flex: 0 0 auto;
 				font-size: 0.8rem;
-				padding: 5px 9px;
-				border-radius: 999px;
-				background: #fff4da;
-				border: 1px solid #f0d7a6;
-				color: #815d47;
+				color: var(--ink-soft);
+				padding: 0;
+				background: transparent;
+				border: 0;
 			}
 
 			.entry-detail {
-				padding: 4px 8px 8px;
+				padding: 2px 2px 12px;
 			}
 
 			.detail-slide-enter-active,
@@ -863,14 +882,15 @@
 				display: flex;
 				justify-content: flex-end;
 				margin-top: 10px;
+				gap: 8px;
 			}
 
 			.note {
-				background: #fff8ec;
-				border: 1px solid #f5e2bf;
-				border-radius: 10px;
+				background: transparent;
+				border: 0;
+				border-radius: 0;
 				margin: 0;
-				padding: 6px 8px;
+				padding: 2px 0;
 				font-size: 0.9rem;
 				line-height: 1.25;
 			}
@@ -882,7 +902,7 @@
 			.note b {
 				font-family: "Noto Serif KR", serif;
 				font-weight: 700;
-				font-size: 1.05rem;
+				font-size: 0.95rem;
 				margin-right: 4px;
 			}
 
@@ -1007,6 +1027,14 @@
 
 				.entry-body {
 					grid-template-columns: 1fr;
+				}
+
+				.entry-summary {
+					align-items: flex-start;
+				}
+
+				.entry-line {
+					white-space: normal;
 				}
 
 				.notes-top-grid {
@@ -1302,11 +1330,14 @@
 					<div v-else-if="filteredEntries.length" class="entry-list">
 						<article class="entry" :id="`entry-${entry.id}`" v-for="entry in filteredEntries" :key="entry.id">
 							<button class="entry-summary" type="button" @click="toggleExpanded(entry.id)">
-								<div>
-									<h3 class="whisky-name">{{ entry.whisky }}</h3>
-									<p class="meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.date || "날짜 미입력" }}</p>
+								<div class="entry-line">
+									<span class="entry-date">{{ entry.date || "날짜 미입력" }}</span>
+									<span class="entry-separator">&gt;</span>
+									<span class="entry-category">{{ entry.category || "종류 미입력" }}</span>
+									<span class="entry-separator">&gt;</span>
+									<span class="entry-name">{{ entry.whisky || "이름 미입력" }}</span>
 								</div>
-								<span class="expand-indicator">{{ isExpanded(entry.id) ? "접기" : "자세히" }}</span>
+								<span class="expand-indicator">{{ isExpanded(entry.id) ? "접기" : "상세" }}</span>
 							</button>
 
 							<transition name="detail-slide">
@@ -1666,6 +1697,7 @@
 				const drinkCategory = getEntryDrinkCategory(entry);
 				return {
 					id: entry.id || crypto.randomUUID(),
+					createdAt: entry.createdAt || "",
 					date: entry.date || "",
 					place: entry.place || "",
 					drinker: entry.drinker || "",
@@ -1848,7 +1880,30 @@
 						return WRITE_TAB_CONFIGS[drinkType] || WRITE_TAB_CONFIGS.whisky;
 					},
 					sortedEntries() {
-						return [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
+						return this.entries
+							.map((entry, index) => ({ entry, index }))
+							.sort((left, right) => {
+								const leftDate = String(left.entry.date || "");
+								const rightDate = String(right.entry.date || "");
+
+								if (leftDate !== rightDate) {
+									return rightDate.localeCompare(leftDate);
+								}
+
+								const leftCreatedAt = String(left.entry.createdAt || "");
+								const rightCreatedAt = String(right.entry.createdAt || "");
+
+								if (leftCreatedAt && rightCreatedAt && leftCreatedAt !== rightCreatedAt) {
+									return rightCreatedAt.localeCompare(leftCreatedAt);
+								}
+
+								if (leftCreatedAt !== rightCreatedAt) {
+									return rightCreatedAt ? 1 : -1;
+								}
+
+								return right.index - left.index;
+							})
+							.map(({ entry }) => entry);
 					},
 					filteredEntries() {
 						const query = this.searchQuery.trim().toLowerCase();
@@ -2403,6 +2458,7 @@
 
 						const newEntry = {
 							id: crypto.randomUUID(),
+							createdAt: new Date().toISOString(),
 							date: this.form.date,
 							place: this.form.place,
 							drinker: this.form.drinker,

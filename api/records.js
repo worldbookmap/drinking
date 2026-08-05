@@ -98,6 +98,7 @@ function normalizeEntries(entries) {
 		const drinkCategory = getEntryDrinkCategory(entry);
 		return {
 			id: entry?.id || crypto.randomUUID(),
+			createdAt: entry?.createdAt || "",
 			date: entry?.date || "",
 			place: entry?.place || "",
 			drinker: entry?.drinker || "",
