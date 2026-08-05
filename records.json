@@ -1,5 +1,27 @@
 [
   {
+    "id": "b0ced081-264b-464f-9cf8-ca420a3d2bb4",
+    "createdAt": "2026-08-05T12:08:28.008Z",
+    "date": "2026-08-05",
+    "place": "집",
+    "drinker": "함께",
+    "whisky": "동목촌 마속 명전 금준미",
+    "drinkCategory": "tea",
+    "drinkType": "tea",
+    "category": "홍차",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260805115958-image-umyo0d.webp",
+    "caskType": "",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "금준미",
+    "detailLabel": "하위카테고리",
+    "detailValue": "금준미",
+    "nose": "연시, 고구마, 꿀, 꽃향(생화)",
+    "palate": "단맛, 연시, 맑다,",
+    "finish": "달큰함, 단향 지속",
+    "memo": "직관적이지 않고 섬세하고 우아하고 은근함\n\n동목촌: 지역이름, 마속: 세부 마을 이름\n명전: 절기이름"
+  },
+  {
     "id": "c4419e63-f6e9-459d-8d31-83eb518e2bd2",
     "createdAt": "",
     "date": "2026-08-04",
