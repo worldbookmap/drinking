@@ -1,6 +1,7 @@
 [
   {
     "id": "c4419e63-f6e9-459d-8d31-83eb518e2bd2",
+    "createdAt": "",
     "date": "2026-08-04",
     "place": "페어몬트호텔룸",
     "drinker": "함께",
@@ -22,6 +23,7 @@
   },
   {
     "id": "273aebe7-91db-45e7-8e7d-d7d32a3ba3d5",
+    "createdAt": "",
     "date": "2026-08-04",
     "place": "집",
     "drinker": "함께",
@@ -43,6 +45,7 @@
   },
   {
     "id": "fe1380cc-6853-4222-8e74-190186700128",
+    "createdAt": "",
     "date": "2026-08-03",
     "place": "페어몬트 호텔룸",
     "drinker": "함께",
@@ -64,6 +67,7 @@
   },
   {
     "id": "5ed10b6e-ca7b-4ce2-8144-a3ad4f760a73",
+    "createdAt": "",
     "date": "2026-08-03",
     "place": "요츠바",
     "drinker": "함께",
@@ -85,6 +89,7 @@
   },
   {
     "id": "b09f8ca7-612a-4577-a8da-07a91db95912",
+    "createdAt": "",
     "date": "2026-08-02",
     "place": "집",
     "drinker": "함께",
