@@ -89,6 +89,245 @@
 				background-attachment: fixed;
 			}
 
+			.loading-screen {
+				position: fixed;
+				inset: 0;
+				z-index: 120;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 24px;
+				overflow: hidden;
+				opacity: 1;
+				visibility: visible;
+				transition: opacity 0.8s ease, visibility 0.8s ease;
+			}
+
+			.loading-screen::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background-image:
+					linear-gradient(135deg, rgba(25, 22, 19, 0.66), rgba(78, 67, 58, 0.4), rgba(214, 201, 188, 0.14)),
+					url("./uploads/openBg.jpg");
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				transform: scale(1);
+				animation: loadingBgZoom 6.8s ease-out forwards;
+				will-change: transform;
+				pointer-events: none;
+			}
+
+			.loading-screen::after {
+				content: "";
+				position: absolute;
+				inset: -8%;
+				background:
+					radial-gradient(circle at 20% 22%, rgba(255, 246, 231, 0.22), transparent 24%),
+					radial-gradient(circle at 76% 74%, rgba(255, 238, 213, 0.16), transparent 28%),
+					radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.08), transparent 18%),
+					radial-gradient(circle at 62% 18%, rgba(245, 239, 228, 0.1), transparent 16%),
+					linear-gradient(180deg, rgba(18, 16, 14, 0.16), rgba(18, 16, 14, 0.4));
+				opacity: 0.95;
+				filter: blur(2px);
+				animation: loadingMistFloat 10s ease-in-out infinite alternate;
+				pointer-events: none;
+			}
+
+			.loading-particles {
+				position: absolute;
+				inset: -12%;
+				z-index: 0;
+				pointer-events: none;
+				opacity: 0.72;
+				background:
+					radial-gradient(circle at 12% 24%, rgba(255, 251, 244, 0.7) 0 1.5px, transparent 3px),
+					radial-gradient(circle at 28% 68%, rgba(255, 243, 224, 0.58) 0 2px, transparent 3.5px),
+					radial-gradient(circle at 44% 34%, rgba(255, 255, 255, 0.4) 0 1.2px, transparent 2.8px),
+					radial-gradient(circle at 58% 56%, rgba(255, 245, 229, 0.52) 0 1.8px, transparent 3.2px),
+					radial-gradient(circle at 74% 20%, rgba(255, 250, 242, 0.62) 0 1.6px, transparent 2.8px),
+					radial-gradient(circle at 86% 64%, rgba(246, 236, 219, 0.46) 0 2.2px, transparent 3.8px);
+				filter: blur(0.2px);
+				animation: loadingParticlesDrift 14s linear infinite;
+			}
+
+			.loading-screen.hidden {
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+			}
+
+			.loading-copy {
+				position: relative;
+				z-index: 1;
+				max-width: min(720px, 100%);
+				text-align: center;
+				color: #fff9f2;
+				text-shadow: 0 3px 18px rgba(0, 0, 0, 0.28);
+			}
+
+			.loading-copy-title {
+				margin: 0;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 700;
+				font-size: clamp(2.1rem, 5.6vw, 4.2rem);
+				line-height: 1.24;
+				letter-spacing: 0.02em;
+				opacity: 0;
+				transform: translate3d(-82px, 0, 0);
+				animation: loadingCopyIn 1.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s forwards;
+			}
+
+			.loading-copy-title span {
+				display: block;
+			}
+
+			.loading-copy-title span:last-child {
+				margin-top: 10px;
+			}
+
+			.loading-copy-accent {
+				display: inline-block;
+				margin-top: 18px;
+				padding: 8px 14px;
+				border: 1px solid rgba(255, 246, 231, 0.28);
+				border-radius: 999px;
+				background: rgba(255, 248, 239, 0.08);
+				backdrop-filter: blur(8px);
+				font-size: 0.82rem;
+				letter-spacing: 0.16em;
+				color: rgba(255, 247, 236, 0.9);
+				opacity: 0;
+				transform: translate3d(0, 20px, 0);
+				animation: loadingSubIn 1.05s ease 1.1s forwards;
+			}
+
+			.loading-copy small {
+				display: none;
+			}
+
+			.loading-progress {
+				position: absolute;
+				left: 24px;
+				right: 24px;
+				bottom: 24px;
+				z-index: 1;
+				display: grid;
+				gap: 10px;
+			}
+
+			.loading-progress-label {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 12px;
+				font-size: 0.8rem;
+				letter-spacing: 0.08em;
+				color: rgba(255, 247, 236, 0.88);
+				opacity: 0;
+				transform: translate3d(0, 18px, 0);
+				animation: loadingSubIn 0.95s ease 1.4s forwards;
+			}
+
+			.loading-progress-track {
+				position: relative;
+				height: 6px;
+				border-radius: 999px;
+				overflow: hidden;
+				background: rgba(255, 248, 239, 0.18);
+				border: 1px solid rgba(255, 245, 229, 0.18);
+				backdrop-filter: blur(6px);
+				opacity: 0;
+				transform: translate3d(0, 18px, 0);
+				animation: loadingSubIn 0.95s ease 1.55s forwards;
+			}
+
+			.loading-progress-bar {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				transform-origin: left center;
+				transform: scaleX(var(--loading-progress, 0));
+				background: linear-gradient(90deg, rgba(255, 235, 198, 0.72), rgba(255, 251, 244, 0.98), rgba(255, 228, 185, 0.78));
+				box-shadow: 0 0 18px rgba(255, 244, 222, 0.34);
+				transition: transform 0.28s ease-out;
+			}
+
+			.loading-progress-hint {
+				text-align: right;
+				font-size: 0.72rem;
+				letter-spacing: 0.06em;
+				color: rgba(255, 245, 229, 0.72);
+				opacity: 0;
+				transform: translate3d(0, 18px, 0);
+				animation: loadingSubIn 0.95s ease 1.7s forwards;
+			}
+
+			.app-content {
+				opacity: 1;
+				transform: translate3d(0, 0, 0);
+				transition: opacity 0.72s ease, transform 0.72s ease;
+			}
+
+			.app-content.loading {
+				opacity: 0;
+				transform: translate3d(0, 22px, 0);
+				pointer-events: none;
+			}
+
+			@keyframes loadingCopyIn {
+				from {
+					opacity: 0;
+					transform: translate3d(-82px, 0, 0);
+				}
+				to {
+					opacity: 1;
+					transform: translate3d(0, 0, 0);
+				}
+			}
+
+			@keyframes loadingSubIn {
+				from {
+					opacity: 0;
+					transform: translate3d(0, 18px, 0);
+				}
+				to {
+					opacity: 1;
+					transform: translate3d(0, 0, 0);
+				}
+			}
+
+			@keyframes loadingBgZoom {
+				from {
+					transform: scale(1);
+				}
+				to {
+					transform: scale(1.08);
+				}
+			}
+
+			@keyframes loadingMistFloat {
+				from {
+					transform: translate3d(-1.5%, 0, 0) scale(1);
+				}
+				to {
+					transform: translate3d(1.5%, -1.2%, 0) scale(1.04);
+				}
+			}
+
+			@keyframes loadingParticlesDrift {
+				from {
+					transform: translate3d(0, 0, 0);
+				}
+				50% {
+					transform: translate3d(-1.4%, -1%, 0);
+				}
+				to {
+					transform: translate3d(1.6%, 1.2%, 0);
+				}
+			}
+
 			.shell {
 				max-width: 1100px;
 				margin: 0 auto;
@@ -1084,15 +1323,73 @@
 				.layer-item-meta {
 					font-size: 0.83rem;
 				}
+
+				.loading-screen {
+					padding: 20px;
+				}
+
+				.loading-copy p {
+					font-size: clamp(1.55rem, 7vw, 2.3rem);
+					line-height: 1.45;
+				}
+
+				.loading-copy-title span:last-child {
+					margin-top: 6px;
+				}
+
+				.loading-copy-accent {
+					margin-top: 14px;
+					padding: 7px 12px;
+					font-size: 0.72rem;
+					letter-spacing: 0.12em;
+				}
+
+				.loading-copy small {
+					margin-top: 14px;
+					font-size: 0.76rem;
+					letter-spacing: 0.14em;
+				}
+
+				.loading-progress {
+					left: 16px;
+					right: 16px;
+					bottom: 18px;
+				}
+
+				.loading-progress-label {
+					font-size: 0.72rem;
+				}
+
+				.loading-progress-hint {
+					font-size: 0.68rem;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<div id="app" class="shell">
+			<div class="loading-screen" :class="{ hidden: !isInitialLoading }" aria-hidden="true" @click="skipInitialLoading">
+					<div class="loading-particles"></div>
+				<div class="loading-copy">
+					<p class="loading-copy-title"><span>향과 맛으로</span><span>삶을 풍족하게 하는 시간</span></p>
+					<div class="loading-copy-accent">A slower, fuller glass of life</div>
+				</div>
+					<div class="loading-progress">
+						<div class="loading-progress-label">
+							<span>시음 기록을 불러오는 중</span>
+							<span>{{ isReadyToDismissLoading ? "클릭해서 바로 보기" : "잠시만 기다려 주세요" }}</span>
+						</div>
+						<div class="loading-progress-track">
+							<div class="loading-progress-bar" :style="{ '--loading-progress': loadingProgress }"></div>
+						</div>
+						<div class="loading-progress-hint">화면을 누르면 다음 장면으로 넘어갑니다</div>
+					</div>
+			</div>
+			<div class="app-content" :class="{ loading: isInitialLoading }">
 				<div v-if="toast.visible" class="toast" :class="toast.type">{{ toast.message }}</div>
 			<header class="hero">
-				<h1 class="title">향과 맛을 즐기자</h1>
-				<p class="subtitle">위스키, 와인, 차의 향과 맛을 한곳에 기록해요.</p>
+				<h1 class="title">향과 맛으로 풍족해지는 시간</h1>
+				<p class="subtitle">위스키, 와인, 차</p>
 				<div class="tab-nav">
 					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">시음노트쓰기</button>
 					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">시음기록</button>
@@ -1333,7 +1630,7 @@
 								<div class="entry-line">
 									<span class="entry-date">{{ entry.date || "날짜 미입력" }}</span>
 									<span class="entry-separator">&gt;</span>
-									<span class="entry-category">{{ entry.category || "종류 미입력" }}</span>
+									<span class="entry-category">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }}</span>
 									<span class="entry-separator">&gt;</span>
 									<span class="entry-name">{{ entry.whisky || "이름 미입력" }}</span>
 								</div>
@@ -1522,6 +1819,7 @@
 					<p class="sync-status" style="margin-top: 12px">날짜를 클릭하면 해당 날짜의 시음 내용이 중앙에 보여요.</p>
 				</section>
 			</main>
+			</div>
 		</div>
 
 		<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
@@ -1843,6 +2141,10 @@
 						weekLabels: WEEK_LABELS,
 						calendarMonthKey: getCurrentMonthKey(),
 						activeCalendarKey: "",
+						isInitialLoading: true,
+						isReadyToDismissLoading: false,
+						loadingProgress: 0,
+						loadingProgressTimer: null,
 						isSaving: false,
 						isImageUploading: false,
 						lastCommitSha: "",
@@ -2056,10 +2358,23 @@
 				async mounted() {
 					this.syncWriteTheme();
 					window.addEventListener("keydown", this.onGlobalKeydown);
+					this.startInitialLoadingProgress();
+					const loadStartedAt = Date.now();
 					await this.reloadFromRepo();
+					this.completeInitialLoadingProgress();
+					this.isReadyToDismissLoading = true;
+					const elapsed = Date.now() - loadStartedAt;
+					if (elapsed < 4800) {
+						await this.wait(4800 - elapsed);
+					}
+					this.finishInitialLoading();
 				},
 				beforeUnmount() {
 					window.removeEventListener("keydown", this.onGlobalKeydown);
+					if (this.loadingProgressTimer) {
+						clearInterval(this.loadingProgressTimer);
+						this.loadingProgressTimer = null;
+					}
 				},
 				watch: {
 					activeWriteTab() {
@@ -2069,6 +2384,48 @@
 				methods: {
 					getEntryDrinkCategory(entry) {
 						return getEntryDrinkCategory(entry);
+					},
+					startInitialLoadingProgress() {
+						if (this.loadingProgressTimer) {
+							clearInterval(this.loadingProgressTimer);
+						}
+
+						this.loadingProgress = 0.04;
+						this.loadingProgressTimer = setInterval(() => {
+							if (!this.isInitialLoading) {
+								clearInterval(this.loadingProgressTimer);
+								this.loadingProgressTimer = null;
+								return;
+							}
+
+							const current = Number(this.loadingProgress || 0);
+							if (current >= 0.9) {
+								return;
+							}
+
+							const remaining = 0.92 - current;
+							const step = Math.max(remaining * 0.08, 0.006);
+							this.loadingProgress = Math.min(0.92, current + step);
+						}, 120);
+					},
+					completeInitialLoadingProgress() {
+						if (this.loadingProgressTimer) {
+							clearInterval(this.loadingProgressTimer);
+							this.loadingProgressTimer = null;
+						}
+
+						this.loadingProgress = 1;
+					},
+					finishInitialLoading() {
+						if (!this.isReadyToDismissLoading || !this.isInitialLoading) {
+							return;
+						}
+
+						this.loadingProgress = 1;
+						this.isInitialLoading = false;
+					},
+					skipInitialLoading() {
+						this.finishInitialLoading();
 					},
 					onGlobalKeydown(event) {
 						if (event.key !== "Escape") {
