@@ -1,5 +1,27 @@
 [
   {
+    "id": "da34bcf6-0996-40e7-a604-07be574220a0",
+    "createdAt": "2026-08-06T12:48:06.819Z",
+    "date": "2026-08-06",
+    "place": "집",
+    "drinker": "함께",
+    "whisky": "Mars The YA #3",
+    "drinkCategory": "whisky",
+    "drinkType": "whisky",
+    "category": "일본",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260806124425-image-jcob0l.webp",
+    "caskType": "ex버번,?",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "캐스크",
+    "detailValue": "ex버번,?",
+    "nose": "바나나, 사과, 알콜의 스파이시, 바나나, 꿀",
+    "palate": "과일, 달콤함, 스파이스, 캔디, 시트러스",
+    "finish": "중간, 따뜻함, 드라이, 스파이시, 오크, 쌉쌀함",
+    "memo": "맛있다."
+  },
+  {
     "id": "b0ced081-264b-464f-9cf8-ca420a3d2bb4",
     "createdAt": "2026-08-05T12:08:28.008Z",
     "date": "2026-08-05",
