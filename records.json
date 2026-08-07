@@ -1,5 +1,27 @@
 [
   {
+    "id": "374f968d-620b-4879-86be-2c7f278b5409",
+    "createdAt": "2026-08-07T01:40:12.964Z",
+    "date": "2026-08-07",
+    "place": "ㄴ",
+    "drinker": "지선",
+    "whisky": "ㅋㅌㄹㄹ",
+    "drinkCategory": "whisky",
+    "drinkType": "whisky",
+    "category": "대만",
+    "imageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/d1bd89357a127e1bf19d8e9530eddafe48ef8e8f/uploads/20260807014010-image-wq5do2.webp",
+    "caskType": "올로로소",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "캐스크",
+    "detailValue": "올로로소",
+    "nose": "셰리",
+    "palate": "과일",
+    "finish": "",
+    "memo": ""
+  },
+  {
     "id": "da34bcf6-0996-40e7-a604-07be574220a0",
     "createdAt": "2026-08-06T12:48:06.819Z",
     "date": "2026-08-06",
