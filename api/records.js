@@ -80,7 +80,8 @@ function getConfig() {
 		owner: process.env.GITHUB_OWNER || "worldbookmap",
 		repo: process.env.GITHUB_REPO || "drinking",
 		branch: process.env.GITHUB_BRANCH || "main",
-		path: process.env.GITHUB_RECORDS_PATH || "records.json"
+		path: process.env.GITHUB_RECORDS_PATH || "records.json",
+		uploadDir: process.env.GITHUB_UPLOAD_DIR || "uploads"
 	};
 }
 
@@ -182,6 +183,160 @@ async function writeRecordsToGithub(config, entries, previousSha) {
 	});
 }
 
+function encodePathBySegment(path) {
+	return String(path || "")
+		.split("/")
+		.filter(Boolean)
+		.map((segment) => encodeURIComponent(segment))
+		.join("/");
+}
+
+function normalizeUploadDir(uploadDir) {
+	return String(uploadDir || "uploads").replace(/^\/+|\/+$/g, "") || "uploads";
+}
+
+function extractManagedUploadPath(url, config) {
+	const normalizedUploadDir = normalizeUploadDir(config.uploadDir);
+	const cleaned = String(url || "").trim();
+if (!cleaned) {
+		return "";
+	}
+
+	if (cleaned.startsWith(`${normalizedUploadDir}/`)) {
+		return cleaned;
+	}
+
+	try {
+		const parsed = new URL(cleaned);
+		if (parsed.hostname !== "raw.githubusercontent.com") {
+			return "";
+		}
+
+		const parts = parsed.pathname.split("/").filter(Boolean);
+		if (parts.length < 4) {
+			return "";
+		}
+
+		const owner = parts[0];
+		const repo = parts[1];
+		if (owner !== config.owner || repo !== config.repo) {
+			return "";
+		}
+
+		const relativePath = decodeURIComponent(parts.slice(3).join("/"));
+		if (!relativePath.startsWith(`${normalizedUploadDir}/`)) {
+			return "";
+		}
+
+		return relativePath;
+	} catch {
+		return "";
+	}
+}
+
+function collectImageUrls(entries) {
+	const set = new Set();
+	for (const entry of entries || []) {
+		const imageUrl = String(entry?.imageUrl || "").trim();
+		if (imageUrl) {
+			set.add(imageUrl);
+		}
+	}
+	return set;
+}
+
+function collectDeletedManagedUploadPaths(previousEntries, nextEntries, config) {
+	const previousUrls = collectImageUrls(previousEntries);
+	const nextUrls = collectImageUrls(nextEntries);
+	const paths = new Set();
+
+	for (const url of previousUrls) {
+		if (nextUrls.has(url)) {
+			continue;
+		}
+
+		const managedPath = extractManagedUploadPath(url, config);
+		if (managedPath) {
+			paths.add(managedPath);
+		}
+	}
+
+	return [...paths];
+}
+
+async function getFileShaFromGithub(config, filePath) {
+	const encodedPath = encodePathBySegment(filePath);
+	const path = `/repos/${config.owner}/${config.repo}/contents/${encodedPath}?ref=${encodeURIComponent(config.branch)}`;
+
+	try {
+		const file = await githubRequest(path, {
+			headers: {
+				Authorization: `Bearer ${config.token}`,
+				Accept: "application/vnd.github+json"
+			}
+		});
+		return String(file?.sha || "");
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error || "");
+		if (message.includes("Not Found")) {
+			return "";
+		}
+		throw error;
+	}
+}
+
+async function deleteFileFromGithub(config, filePath, sha) {
+	const encodedPath = encodePathBySegment(filePath);
+	const path = `/repos/${config.owner}/${config.repo}/contents/${encodedPath}`;
+
+	return githubRequest(path, {
+		method: "DELETE",
+		headers: {
+			Authorization: `Bearer ${config.token}`,
+			Accept: "application/vnd.github+json",
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({
+			message: `Delete orphaned image ${filePath} from Vercel app`,
+			sha,
+			branch: config.branch
+		})
+	});
+}
+
+async function deleteUploadsFromGithub(config, paths) {
+	let deleted = 0;
+	let skipped = 0;
+	const failed = [];
+
+	for (const path of paths) {
+		try {
+			const sha = await getFileShaFromGithub(config, path);
+			if (!sha) {
+				skipped += 1;
+				continue;
+			}
+
+			await deleteFileFromGithub(config, path, sha);
+			deleted += 1;
+		} catch (error) {
+			const message = error instanceof Error ? error.message : String(error || "Unknown delete error");
+			if (message.includes("Not Found")) {
+				skipped += 1;
+				continue;
+			}
+			failed.push({ path, error: message });
+		}
+	}
+
+	return {
+		requested: paths.length,
+		deleted,
+		skipped,
+		failed
+	};
+}
+
 export default async function handler(req, res) {
 	if (req.method !== "GET" && req.method !== "POST") {
 		return sendJson(res, 405, { error: "Method not allowed" });
@@ -201,12 +356,15 @@ export default async function handler(req, res) {
 		}
 
 		const incomingEntries = normalizeEntries(req.body?.entries);
-		const { sha } = await readRecordsFromGithub(config);
+		const { entries: previousEntries, sha } = await readRecordsFromGithub(config);
 		const result = await writeRecordsToGithub(config, incomingEntries, sha);
+		const removedUploadPaths = collectDeletedManagedUploadPaths(previousEntries, incomingEntries, config);
+		const imageCleanup = await deleteUploadsFromGithub(config, removedUploadPaths);
 
 		return sendJson(res, 200, {
 			ok: true,
-			commitSha: result.commit?.sha || ""
+			commitSha: result.commit?.sha || "",
+			imageCleanup
 		});
 	} catch (error) {
 		return sendJson(res, 500, {

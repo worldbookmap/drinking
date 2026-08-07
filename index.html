@@ -1828,12 +1828,14 @@
 			const RECORDS_FILE = "./records.json";
 			const RECORDS_API = "/api/records";
 			const IMAGE_UPLOAD_API = "/api/upload-image";
-			const IMAGE_MAX_DIMENSION = 1280;
-			const IMAGE_WEBP_QUALITY = 0.82;
+			const IMAGE_MAX_DIMENSION = 960;
+			const IMAGE_WEBP_QUALITY = 0.72;
+			const IMAGE_TARGET_MAX_BYTES = 350 * 1024;
 			const IMAGE_FALLBACK_STEPS = [
-				{ maxDimension: 1280, quality: 0.82 },
-				{ maxDimension: 1024, quality: 0.76 },
-				{ maxDimension: 896, quality: 0.68 }
+				{ maxDimension: 960, quality: 0.72 },
+				{ maxDimension: 840, quality: 0.66 },
+				{ maxDimension: 720, quality: 0.6 },
+				{ maxDimension: 640, quality: 0.56 }
 			];
 			const DEFAULT_BOTTLE_IMAGE =
 				"data:image/svg+xml," +
@@ -2050,6 +2052,11 @@
 				});
 			}
 
+			function getDataUrlSizeBytes(dataUrl) {
+				const base64 = String(dataUrl || "").split(",")[1] || "";
+				return Math.floor((base64.length * 3) / 4);
+			}
+
 			async function resizeAndCompressImage(file, options = {}) {
 				const maxDimension = Number(options.maxDimension) || IMAGE_MAX_DIMENSION;
 				const quality = Number(options.quality) || IMAGE_WEBP_QUALITY;
@@ -2100,16 +2107,37 @@
 			}
 
 			async function buildUploadPayload(file) {
+				let smallestCandidate = null;
+
 				for (const step of IMAGE_FALLBACK_STEPS) {
 					try {
-						return await resizeAndCompressImage(file, {
+						const candidate = await resizeAndCompressImage(file, {
 							maxDimension: step.maxDimension,
 							quality: step.quality,
 							outputMimeType: "image/webp"
 						});
+
+						const candidateBytes = getDataUrlSizeBytes(candidate.dataUrl);
+						if (!smallestCandidate || candidateBytes < smallestCandidate.bytes) {
+							smallestCandidate = {
+								...candidate,
+								bytes: candidateBytes
+							};
+						}
+
+						if (candidateBytes <= IMAGE_TARGET_MAX_BYTES) {
+							return candidate;
+						}
 					} catch {
 						// Continue trying smaller output settings.
 					}
+				}
+
+				if (smallestCandidate) {
+					return {
+						dataUrl: smallestCandidate.dataUrl,
+						mimeType: smallestCandidate.mimeType
+					};
 				}
 
 				const originalDataUrl = await fileToDataUrl(file);
@@ -2935,6 +2963,7 @@
 							}
 
 							const commitSha = result.commitSha ? result.commitSha.slice(0, 7) : "";
+							const deletedImageCount = Number(result?.imageCleanup?.deleted || 0);
 							if (commitSha) {
 								this.lastCommitSha = commitSha;
 							}
@@ -2952,14 +2981,15 @@
 								this.entries = payload.map((entry) => normalizeEntry(entry));
 							}
 
+							const cleanupText = deletedImageCount > 0 ? ` 삭제된 사진 ${deletedImageCount}장도 정리했어요.` : "";
 							this.syncMessage = commitSha
-								? `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요. (${commitSha})`
-								: "GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요.";
+								? `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요. (${commitSha})${cleanupText}`
+								: `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요.${cleanupText}`;
 							this.showToast(
 								"success",
 								commitSha
-									? `GitHub 저장 후 최신 데이터를 자동 반영했어요. SHA ${commitSha}`
-									: "GitHub 저장 후 최신 데이터를 자동 반영했어요."
+									? `GitHub 저장 후 최신 데이터를 자동 반영했어요. SHA ${commitSha}${cleanupText}`
+									: `GitHub 저장 후 최신 데이터를 자동 반영했어요.${cleanupText}`
 							);
 						} catch (error) {
 							this.syncMessage = `저장 실패: ${error.message}`;
