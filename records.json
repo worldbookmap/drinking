@@ -1,5 +1,27 @@
 [
   {
+    "id": "3e2ea469-e44a-432f-b81c-c0cd985bc6e0",
+    "createdAt": "2026-08-07T01:30:49.135Z",
+    "date": "2026-08-10",
+    "place": "ㄴ",
+    "drinker": "지선",
+    "whisky": "ㄴㄴㄴ",
+    "drinkCategory": "whisky",
+    "drinkType": "whisky",
+    "category": "대만",
+    "imageUrl": "https://worldbookmap.github.io/drinking/uploads/20260807013044-image-ds2ry8.webp",
+    "caskType": "버진",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "캐스크",
+    "detailValue": "버진",
+    "nose": "셰리",
+    "palate": "스파이스",
+    "finish": "드라이",
+    "memo": ""
+  },
+  {
     "id": "da34bcf6-0996-40e7-a604-07be574220a0",
     "createdAt": "2026-08-06T12:48:06.819Z",
     "date": "2026-08-06",
