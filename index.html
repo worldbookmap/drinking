@@ -1308,6 +1308,38 @@
 				object-fit: contain;
 			}
 
+			.tea-leaf-trigger {
+				width: 100%;
+				margin-top: 6px;
+			}
+
+			.tea-leaf-modal {
+				width: min(520px, calc(100vw - 28px));
+				margin: 0 auto;
+			}
+
+			.tea-leaf-backdrop {
+				z-index: 110;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.tea-leaf-modal-image-wrap {
+				margin-top: 6px;
+				border: 1px solid rgba(121, 113, 106, 0.2);
+				border-radius: 12px;
+				background: #fff8ef;
+				padding: 10px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.tea-leaf-modal-image {
+				width: min(100%, 420px);
+				height: min(62vh, 420px);
+				object-fit: contain;
+			}
+
 			.traits {
 				display: flex;
 				flex-wrap: wrap;
@@ -1671,31 +1703,31 @@
 							</div>
 						</div>
 
-						<div v-if="activeWriteTab === 'tea'" class="row">
-							<label for="teaLeafImageUrl">차엽 사진 URL</label>
+						<div class="row">
+							<label for="teaLeafImageUrl">{{ getLabelPhotoTerm(activeWriteTab) }} 사진 URL</label>
 							<input
 								id="teaLeafImageUrl"
 								v-model.trim="form.teaLeafImageUrl"
 								@input="clearTeaLeafPreview"
 								type="url"
-								placeholder="차엽 사진 URL 또는 아래에서 카메라/사진첩 업로드"
+								:placeholder="`${getLabelPhotoTerm(activeWriteTab)} 사진 URL 또는 아래에서 카메라/사진첩 업로드`"
 							/>
 							<div class="upload-actions">
 								<button class="tool-btn small" type="button" @click="openTeaLeafCamera" :disabled="isImageUploading">
-									<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "차엽 찍기" }}
+									<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : `${getLabelPhotoTerm(activeWriteTab)} 찍기` }}
 								</button>
 								<button class="tool-btn small" type="button" @click="openTeaLeafGallery" :disabled="isImageUploading">
 									<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
 								</button>
 							</div>
-							<p class="upload-hint">차엽 사진도 자동 리사이즈/압축 후 저장돼요.</p>
+							<p class="upload-hint">{{ getLabelPhotoTerm(activeWriteTab) }} 사진도 자동 리사이즈/압축 후 저장돼요.</p>
 							<input ref="teaLeafCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'form', 'teaLeafImageUrl', 'teaLeafPreviewUrl')" style="display: none" />
 							<input ref="teaLeafGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'form', 'teaLeafImageUrl', 'teaLeafPreviewUrl')" style="display: none" />
 							<div class="bottle-preview">
 								<img
 									:src="resolveBottleImage(form.teaLeafImageUrl, teaLeafPreviewUrl)"
 									:data-origin-src="form.teaLeafImageUrl"
-									alt="차엽 미리보기"
+									:alt="`${getLabelPhotoTerm(activeWriteTab)} 미리보기`"
 									@load="onBottleImageLoad"
 									@error="onBottleImageError"
 								/>
@@ -1827,6 +1859,14 @@
 												@error="onBottleImageError"
 											/>
 										</div>
+										<button
+											v-if="editingEntryId !== entry.id && entry.teaLeafImageUrl"
+											class="tool-btn small tea-leaf-trigger"
+											type="button"
+											@click="openTeaLeafModal(entry)"
+										>
+											{{ getLabelPhotoTerm(getEntryDrinkCategory(entry)) }}
+										</button>
 										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
 												<p class="note"><b>{{ getEntryCategoryLabel(entry) }}</b>{{ entry.category || "기록 없음" }}</p>
@@ -1838,15 +1878,6 @@
 											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
 											<p class="note note-memo"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
-											<div v-if="getEntryDrinkCategory(entry) === 'tea' && entry.teaLeafImageUrl" class="bottle-preview entry-photo entry-tea-leaf-photo">
-												<img
-													:src="resolveBottleImage(entry.teaLeafImageUrl)"
-													:data-origin-src="entry.teaLeafImageUrl"
-													alt="차엽 사진"
-													@load="onBottleImageLoad"
-													@error="onBottleImageError"
-												/>
-											</div>
 										</div>
 										<div class="notes" v-else>
 											<div class="notes-top-grid">
@@ -1907,25 +1938,25 @@
 													/>
 												</div>
 											</div>
-											<div v-if="editForm.drinkCategory === 'tea'" class="row" style="margin: 0">
-												<label>차엽 사진 URL</label>
+											<div class="row" style="margin: 0">
+												<label>{{ getLabelPhotoTerm(editForm.drinkCategory) }} 사진 URL</label>
 												<input v-model.trim="editForm.teaLeafImageUrl" @input="editTeaLeafPreviewUrl = ''" type="url" placeholder="https://..." />
 												<div class="upload-actions">
 													<button class="tool-btn small" type="button" @click="openFileInput('editTeaLeafCameraInput')" :disabled="isImageUploading">
-														<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "차엽 찍기" }}
+														<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : `${getLabelPhotoTerm(editForm.drinkCategory)} 찍기` }}
 													</button>
 													<button class="tool-btn small" type="button" @click="openFileInput('editTeaLeafGalleryInput')" :disabled="isImageUploading">
 														<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
 													</button>
 												</div>
-												<p class="upload-hint">차엽 사진도 새 파일로 바로 교체할 수 있어요.</p>
+												<p class="upload-hint">{{ getLabelPhotoTerm(editForm.drinkCategory) }} 사진도 새 파일로 바로 교체할 수 있어요.</p>
 												<input ref="editTeaLeafCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'editForm', 'teaLeafImageUrl', 'editTeaLeafPreviewUrl', editForm.teaLeafImageUrl)" style="display: none" />
 												<input ref="editTeaLeafGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'editForm', 'teaLeafImageUrl', 'editTeaLeafPreviewUrl', editForm.teaLeafImageUrl)" style="display: none" />
 												<div class="bottle-preview">
 													<img
 														:src="resolveBottleImage(editForm.teaLeafImageUrl, editTeaLeafPreviewUrl)"
 														:data-origin-src="editForm.teaLeafImageUrl"
-														alt="편집 중 차엽 미리보기"
+														:alt="`편집 중 ${getLabelPhotoTerm(editForm.drinkCategory)} 미리보기`"
 														@load="onBottleImageLoad"
 														@error="onBottleImageError"
 													/>
@@ -2050,6 +2081,25 @@
 					<p class="sync-status" style="margin-top: 12px">날짜를 클릭하면 해당 날짜의 시음 내용이 중앙에 보여요.</p>
 				</section>
 			</main>
+
+			<div class="calendar-modal-backdrop tea-leaf-backdrop" v-if="teaLeafModal.visible" @click="closeTeaLeafModal">
+				<div class="calendar-modal tea-leaf-modal" @click.stop>
+					<div class="calendar-modal-head">
+						<p class="layer-title" style="margin: 0">{{ teaLeafModal.label }} 사진</p>
+						<button class="modal-close" type="button" @click="closeTeaLeafModal">X</button>
+					</div>
+					<div class="tea-leaf-modal-image-wrap">
+						<img
+							class="tea-leaf-modal-image"
+							:src="resolveBottleImage(teaLeafModal.url)"
+							:data-origin-src="teaLeafModal.url"
+							:alt="`${teaLeafModal.label} 사진`"
+							@load="onBottleImageLoad"
+							@error="onBottleImageError"
+						/>
+					</div>
+				</div>
+			</div>
 			</div>
 		</div>
 
@@ -2245,7 +2295,7 @@
 					drinkType: drinkCategory,
 					category: entry.category || "",
 					imageUrl: entry.imageUrl || "",
-					teaLeafImageUrl: entry.teaLeafImageUrl || "",
+					teaLeafImageUrl: entry.teaLeafImageUrl || entry.labelImageUrl || "",
 					caskType: entry.caskType || "",
 					wineCountry: entry.wineCountry || "",
 					wineCountryCustom: entry.wineCountryCustom || "",
@@ -2433,6 +2483,11 @@
 						weekLabels: WEEK_LABELS,
 						calendarMonthKey: getCurrentMonthKey(),
 						activeCalendarKey: "",
+						teaLeafModal: {
+							visible: false,
+							url: "",
+							label: "라벨"
+						},
 						isInitialLoading: true,
 						isReadyToDismissLoading: false,
 						loadingProgress: 0,
@@ -2733,6 +2788,11 @@
 							return;
 						}
 
+						if (this.teaLeafModal.visible) {
+							this.closeTeaLeafModal();
+							return;
+						}
+
 						if (this.editingEntryId) {
 							this.cancelEditEntry();
 						}
@@ -2851,6 +2911,7 @@
 							category: this.editForm.category,
 							imageUrl: this.editForm.imageUrl,
 							teaLeafImageUrl: this.editForm.teaLeafImageUrl,
+							labelImageUrl: this.editForm.teaLeafImageUrl,
 							caskType: this.editForm.caskType,
 							wineCountry: this.editForm.wineCountry,
 							wineCountryCustom: this.editForm.wineCountryCustom,
@@ -2908,6 +2969,9 @@
 					},
 					getEntryDetailValue(entry) {
 						return getDrinkDetailValue(entry);
+					},
+					getLabelPhotoTerm(drinkCategory) {
+						return drinkCategory === "tea" ? "차엽" : "라벨";
 					},
 					resolveBottleImage(url, previewUrl = "") {
 						const preview = (previewUrl || "").trim();
@@ -3117,6 +3181,21 @@
 					closeCalendarModal() {
 						this.activeCalendarKey = "";
 					},
+					openTeaLeafModal(entry) {
+						const url = String(entry?.teaLeafImageUrl || "").trim();
+						if (!url) {
+							return;
+						}
+
+						this.teaLeafModal.visible = true;
+						this.teaLeafModal.url = url;
+						this.teaLeafModal.label = this.getLabelPhotoTerm(this.getEntryDrinkCategory(entry));
+					},
+					closeTeaLeafModal() {
+						this.teaLeafModal.visible = false;
+						this.teaLeafModal.url = "";
+						this.teaLeafModal.label = "라벨";
+					},
 					openRecordFromCalendar(entryId) {
 						if (!entryId) {
 							return;
@@ -3186,6 +3265,7 @@
 							category: this.form.category,
 							imageUrl: this.form.imageUrl,
 							teaLeafImageUrl: this.form.teaLeafImageUrl,
+							labelImageUrl: this.form.teaLeafImageUrl,
 							caskType: this.form.caskType,
 							wineCountry: this.form.wineCountry,
 							wineCountryCustom: this.form.wineCountryCustom,

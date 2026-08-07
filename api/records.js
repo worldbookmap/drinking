@@ -115,7 +115,8 @@ function normalizeEntries(entries) {
 			drinkType: drinkCategory,
 			category: entry?.category || "",
 			imageUrl: entry?.imageUrl || "",
-			teaLeafImageUrl: entry?.teaLeafImageUrl || "",
+			teaLeafImageUrl: entry?.teaLeafImageUrl || entry?.labelImageUrl || "",
+			labelImageUrl: entry?.labelImageUrl || entry?.teaLeafImageUrl || "",
 			caskType: entry?.caskType || "",
 			wineCountry: entry?.wineCountry || "",
 			wineCountryCustom: entry?.wineCountryCustom || "",
@@ -249,6 +250,11 @@ function collectImageUrls(entries) {
 		const teaLeafImageUrl = String(entry?.teaLeafImageUrl || "").trim();
 		if (teaLeafImageUrl) {
 			set.add(teaLeafImageUrl);
+		}
+
+		const labelImageUrl = String(entry?.labelImageUrl || "").trim();
+		if (labelImageUrl) {
+			set.add(labelImageUrl);
 		}
 	}
 	return set;
