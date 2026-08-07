@@ -22,6 +22,28 @@
     "memo": ""
   },
   {
+    "id": "1736d6ca-1ed6-4e97-8609-225eead8c507",
+    "createdAt": "2026-08-07T01:32:30.958Z",
+    "date": "2026-08-07",
+    "place": "ㅜㅜㅜㅜㅣ",
+    "drinker": "진욱",
+    "whisky": "ㅡ차ㅏㅊ",
+    "drinkCategory": "whisky",
+    "drinkType": "whisky",
+    "category": "스코틀랜드",
+    "imageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/81cb8f4c2d7e31251167f7630c32072e0322c00d/uploads/20260807013220-image-b32i02.webp",
+    "caskType": "버진, 올로로소",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "캐스크",
+    "detailValue": "버진, 올로로소",
+    "nose": "셰리, 스모크",
+    "palate": "스파이스",
+    "finish": "달콤한 여운",
+    "memo": ""
+  },
+  {
     "id": "da34bcf6-0996-40e7-a604-07be574220a0",
     "createdAt": "2026-08-06T12:48:06.819Z",
     "date": "2026-08-06",
