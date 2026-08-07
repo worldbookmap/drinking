@@ -1975,7 +1975,7 @@
 									</div>
 									<div class="detail-actions">
 										<button v-if="editingEntryId !== entry.id" class="tool-btn small" type="button" @click="startEditEntry(entry)"><i class="lni lni-pencil"></i>수정</button>
-										<button v-else class="tool-btn small" type="button" @click="saveEditedEntry(entry.id)"><i class="lni lni-save"></i>저장</button>
+										<button v-else class="tool-btn small" type="button" @click="saveEditedEntry(entry.id)" :disabled="isImageUploading"><i class="lni lni-save"></i>{{ isImageUploading ? "업로드 중..." : "저장" }}</button>
 										<button v-if="editingEntryId === entry.id" class="tool-btn small" type="button" @click="cancelEditEntry"><i class="lni lni-close"></i>취소</button>
 										<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
 									</div>
@@ -2800,6 +2800,11 @@
 					},
 					saveEditedEntry(entryId) {
 						if (!entryId || this.editingEntryId !== entryId || !this.editForm) {
+							return;
+						}
+
+						if (this.isImageUploading) {
+							this.showToast("error", "이미지 업로드가 끝난 뒤에 저장해 주세요.");
 							return;
 						}
 
