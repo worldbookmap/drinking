@@ -20,7 +20,49 @@
     "detailValue": "올로로소",
     "nose": "셰리",
     "palate": "과일",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "",
+    "memo": ""
+  },
+  {
+    "id": "668e0c26-19a5-4553-8575-148fcf5afb9d",
+    "createdAt": "2026-08-07T05:10:37.367Z",
+    "date": "2026-08-07",
+    "place": "회사",
+    "drinker": "진욱",
+    "whisky": "샤또 마고",
+    "drinkCategory": "wine",
+    "drinkType": "wine",
+    "category": "레드",
+    "imageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/8686731150e79410e94b58074d46217c8703dc8d/uploads/20260807050955-image-oytjtq.webp",
+    "teaLeafImageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/3fd11d786c8a810b20a31ba91dea5460c8ffe7d9/uploads/20260807051005-image-sb0huq.webp",
+    "labelImageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/3fd11d786c8a810b20a31ba91dea5460c8ffe7d9/uploads/20260807051005-image-sb0huq.webp",
+    "caskType": "",
+    "wineCountry": "호주",
+    "wineCountryCustom": "",
+    "teaSubcategory": "",
+    "detailLabel": "국가",
+    "detailValue": "호주",
+    "nose": "레드과일, 살구, 오렌지, 레몬, 꽃향, 유칼립투스",
+    "palate": "미끄덩하다",
+    "rating": {
+      "body": "4",
+      "acidity": "2",
+      "tannin": "4",
+      "alcohol": "",
+      "sweetness": "4",
+      "complexity": "5",
+      "balance": "5"
+    },
+    "finish": "짧음, 미네랄 여운",
     "memo": ""
   },
   {
@@ -44,6 +86,15 @@
     "detailValue": "ex버번,?",
     "nose": "바나나, 사과, 알콜의 스파이시, 바나나, 꿀",
     "palate": "과일, 달콤함, 스파이스, 캔디, 시트러스",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "중간, 따뜻함, 드라이, 스파이시, 오크, 쌉쌀함",
     "memo": "맛있다."
   },
@@ -68,6 +119,15 @@
     "detailValue": "금준미",
     "nose": "연시, 고구마, 꿀, 꽃향(생화)",
     "palate": "단맛, 연시, 맑다,",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "달큰함, 단향 지속",
     "memo": "직관적이지 않고 섬세하고 우아하고 은근함\n\n동목촌: 지역이름, 마속: 세부 마을 이름\n명전: 절기이름"
   },
@@ -92,6 +152,15 @@
     "detailValue": "정산소종",
     "nose": "꽃향, 목질, 나무향, 단향",
     "palate": "목질, 단맛, 떫은맛(탄닌)",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "중간, 구수함",
     "memo": "무연 정산소종이라서 훈연향 없음. 맛이 고급에 비해 살짝 단조로움. 육각형이라기엔 조금 모자람. 무연 정산소종 먹을거면 그냥 다른 홍차가 낫다는 생각. 하지만 가성비는 좋은편. 25년 생산"
   },
@@ -116,6 +185,15 @@
     "detailValue": "육보차",
     "nose": "젖은 흙, 버섯?",
     "palate": "단맛, 구수함, 묵직함, 은은한 쓴맛",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "중간, 달큰함, 단향 지속",
     "memo": "휘게에서 사온 육보 다 마셔간다\n물을 삼다수와 백산수 둘 다 마셔보니 맛 차이 느껴진다. 삼다수가 좀 더 부드러움"
   },
@@ -140,6 +218,15 @@
     "detailValue": "백호은침",
     "nose": "호향 프레쉬, 꽃향",
     "palate": "호향",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "중간",
     "memo": "엽저가 매우 튼실하고 깨끗, 약간 기름질 수 있지만 풍성한 향\n- 진욱: 호향이 뭔대 도대체!!!!!?"
   },
@@ -164,6 +251,15 @@
     "detailValue": "프랑스",
     "nose": "노란 사과, 시트러스, 미네랄, 용과, 서양배, 복숭아, 꽃향(흰꽃, 인동초)",
     "palate": "드라이, 산미, 미네랄",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "중간, 드라이, 상쾌한 과일",
     "memo": "페어몬트 호캉스\n페어링: 쓰리페퍼 치킨, 오렌지 치킨,"
   },
@@ -188,6 +284,15 @@
     "detailValue": "ex버번",
     "nose": "꿀, 피트",
     "palate": "꿀에 절인 담뱃재, 꿀 질감, 카라멜 팝콘,",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "달콤한 여운, 따뜻함",
     "memo": ""
   },
@@ -212,6 +317,15 @@
     "detailValue": "프랑스",
     "nose": "서양배, 시트러스, 아주 약한 빵향, 복숭아",
     "palate": "탄산, 드라이",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
     "finish": "중간, 드라이, 오크",
     "memo": "페어링: 감자튀김 시오콘부 버터 볶음, 아보카도, 빵\n지선이 회복 후 와인 마시고 싶다고 찡찡"
   }
