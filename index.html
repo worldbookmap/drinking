@@ -585,6 +585,13 @@
 				color: var(--ink-soft);
 			}
 
+			.form-panel .row > label {
+				font-size: 0.94rem;
+				font-weight: 800;
+				color: #4f3d33;
+				letter-spacing: 0.01em;
+			}
+
 			input,
 			textarea,
 			select {
@@ -1403,6 +1410,12 @@
 				align-items: start;
 			}
 
+			.entry-media {
+				display: grid;
+				gap: 6px;
+				align-content: start;
+			}
+
 			.entry-photo {
 				margin-top: 9px;
 				padding: 8px;
@@ -1416,7 +1429,7 @@
 
 			.tea-leaf-trigger {
 				width: 100%;
-				margin-top: 6px;
+				margin-top: 0;
 			}
 
 			.tea-leaf-modal {
@@ -2178,23 +2191,25 @@
 							<transition name="detail-slide">
 								<div class="entry-detail" v-if="isExpanded(entry.id)">
 									<div class="entry-body">
-										<div class="bottle-preview entry-photo">
-											<img
-												:src="resolveBottleImage(entry.imageUrl)"
-												:data-origin-src="entry.imageUrl"
-												alt="위스키 병 이미지"
-												@load="onBottleImageLoad"
-												@error="onBottleImageError"
-											/>
+										<div class="entry-media">
+											<div class="bottle-preview entry-photo">
+												<img
+													:src="resolveBottleImage(entry.imageUrl)"
+													:data-origin-src="entry.imageUrl"
+													alt="위스키 병 이미지"
+													@load="onBottleImageLoad"
+													@error="onBottleImageError"
+												/>
+											</div>
+											<button
+												v-if="editingEntryId !== entry.id && entry.teaLeafImageUrl"
+												class="tool-btn small tea-leaf-trigger"
+												type="button"
+												@click="openTeaLeafModal(entry)"
+											>
+												{{ getLabelPhotoTerm(getEntryDrinkCategory(entry)) }}
+											</button>
 										</div>
-										<button
-											v-if="editingEntryId !== entry.id && entry.teaLeafImageUrl"
-											class="tool-btn small tea-leaf-trigger"
-											type="button"
-											@click="openTeaLeafModal(entry)"
-										>
-											{{ getLabelPhotoTerm(getEntryDrinkCategory(entry)) }}
-										</button>
 										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
 												<p class="note"><b>{{ getEntryCategoryLabel(entry) }}</b>{{ entry.category || "기록 없음" }}</p>
