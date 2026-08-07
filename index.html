@@ -1530,21 +1530,19 @@
 					<p class="loading-copy-title"><span>향과 맛으로</span><span>삶을 풍족하게 하는 시간</span></p>
 					<div class="loading-copy-accent">A slower, fuller glass of life</div>
 				</div>
-					<div class="loading-progress">
-						<div class="loading-progress-label">
-							<span>시음 기록을 불러오는 중</span>
-							<span>{{ isReadyToDismissLoading ? "클릭해서 바로 보기" : "잠시만 기다려 주세요" }}</span>
-						</div>
-						<div class="loading-progress-track">
-							<div class="loading-progress-bar" :style="{ '--loading-progress': loadingProgress }"></div>
-						</div>
-						<div class="loading-progress-hint">화면을 누르면 다음 장면으로 넘어갑니다</div>
+				<div class="loading-progress">
+					<div class="loading-progress-label">
+						<span>시음 기록을 불러오는 중</span>
+						<span>{{ isReadyToDismissLoading ? "클릭해서 바로 보기" : "잠시만 기다려 주세요" }}</span>
 					</div>
+					<div class="loading-progress-track">
+						<div class="loading-progress-bar" :style="{ '--loading-progress': loadingProgress }"></div>
+					</div>
+					<div class="loading-progress-hint">탭해서 바로 시작할 수 있어요</div>
+				</div>
 			</div>
-			<div class="app-content" :class="{ loading: isInitialLoading }">
-				<div v-if="toast.visible" class="toast" :class="toast.type">{{ toast.message }}</div>
-			<header class="hero">
-				<h1 class="title">향과 맛으로 풍족해지는 시간</h1>
+
+			<header>
 				<p class="subtitle">위스키, 와인, 차</p>
 				<div class="tab-nav">
 					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'"><i class="lni lni-pencil-alt"></i>시음노트</button>
@@ -1829,15 +1827,6 @@
 												@error="onBottleImageError"
 											/>
 										</div>
-											<div v-if="getEntryDrinkCategory(entry) === 'tea' && entry.teaLeafImageUrl" class="bottle-preview entry-photo">
-												<img
-													:src="resolveBottleImage(entry.teaLeafImageUrl)"
-													:data-origin-src="entry.teaLeafImageUrl"
-													alt="차엽 사진"
-													@load="onBottleImageLoad"
-													@error="onBottleImageError"
-												/>
-											</div>
 										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
 												<p class="note"><b>{{ getEntryCategoryLabel(entry) }}</b>{{ entry.category || "기록 없음" }}</p>
@@ -1849,6 +1838,15 @@
 											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
 											<p class="note note-memo"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
+											<div v-if="getEntryDrinkCategory(entry) === 'tea' && entry.teaLeafImageUrl" class="bottle-preview entry-photo entry-tea-leaf-photo">
+												<img
+													:src="resolveBottleImage(entry.teaLeafImageUrl)"
+													:data-origin-src="entry.teaLeafImageUrl"
+													alt="차엽 사진"
+													@load="onBottleImageLoad"
+													@error="onBottleImageError"
+												/>
+											</div>
 										</div>
 										<div class="notes" v-else>
 											<div class="notes-top-grid">
@@ -2656,14 +2654,15 @@
 					this.syncWriteTheme();
 					window.addEventListener("keydown", this.onGlobalKeydown);
 					this.startInitialLoadingProgress();
-					const loadStartedAt = Date.now();
-					await this.reloadFromRepo();
+					const loadPromise = this.reloadFromRepo();
+					const minLoadingMs = 900;
+					const maxLoadingWaitMs = 2600;
+					await Promise.all([
+						this.wait(minLoadingMs),
+						Promise.race([loadPromise, this.wait(maxLoadingWaitMs)])
+					]);
 					this.completeInitialLoadingProgress();
 					this.isReadyToDismissLoading = true;
-					const elapsed = Date.now() - loadStartedAt;
-					if (elapsed < 4800) {
-						await this.wait(4800 - elapsed);
-					}
 					this.finishInitialLoading();
 				},
 				beforeUnmount() {
