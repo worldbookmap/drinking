@@ -2255,9 +2255,9 @@
 										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
 												<p class="note"><b>{{ getEntryCategoryLabel(entry) }}</b>{{ entry.category || "기록 없음" }}</p>
-												<p class="note"><b>마신이</b>{{ entry.drinker || "기록 없음" }}</p>
-												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
 												<p class="note"><b>{{ getEntryDetailLabel(entry) }}</b>{{ getEntryDetailValue(entry) || "기록 없음" }}</p>
+												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
+												<p class="note"><b>마신이</b>{{ entry.drinker || "기록 없음" }}</p>
 											</div>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
 											<div class="wine-rating-readonly" v-if="getEntryDrinkCategory(entry) === 'wine'">
