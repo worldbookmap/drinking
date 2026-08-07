@@ -7,9 +7,10 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Noto+Serif+KR:wght@400;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
+		<link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
 		<style>
 			:root {
 				--bg-cream: #fbf7ef;
@@ -29,7 +30,7 @@
 				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(96, 91, 84, 0.07) 0 11%, transparent 22%);
 				--page-bg-base: linear-gradient(145deg, #fffdf9 0%, #f6f1e8 36%, #eee7dc 70%, #e4dbd0 100%);
 				--hero-overlay: linear-gradient(135deg, rgba(48, 44, 40, 0.56), rgba(96, 90, 83, 0.34), rgba(171, 164, 155, 0.12));
-				--hero-image: url("./uploads/bg.jpg");
+				--hero-image: url("./assets/bg.jpg");
 				--panel-bg: rgba(253, 250, 244, 0.92);
 				--panel-stroke: rgba(73, 64, 59, 0.12);
 				--hero-title: #fffaf3;
@@ -44,7 +45,7 @@
 				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(184, 121, 94, 0.1) 0 11%, transparent 22%);
 				--page-bg-base: linear-gradient(145deg, #fff7f4 0%, #f3e1db 36%, #e7c6bc 70%, #dbaca2 100%);
 				--hero-overlay: linear-gradient(135deg, rgba(93, 20, 19, 0.62), rgba(141, 45, 41, 0.46), rgba(201, 124, 108, 0.14));
-				--hero-image: url("./uploads/bgwine.jpg");
+				--hero-image: url("./assets/bgwine.jpg");
 				--panel-bg: rgba(255, 248, 246, 0.9);
 				--panel-stroke: rgba(123, 53, 49, 0.14);
 				--hero-title: #fffaf7;
@@ -61,7 +62,7 @@
 				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(0, 0, 0, 0.08) 0 10%, transparent 22%);
 				--page-bg-base: linear-gradient(145deg, #f7f6f2 0%, #ece8e0 38%, #ddd8ce 72%, #cec7bc 100%);
 				--hero-overlay: linear-gradient(135deg, rgba(24, 24, 24, 0.74), rgba(52, 52, 52, 0.58), rgba(101, 101, 101, 0.24));
-				--hero-image: url("./uploads/bgtea.jpg");
+				--hero-image: url("./assets/bgtea.jpg");
 				--panel-bg: rgba(250, 249, 245, 0.92);
 				--panel-stroke: rgba(56, 54, 52, 0.14);
 				--hero-title: #f9f8f5;
@@ -79,7 +80,7 @@
 			body {
 				margin: 0;
 				min-height: 100vh;
-				font-family: "Gowun Dodum", sans-serif;
+				font-family: "Noto Serif KR", serif;
 				color: var(--ink);
 				background:
 					var(--page-bg-1),
@@ -88,6 +89,7 @@
 					var(--page-bg-base);
 				background-attachment: fixed;
 			}
+
 
 			.loading-screen {
 				position: fixed;
@@ -109,7 +111,7 @@
 				inset: 0;
 				background-image:
 					linear-gradient(135deg, rgba(25, 22, 19, 0.52), rgba(78, 67, 58, 0.28), rgba(214, 201, 188, 0.1)),
-					url("./uploads/openBg.jpg");
+					url("./assets/openBg.jpg");
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
@@ -403,14 +405,15 @@
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
+				gap: 6px;
 				border: 1px solid rgba(116, 83, 66, 0.18);
-				background: linear-gradient(180deg, rgba(255, 252, 247, 0.95), rgba(236, 231, 223, 0.94));
+				background: linear-gradient(180deg, rgba(255, 254, 251, 0.96), rgba(238, 233, 226, 0.94));
 				color: var(--ink-soft);
-				padding: 8px 11px;
+				padding: 9px 12px;
 				border-radius: 999px;
 				font-family: "Noto Serif KR", serif;
 				font-weight: 600;
-				font-size: 0.96rem;
+				font-size: 0.9rem;
 				letter-spacing: 0.01em;
 				text-align: center;
 				white-space: nowrap;
@@ -422,7 +425,14 @@
 					0 3px 8px rgba(60, 55, 50, 0.07);
 				opacity: 0.44;
 				filter: saturate(0.5);
-				transition: opacity 0.18s ease, filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+				will-change: transform, box-shadow;
+				transition:
+					opacity 0.18s ease,
+					filter 0.18s ease,
+					transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+					box-shadow 0.18s ease,
+					background-color 0.18s ease,
+					border-color 0.18s ease;
 			}
 
 			.tab-btn:not(.active):hover {
@@ -441,6 +451,26 @@
 					var(--tab-active-shadow),
 					inset 0 1px 0 rgba(255, 239, 219, 0.28);
 				text-shadow: 0 1px 2px rgba(34, 16, 8, 0.26);
+			}
+
+			.tab-btn:active {
+				transform: translateY(0) scale(0.98);
+			}
+
+			.write-tab-nav .tab-btn.whisky-tab.active {
+				background: linear-gradient(135deg, #f7d35a, #e9b91f);
+				color: #4e3910;
+				box-shadow:
+					0 10px 20px rgba(173, 128, 8, 0.22),
+					inset 0 1px 0 rgba(255, 255, 255, 0.42);
+				text-shadow: none;
+			}
+
+			.write-tab-nav .tab-btn.whisky-tab:active {
+				transform: translateY(0) scale(0.98);
+				box-shadow:
+					0 6px 14px rgba(173, 128, 8, 0.14),
+					inset 0 1px 0 rgba(255, 255, 255, 0.38);
 			}
 
 			.panel {
@@ -524,7 +554,7 @@
 				-webkit-appearance: none;
 				appearance: none;
 				padding-right: 40px;
-				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23908276' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='3' ry='3'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+					background-image: url("./assets/date-icon.svg");
 				background-repeat: no-repeat;
 				background-position: right 12px center;
 				background-size: 17px 17px;
@@ -544,7 +574,7 @@
 			select:focus {
 				outline: none;
 				border-color: var(--accent);
-				box-shadow: 0 0 0 3px rgba(111, 102, 95, 0.14);
+				box-shadow: 0 0 0 3px rgba(111, 102, 95, 0.2);
 			}
 
 			textarea {
@@ -560,26 +590,69 @@
 
 			button {
 				border: 0;
-				border-radius: 999px;
+				border-radius: 12px;
 				padding: 10px 14px;
 				font: inherit;
 				cursor: pointer;
+				will-change: transform, box-shadow;
+				transition:
+					transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+					box-shadow 0.18s ease,
+					background-color 0.18s ease,
+					border-color 0.18s ease,
+					filter 0.18s ease,
+					opacity 0.18s ease;
+			}
+
+			button:hover {
+				transform: translateY(-1px);
+			}
+
+			button:active {
+				transform: translateY(0) scale(0.97);
+			}
+
+			button:focus-visible {
+				outline: none;
+				box-shadow: 0 0 0 3px rgba(111, 102, 95, 0.22);
+			}
+
+			button i.lni {
+				font-size: 0.88em;
+				line-height: 1;
 			}
 
 			.btn-add {
 				flex: 1;
-				background: linear-gradient(135deg, #9e6242, #7d4934, #c1995b);
-				background: linear-gradient(135deg, #66605a, #4f4a45, #8a8178);
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 7px;
+				background: linear-gradient(135deg, #6f6760, #4f4944);
 				color: #fff;
 				font-weight: 700;
-				box-shadow: 0 12px 24px rgba(93, 60, 43, 0.2);
+				box-shadow: 0 10px 20px rgba(72, 59, 50, 0.22);
+			}
+
+			.btn-add:active {
+				transform: translateY(0) scale(0.985);
+				box-shadow: 0 6px 14px rgba(72, 59, 50, 0.16);
 			}
 
 			.btn-reset {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 7px;
 				background: rgba(255, 251, 246, 0.9);
 				border: 1px solid rgba(116, 111, 105, 0.18);
 				color: var(--ink-soft);
 				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+			}
+
+			.btn-reset:active {
+				transform: translateY(0) scale(0.985);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
 			}
 
 			.list-panel {
@@ -836,6 +909,7 @@
 				gap: 8px;
 				flex-wrap: wrap;
 				margin-bottom: 12px;
+				min-width: 0;
 			}
 
 				.record-type-filter {
@@ -843,6 +917,7 @@
 					align-items: center;
 					gap: 8px;
 					flex-wrap: wrap;
+					min-width: 0;
 				}
 
 			.list-tools {
@@ -852,6 +927,7 @@
 				flex-wrap: wrap;
 				justify-content: flex-start;
 				margin-top: 8px;
+				min-width: 0;
 			}
 
 			.search-row {
@@ -869,6 +945,9 @@
 					display: inline-flex;
 					align-items: center;
 					justify-content: center;
+					max-width: 100%;
+					min-width: 0;
+					white-space: nowrap;
 				border-radius: 999px;
 				background: rgba(228, 207, 170, 0.78);
 				background: rgba(225, 220, 212, 0.9);
@@ -896,12 +975,23 @@
 				}
 
 			.tool-btn {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				gap: 6px;
+				min-width: 0;
 				background: rgba(255, 251, 246, 0.86);
 				border: 1px solid rgba(118, 111, 104, 0.16);
 				color: var(--ink-soft);
-				padding: 7px 11px;
+				padding: 7px 12px;
 				font-size: 0.74rem;
-				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.6),
+					0 3px 8px rgba(58, 52, 47, 0.08);
+			}
+
+			.tool-btn:active {
+				transform: translateY(0) scale(0.98);
 			}
 
 			.tool-btn.small {
@@ -910,16 +1000,25 @@
 			}
 
 			.tool-btn.save {
-				background: linear-gradient(135deg, #9b5f3f, #7d4934);
-				background: linear-gradient(135deg, #5e5954, #45413d);
+				background: linear-gradient(135deg, #645c56, #423d39);
 				color: #fff;
 				border-color: transparent;
+				box-shadow: 0 9px 18px rgba(65, 56, 48, 0.22);
 			}
 
-			.tool-btn:disabled {
+			.tool-btn.save:active {
+				box-shadow: 0 5px 12px rgba(65, 56, 48, 0.16);
+			}
+
+			.tool-btn:disabled,
+			.btn-add:disabled,
+			.btn-reset:disabled,
+			.tab-btn:disabled {
 				opacity: 0.6;
 				cursor: not-allowed;
+				transform: none;
 			}
+
 
 			.storage-status {
 				margin: 0 0 10px;
@@ -942,12 +1041,15 @@
 				align-items: center;
 				gap: 6px;
 				margin-left: 8px;
+				max-width: 100%;
+				min-width: 0;
 				padding: 5px 10px;
 				border-radius: 999px;
 				background: rgba(255, 255, 255, 0.72);
 				border: 1px solid #f1c8bc;
 				font-size: 0.78rem;
 				color: #7a4b49;
+				overflow-wrap: anywhere;
 			}
 
 			.toast {
@@ -989,12 +1091,14 @@
 
 			.entry-list {
 				display: grid;
+				grid-template-columns: minmax(0, 1fr);
 				gap: 0;
 			}
 
 			.entry {
 				border-bottom: 1px solid rgba(109, 101, 94, 0.14);
 				padding: 2px 0;
+				min-width: 0;
 				animation: slideIn 0.26s ease;
 			}
 
@@ -1022,6 +1126,7 @@
 
 			.entry-summary {
 				width: 100%;
+				min-width: 0;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
@@ -1048,7 +1153,7 @@
 			}
 
 			.entry-date {
-				font-size: 0.8rem;
+				font-size: 0.72rem;
 				font-weight: 700;
 				color: var(--accent-strong);
 			}
@@ -1059,6 +1164,7 @@
 			}
 
 			.entry-category {
+				font-size: 0.78rem;
 				color: var(--ink-soft);
 			}
 
@@ -1077,6 +1183,7 @@
 
 			.entry-detail {
 				padding: 2px 2px 12px;
+				min-width: 0;
 			}
 
 			.detail-slide-enter-active,
@@ -1108,14 +1215,14 @@
 
 			.notes {
 				display: grid;
-				gap: 4px;
-				margin-top: 9px;
+				gap: 6px;
+				margin-top: 7px;
 			}
 
 			.notes-top-grid {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
-				gap: 4px;
+				gap: 6px 8px;
 			}
 
 			.detail-actions {
@@ -1126,13 +1233,17 @@
 			}
 
 			.note {
+				display: grid;
+				grid-template-columns: 56px minmax(0, 1fr);
+				column-gap: 4px;
+				align-items: start;
 				background: transparent;
 				border: 0;
 				border-radius: 0;
 				margin: 0;
 				padding: 2px 0;
 				font-size: 0.9rem;
-				line-height: 1.25;
+				line-height: 1.42;
 			}
 
 			.note-memo {
@@ -1140,10 +1251,14 @@
 			}
 
 			.note b {
+				display: block;
+				min-width: 0;
 				font-family: "Noto Serif KR", serif;
 				font-weight: 700;
-				font-size: 0.95rem;
-				margin-right: 4px;
+				font-size: 0.92rem;
+				margin-right: 0;
+				line-height: 1.25;
+				white-space: nowrap;
 			}
 
 			.bottle-preview {
@@ -1238,10 +1353,30 @@
 
 				.record-primary-tools {
 					margin-bottom: 10px;
+					align-items: flex-start;
+					flex-direction: column;
+					gap: 6px;
+				}
+
+				.record-primary-tools > * {
+					width: 100%;
+					max-width: 100%;
 				}
 
 				.list-tools {
 					justify-content: flex-start;
+				}
+
+				.record-type-filter {
+					width: 100%;
+				}
+
+				.tool-btn.save {
+					width: 100%;
+				}
+
+				.sha-chip {
+					margin-left: 0;
 				}
 
 				.tab-nav {
@@ -1269,16 +1404,36 @@
 					grid-template-columns: 1fr;
 				}
 
+				.detail-actions {
+					justify-content: flex-start;
+					flex-wrap: wrap;
+				}
+
+				.detail-actions .tool-btn,
+				.detail-actions .delete {
+					flex: 1 1 108px;
+					min-width: 0;
+				}
+
 				.entry-summary {
 					align-items: flex-start;
 				}
 
 				.entry-line {
-					white-space: normal;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 
 				.notes-top-grid {
 					grid-template-columns: 1fr;
+					gap: 4px;
+				}
+
+				.note {
+					grid-template-columns: 52px minmax(0, 1fr);
+					column-gap: 4px;
+					line-height: 1.45;
 				}
 
 				.entry-photo {
@@ -1392,17 +1547,16 @@
 				<h1 class="title">향과 맛으로 풍족해지는 시간</h1>
 				<p class="subtitle">위스키, 와인, 차</p>
 				<div class="tab-nav">
-					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">시음노트쓰기</button>
-					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">시음기록</button>
-					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="activeTab = 'calendar'">달력</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'"><i class="lni lni-pencil-alt"></i>시음노트</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'"><i class="lni lni-agenda"></i>기록</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="activeTab = 'calendar'"><i class="lni lni-calendar"></i>달력</button>
 				</div>
 			</header>
 
 			<main class="grid">
 				<section class="panel form-panel" v-if="activeTab === 'write'">
-					<h2 class="panel-title">시음 노트 쓰기</h2>
 					<div class="tab-nav write-tab-nav">
-						<button class="tab-btn" :class="{ active: activeWriteTab === 'whisky' }" type="button" @click="activeWriteTab = 'whisky'">위스키</button>
+							<button class="tab-btn whisky-tab" :class="{ active: activeWriteTab === 'whisky' }" type="button" @click="activeWriteTab = 'whisky'">위스키</button>
 						<button class="tab-btn" :class="{ active: activeWriteTab === 'wine' }" type="button" @click="activeWriteTab = 'wine'">와인</button>
 						<button class="tab-btn" :class="{ active: activeWriteTab === 'tea' }" type="button" @click="activeWriteTab = 'tea'">차</button>
 					</div>
@@ -1451,15 +1605,15 @@
 							/>
 							<div class="upload-actions">
 								<button class="tool-btn small" type="button" @click="openCamera" :disabled="isImageUploading">
-									{{ isImageUploading ? "업로드 중..." : "카메라로 찍기" }}
+									<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "카메라로 찍기" }}
 								</button>
 								<button class="tool-btn small" type="button" @click="openGallery" :disabled="isImageUploading">
-									{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
+									<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
 								</button>
 							</div>
 							<p class="upload-hint">업로드 전에 자동 리사이즈/압축 후 GitHub uploads 폴더에 저장돼요.</p>
-							<input ref="cameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile" style="display: none" />
-							<input ref="galleryInput" type="file" accept="image/*" @change="onPickImageFile" style="display: none" />
+							<input ref="cameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'form', 'imageUrl', 'formPreviewUrl')" style="display: none" />
+							<input ref="galleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'form', 'imageUrl', 'formPreviewUrl')" style="display: none" />
 							<div class="bottle-preview">
 								<img
 									:src="resolveBottleImage(form.imageUrl, formPreviewUrl)"
@@ -1503,7 +1657,7 @@
 						</div>
 
 						<div v-else class="row">
-							<label for="teaSubcategory">하위카테고리</label>
+							<label for="teaSubcategory">품종</label>
 							<textarea id="teaSubcategory" v-model.trim="form.teaSubcategory" placeholder="예: 육보차, 보이차"></textarea>
 							<div class="traits">
 								<button
@@ -1516,6 +1670,37 @@
 								>
 									{{ subcategory }}
 								</button>
+							</div>
+						</div>
+
+						<div v-if="activeWriteTab === 'tea'" class="row">
+							<label for="teaLeafImageUrl">차엽 사진 URL</label>
+							<input
+								id="teaLeafImageUrl"
+								v-model.trim="form.teaLeafImageUrl"
+								@input="clearTeaLeafPreview"
+								type="url"
+								placeholder="차엽 사진 URL 또는 아래에서 카메라/사진첩 업로드"
+							/>
+							<div class="upload-actions">
+								<button class="tool-btn small" type="button" @click="openTeaLeafCamera" :disabled="isImageUploading">
+									<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "차엽 찍기" }}
+								</button>
+								<button class="tool-btn small" type="button" @click="openTeaLeafGallery" :disabled="isImageUploading">
+									<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
+								</button>
+							</div>
+							<p class="upload-hint">차엽 사진도 자동 리사이즈/압축 후 저장돼요.</p>
+							<input ref="teaLeafCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'form', 'teaLeafImageUrl', 'teaLeafPreviewUrl')" style="display: none" />
+							<input ref="teaLeafGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'form', 'teaLeafImageUrl', 'teaLeafPreviewUrl')" style="display: none" />
+							<div class="bottle-preview">
+								<img
+									:src="resolveBottleImage(form.teaLeafImageUrl, teaLeafPreviewUrl)"
+									:data-origin-src="form.teaLeafImageUrl"
+									alt="차엽 미리보기"
+									@load="onBottleImageLoad"
+									@error="onBottleImageError"
+								/>
 							</div>
 						</div>
 
@@ -1577,20 +1762,15 @@
 
 						<div class="actions">
 							<button class="btn-add" type="submit" :disabled="isImageUploading">
-								{{ isImageUploading ? "이미지 업로드 중..." : `${currentWriteConfig.label} 기록 추가` }}
+								<i class="lni lni-circle-plus"></i>{{ isImageUploading ? "이미지 업로드 중..." : `${currentWriteConfig.label} 기록 추가` }}
 							</button>
-							<button class="btn-reset" type="button" @click="resetForm">초기화</button>
+							<button class="btn-reset" type="button" @click="resetForm"><i class="lni lni-reload"></i>초기화</button>
 						</div>
 					</form>
 				</section>
 
 				<section class="panel list-panel" v-if="activeTab === 'records'">
-					<div class="list-head">
-						<h2 class="panel-title" style="margin: 0">내 시음 기록</h2>
-					</div>
-
 					<div class="record-primary-tools">
-						<span class="count-chip">총 {{ entries.length }}잔</span>
 						<span v-if="hasRecordFilters" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
 						<div class="record-type-filter">
 							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'all' }" type="button" @click="recordDrinkFilter = 'all'">전체</button>
@@ -1599,7 +1779,7 @@
 							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'tea' }" type="button" @click="recordDrinkFilter = 'tea'">차</button>
 						</div>
 						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
-							{{ isSaving ? "저장 중..." : "GitHub에 저장" }}
+							<i class="lni lni-save"></i>{{ isSaving ? "저장 중..." : "저장" }}
 						</button>
 						<span v-if="lastCommitSha" class="sha-chip">최근 SHA {{ lastCommitSha }}</span>
 					</div>
@@ -1635,7 +1815,6 @@
 									<span class="entry-separator">&gt;</span>
 									<span class="entry-name">{{ entry.whisky || "이름 미입력" }}</span>
 								</div>
-								<span class="expand-indicator">{{ isExpanded(entry.id) ? "접기" : "상세" }}</span>
 							</button>
 
 							<transition name="detail-slide">
@@ -1650,10 +1829,19 @@
 												@error="onBottleImageError"
 											/>
 										</div>
+											<div v-if="getEntryDrinkCategory(entry) === 'tea' && entry.teaLeafImageUrl" class="bottle-preview entry-photo">
+												<img
+													:src="resolveBottleImage(entry.teaLeafImageUrl)"
+													:data-origin-src="entry.teaLeafImageUrl"
+													alt="차엽 사진"
+													@load="onBottleImageLoad"
+													@error="onBottleImageError"
+												/>
+											</div>
 										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
-												<p class="note"><b>종류</b>{{ entry.category || "기록 없음" }}</p>
-												<p class="note"><b>마신 사람</b>{{ entry.drinker || "기록 없음" }}</p>
+												<p class="note"><b>{{ getEntryCategoryLabel(entry) }}</b>{{ entry.category || "기록 없음" }}</p>
+												<p class="note"><b>마신이</b>{{ entry.drinker || "기록 없음" }}</p>
 												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
 												<p class="note"><b>{{ getEntryDetailLabel(entry) }}</b>{{ getEntryDetailValue(entry) || "기록 없음" }}</p>
 											</div>
@@ -1669,7 +1857,7 @@
 													<input v-model="editForm.date" type="date" required />
 												</div>
 												<div class="row" style="margin: 0">
-													<label>마신 사람</label>
+													<label>마신이</label>
 													<select v-model="editForm.drinker" required>
 														<option value="" disabled>선택해 주세요</option>
 														<option v-for="drinker in drinkerOptions" :key="`edit-${drinker}`" :value="drinker">{{ drinker }}</option>
@@ -1699,7 +1887,51 @@
 											</div>
 											<div class="row" style="margin: 0">
 												<label>{{ editWriteConfig.label }} 사진 URL</label>
-												<input v-model.trim="editForm.imageUrl" type="url" placeholder="https://..." />
+												<input v-model.trim="editForm.imageUrl" @input="editFormPreviewUrl = ''" type="url" placeholder="https://..." />
+												<div class="upload-actions">
+													<button class="tool-btn small" type="button" @click="openFileInput('editImageCameraInput')" :disabled="isImageUploading">
+														<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "카메라로 찍기" }}
+													</button>
+													<button class="tool-btn small" type="button" @click="openFileInput('editImageGalleryInput')" :disabled="isImageUploading">
+														<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
+													</button>
+												</div>
+												<p class="upload-hint">기존 사진이 있으면 새 사진으로 교체할 수 있어요.</p>
+												<input ref="editImageCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
+												<input ref="editImageGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
+												<div class="bottle-preview">
+													<img
+														:src="resolveBottleImage(editForm.imageUrl, editFormPreviewUrl)"
+														:data-origin-src="editForm.imageUrl"
+														alt="편집 중 사진 미리보기"
+														@load="onBottleImageLoad"
+														@error="onBottleImageError"
+													/>
+												</div>
+											</div>
+											<div v-if="editForm.drinkCategory === 'tea'" class="row" style="margin: 0">
+												<label>차엽 사진 URL</label>
+												<input v-model.trim="editForm.teaLeafImageUrl" @input="editTeaLeafPreviewUrl = ''" type="url" placeholder="https://..." />
+												<div class="upload-actions">
+													<button class="tool-btn small" type="button" @click="openFileInput('editTeaLeafCameraInput')" :disabled="isImageUploading">
+														<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "차엽 찍기" }}
+													</button>
+													<button class="tool-btn small" type="button" @click="openFileInput('editTeaLeafGalleryInput')" :disabled="isImageUploading">
+														<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
+													</button>
+												</div>
+												<p class="upload-hint">차엽 사진도 새 파일로 바로 교체할 수 있어요.</p>
+												<input ref="editTeaLeafCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'editForm', 'teaLeafImageUrl', 'editTeaLeafPreviewUrl', editForm.teaLeafImageUrl)" style="display: none" />
+												<input ref="editTeaLeafGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'editForm', 'teaLeafImageUrl', 'editTeaLeafPreviewUrl', editForm.teaLeafImageUrl)" style="display: none" />
+												<div class="bottle-preview">
+													<img
+														:src="resolveBottleImage(editForm.teaLeafImageUrl, editTeaLeafPreviewUrl)"
+														:data-origin-src="editForm.teaLeafImageUrl"
+														alt="편집 중 차엽 미리보기"
+														@load="onBottleImageLoad"
+														@error="onBottleImageError"
+													/>
+												</div>
 											</div>
 											<div v-if="editForm.drinkCategory === 'whisky'" class="row" style="margin: 0">
 												<label>숙성 캐스크 타입</label>
@@ -1719,7 +1951,7 @@
 												/>
 											</div>
 											<div v-else class="row" style="margin: 0">
-												<label>하위카테고리</label>
+												<label>품종</label>
 												<textarea v-model.trim="editForm.teaSubcategory" placeholder="예: 육보차, 보이차"></textarea>
 											</div>
 											<p class="note" style="margin-top: 8px"><b>{{ getEntryDetailLabel(editForm) }}</b>{{ getEntryDetailValue(editForm) || "기록 없음" }}</p>
@@ -1742,9 +1974,9 @@
 										</div>
 									</div>
 									<div class="detail-actions">
-										<button v-if="editingEntryId !== entry.id" class="tool-btn small" type="button" @click="startEditEntry(entry)">수정</button>
-										<button v-else class="tool-btn small" type="button" @click="saveEditedEntry(entry.id)">저장</button>
-										<button v-if="editingEntryId === entry.id" class="tool-btn small" type="button" @click="cancelEditEntry">취소</button>
+										<button v-if="editingEntryId !== entry.id" class="tool-btn small" type="button" @click="startEditEntry(entry)"><i class="lni lni-pencil"></i>수정</button>
+										<button v-else class="tool-btn small" type="button" @click="saveEditedEntry(entry.id)"><i class="lni lni-save"></i>저장</button>
+										<button v-if="editingEntryId === entry.id" class="tool-btn small" type="button" @click="cancelEditEntry"><i class="lni lni-close"></i>취소</button>
 										<button class="delete" type="button" @click="removeEntry(entry.id)">삭제</button>
 									</div>
 								</div>
@@ -1755,9 +1987,9 @@
 
 					<p class="sync-status">{{ syncMessage }}</p>
 					<div class="list-tools">
-						<button class="tool-btn small" type="button" @click="reloadFromRepo">GitHub JSON 다시 불러오기</button>
-						<button class="tool-btn small" type="button" @click="exportEntries">records.json 내보내기</button>
-						<button class="tool-btn small" type="button" @click="openImport">로컬 JSON 미리보기</button>
+						<button class="tool-btn small" type="button" @click="reloadFromRepo"><i class="lni lni-reload"></i>GitHub JSON 다시 불러오기</button>
+						<button class="tool-btn small" type="button" @click="exportEntries"><i class="lni lni-download"></i>records.json 내보내기</button>
+						<button class="tool-btn small" type="button" @click="openImport"><i class="lni lni-upload"></i>로컬 JSON 미리보기</button>
 					</div>
 					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 				</section>
@@ -1765,9 +1997,9 @@
 				<section class="panel calendar-panel" v-if="activeTab === 'calendar'">
 					<div class="calendar-head">
 						<div class="calendar-nav">
-							<button class="tool-btn small" type="button" @click="moveCalendarMonth(-1)">이전 달</button>
-							<button class="tool-btn small" type="button" @click="goToCurrentMonth">이번 달</button>
-							<button class="tool-btn small" type="button" @click="moveCalendarMonth(1)">다음 달</button>
+							<button class="tool-btn small" type="button" @click="moveCalendarMonth(-1)"><i class="lni lni-chevron-left"></i>이전 달</button>
+							<button class="tool-btn small" type="button" @click="goToCurrentMonth"><i class="lni lni-target"></i>이번 달</button>
+							<button class="tool-btn small" type="button" @click="moveCalendarMonth(1)">다음 달<i class="lni lni-chevron-right"></i></button>
 						</div>
 					</div>
 
@@ -1811,7 +2043,7 @@
 							<div class="layer-list">
 								<div class="layer-item" v-for="entry in activeCalendarEntries" :key="entry.id" @click="openRecordFromCalendar(entry.id)">
 									<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
-									<p class="layer-item-meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.drinker || "마신 사람 미입력" }}</p>
+									<p class="layer-item-meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.drinker || "마신이 미입력" }}</p>
 								</div>
 							</div>
 						</div>
@@ -1837,11 +2069,7 @@
 				{ maxDimension: 720, quality: 0.6 },
 				{ maxDimension: 640, quality: 0.56 }
 			];
-			const DEFAULT_BOTTLE_IMAGE =
-				"data:image/svg+xml," +
-				encodeURIComponent(
-					'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 320"><rect width="220" height="320" fill="#fff7ec"/><rect x="95" y="18" width="30" height="34" rx="8" fill="#dcb78c"/><rect x="82" y="42" width="56" height="30" rx="10" fill="#f0d4ad"/><rect x="56" y="66" width="108" height="216" rx="34" fill="#f5d19c" stroke="#d7a86f" stroke-width="6"/><rect x="68" y="122" width="84" height="74" rx="16" fill="#fff4df"/><circle cx="110" cy="96" r="14" fill="#ebc48c"/><text x="110" y="165" text-anchor="middle" font-size="20" fill="#946742">WHISKY</text></svg>'
-				);
+			const DEFAULT_BOTTLE_IMAGE = "./assets/iconMang.png";
 
 			async function readEntriesFromRepo() {
 				const apiResponse = await fetch(`${RECORDS_API}?t=${Date.now()}`, { cache: "no-store" });
@@ -1890,9 +2118,9 @@
 					label: "차",
 					nameLabel: "차 이름",
 					namePlaceholder: "예: 우전",
-					categoryLabel: "차 종류",
+					categoryLabel: "다류",
 					categoryOptions: ["녹차", "백차", "황차", "청차", "홍차", "흑차"],
-					extraLabel: "하위카테고리"
+					extraLabel: "품종"
 				}
 			};
 			const WRITE_TAB_ORDER = ["whisky", "wine", "tea"];
@@ -1941,7 +2169,7 @@
 					return "wine";
 				}
 
-				if (hasText(entry?.teaSubcategory) || detailLabel === "하위카테고리" || TEA_SUBCATEGORY_SET.has(caskType)) {
+							if (hasText(entry?.teaSubcategory) || detailLabel === "하위카테고리" || detailLabel === "품종" || TEA_SUBCATEGORY_SET.has(caskType)) {
 					return "tea";
 				}
 
@@ -1969,8 +2197,15 @@
 				return WRITE_TAB_CONFIGS[drinkType]?.label || WRITE_TAB_CONFIGS.whisky.label;
 			}
 
+			function getEntryCategoryLabel(entry) {
+				return getEntryDrinkCategory(entry) === "tea" ? "다류" : "종류";
+			}
+
 			function getDrinkDetailLabel(entry) {
 				if (entry?.detailLabel) {
+					if (getEntryDrinkCategory(entry) === "tea" && entry.detailLabel === "하위카테고리") {
+						return "품종";
+					}
 					return entry.detailLabel;
 				}
 
@@ -2012,6 +2247,7 @@
 					drinkType: drinkCategory,
 					category: entry.category || "",
 					imageUrl: entry.imageUrl || "",
+					teaLeafImageUrl: entry.teaLeafImageUrl || "",
 					caskType: entry.caskType || "",
 					wineCountry: entry.wineCountry || "",
 					wineCountryCustom: entry.wineCountryCustom || "",
@@ -2178,6 +2414,7 @@
 							whisky: "",
 							category: "",
 							imageUrl: "",
+							teaLeafImageUrl: "",
 							caskType: "",
 							wineCountry: "",
 							wineCountryCustom: "",
@@ -2206,6 +2443,9 @@
 						isImageUploading: false,
 						lastCommitSha: "",
 						formPreviewUrl: "",
+						teaLeafPreviewUrl: "",
+						editFormPreviewUrl: "",
+						editTeaLeafPreviewUrl: "",
 						toast: {
 							visible: false,
 							type: "success",
@@ -2531,6 +2771,7 @@
 							drinkCategory: normalized.drinkCategory,
 							category: normalized.category,
 							imageUrl: normalized.imageUrl,
+							teaLeafImageUrl: normalized.teaLeafImageUrl,
 							caskType,
 							wineCountry,
 							wineCountryCustom,
@@ -2548,10 +2789,14 @@
 
 						this.editingEntryId = entry.id;
 						this.editForm = this.buildEditForm(entry);
+						this.editFormPreviewUrl = "";
+						this.editTeaLeafPreviewUrl = "";
 					},
 					cancelEditEntry() {
 						this.editingEntryId = null;
 						this.editForm = null;
+						this.editFormPreviewUrl = "";
+						this.editTeaLeafPreviewUrl = "";
 					},
 					saveEditedEntry(entryId) {
 						if (!entryId || this.editingEntryId !== entryId || !this.editForm) {
@@ -2559,7 +2804,7 @@
 						}
 
 						if (!this.editForm.date || !this.editForm.whisky || !this.editForm.drinker || !this.editForm.category) {
-							this.showToast("error", "마신 날, 마신 사람, 이름, 종류를 입력해 주세요.");
+								this.showToast("error", "마신 날, 마신이, 이름, 종류를 입력해 주세요.");
 							return;
 						}
 
@@ -2601,6 +2846,7 @@
 							drinkType: drinkType,
 							category: this.editForm.category,
 							imageUrl: this.editForm.imageUrl,
+							teaLeafImageUrl: this.editForm.teaLeafImageUrl,
 							caskType: this.editForm.caskType,
 							wineCountry: this.editForm.wineCountry,
 							wineCountryCustom: this.editForm.wineCountryCustom,
@@ -2653,6 +2899,9 @@
 					getEntryDetailLabel(entry) {
 						return getDrinkDetailLabel(entry);
 					},
+					getEntryCategoryLabel(entry) {
+						return getEntryDrinkCategory(entry) === "tea" ? "다류" : "종류";
+					},
 					getEntryDetailValue(entry) {
 						return getDrinkDetailValue(entry);
 					},
@@ -2667,6 +2916,9 @@
 					},
 					clearFormPreview() {
 						this.formPreviewUrl = "";
+					},
+					clearTeaLeafPreview() {
+						this.teaLeafPreviewUrl = "";
 					},
 					showToast(type, message) {
 						if (this.toastTimer) {
@@ -2694,7 +2946,32 @@
 					openGallery() {
 						this.$refs.galleryInput.click();
 					},
-					async onPickImageFile(event) {
+					openTeaLeafCamera() {
+						this.$refs.teaLeafCameraInput.click();
+					},
+					openTeaLeafGallery() {
+						this.$refs.teaLeafGalleryInput.click();
+					},
+					openFileInput(refName) {
+						this.$refs[refName]?.click();
+					},
+					async deleteManagedImage(url) {
+						const cleaned = String(url || "").trim();
+						if (!cleaned) {
+							return;
+						}
+
+						try {
+							await fetch(RECORDS_API, {
+								method: "DELETE",
+								headers: { "Content-Type": "application/json" },
+								body: JSON.stringify({ url: cleaned })
+							});
+						} catch {
+							// Best-effort cleanup only.
+						}
+					},
+					async onPickImageFile(event, targetModel = "form", targetField = "imageUrl", previewField = "formPreviewUrl", previousUrl = "") {
 						const [file] = event.target.files || [];
 						event.target.value = "";
 
@@ -2712,7 +2989,7 @@
 
 						try {
 							const payload = await buildUploadPayload(file);
-							this.formPreviewUrl = payload.dataUrl;
+							this[previewField] = payload.dataUrl;
 							const response = await fetch(IMAGE_UPLOAD_API, {
 								method: "POST",
 								headers: { "Content-Type": "application/json" },
@@ -2738,7 +3015,15 @@
 								throw new Error(result.error || `이미지 업로드 실패 (HTTP ${response.status})`);
 							}
 
-							this.form.imageUrl = result.url;
+							const targetState = this[targetModel];
+							if (!targetState) {
+								throw new Error("업로드 대상 상태를 찾지 못했어요.");
+							}
+
+							targetState[targetField] = result.url;
+							if (previousUrl && previousUrl !== result.url) {
+								await this.deleteManagedImage(previousUrl);
+							}
 							this.syncMessage = "이미지 업로드 완료! URL이 자동 입력됐어요.";
 						} catch (error) {
 							this.syncMessage = `이미지 업로드 실패: ${error.message}`;
@@ -2891,6 +3176,7 @@
 							drinkType,
 							category: this.form.category,
 							imageUrl: this.form.imageUrl,
+							teaLeafImageUrl: this.form.teaLeafImageUrl,
 							caskType: this.form.caskType,
 							wineCountry: this.form.wineCountry,
 							wineCountryCustom: this.form.wineCountryCustom,
@@ -3046,6 +3332,7 @@
 							whisky: "",
 							category: "",
 							imageUrl: "",
+							teaLeafImageUrl: "",
 							caskType: "",
 							wineCountry: "",
 							wineCountryCustom: "",
@@ -3056,6 +3343,7 @@
 							memo: ""
 						};
 						this.formPreviewUrl = "";
+						this.teaLeafPreviewUrl = "";
 						this.activeWriteTab = "whisky";
 					}
 				}

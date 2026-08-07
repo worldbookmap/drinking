@@ -16,7 +16,7 @@ function inferLegacyDrinkCategory(entry) {
 		return "wine";
 	}
 
-	if (hasText(entry?.teaSubcategory) || detailLabel === "하위카테고리" || TEA_SUBCATEGORIES.has(caskType)) {
+	if (hasText(entry?.teaSubcategory) || detailLabel === "하위카테고리" || detailLabel === "품종" || TEA_SUBCATEGORIES.has(caskType)) {
 		return "tea";
 	}
 
@@ -42,6 +42,9 @@ function getEntryDrinkCategory(entry) {
 
 function getDrinkDetailLabel(entry) {
 	if (hasText(entry?.detailLabel)) {
+		if (getEntryDrinkCategory(entry) === "tea" && entry.detailLabel === "하위카테고리") {
+			return "품종";
+		}
 		return entry.detailLabel;
 	}
 
@@ -51,7 +54,7 @@ function getDrinkDetailLabel(entry) {
 	}
 
 	if (drinkCategory === "tea") {
-		return "하위카테고리";
+		return "품종";
 	}
 
 	return "캐스크";
@@ -112,6 +115,7 @@ function normalizeEntries(entries) {
 			drinkType: drinkCategory,
 			category: entry?.category || "",
 			imageUrl: entry?.imageUrl || "",
+			teaLeafImageUrl: entry?.teaLeafImageUrl || "",
 			caskType: entry?.caskType || "",
 			wineCountry: entry?.wineCountry || "",
 			wineCountryCustom: entry?.wineCountryCustom || "",
@@ -241,6 +245,11 @@ function collectImageUrls(entries) {
 		if (imageUrl) {
 			set.add(imageUrl);
 		}
+
+		const teaLeafImageUrl = String(entry?.teaLeafImageUrl || "").trim();
+		if (teaLeafImageUrl) {
+			set.add(teaLeafImageUrl);
+		}
 	}
 	return set;
 }
@@ -338,7 +347,7 @@ async function deleteUploadsFromGithub(config, paths) {
 }
 
 export default async function handler(req, res) {
-	if (req.method !== "GET" && req.method !== "POST") {
+	if (req.method !== "GET" && req.method !== "POST" && req.method !== "DELETE") {
 		return sendJson(res, 405, { error: "Method not allowed" });
 	}
 
@@ -353,6 +362,15 @@ export default async function handler(req, res) {
 		if (req.method === "GET") {
 			const { entries } = await readRecordsFromGithub(config);
 			return sendJson(res, 200, { entries });
+		}
+
+		if (req.method === "DELETE") {
+			const removedUploadPaths = collectDeletedManagedUploadPaths([{ imageUrl: req.body?.url || "" }], [], config);
+			const imageCleanup = await deleteUploadsFromGithub(config, removedUploadPaths);
+			return sendJson(res, 200, {
+				ok: true,
+				imageCleanup
+			});
 		}
 
 		const incomingEntries = normalizeEntries(req.body?.entries);
