@@ -35,6 +35,8 @@
 				--panel-stroke: rgba(73, 64, 59, 0.12);
 				--hero-title: #fffaf3;
 				--hero-subtitle: #f0e8dc;
+				--page-fade-mid: rgba(245, 238, 228, 0.68);
+				--page-fade-end: rgba(228, 219, 208, 0.96);
 				--tab-active-bg: linear-gradient(135deg, #726b64, #5b564f, #988f85);
 				--tab-active-shadow: 0 10px 22px rgba(88, 56, 40, 0.24);
 			}
@@ -50,6 +52,8 @@
 				--panel-stroke: rgba(123, 53, 49, 0.14);
 				--hero-title: #fffaf7;
 				--hero-subtitle: #fcebe6;
+				--page-fade-mid: rgba(241, 216, 209, 0.7);
+				--page-fade-end: rgba(219, 172, 162, 0.95);
 				--tab-active-bg: linear-gradient(135deg, #a85045, #8a3a35, #cd7568);
 				--tab-active-shadow: 0 10px 22px rgba(121, 50, 42, 0.24);
 				--accent: #9a5148;
@@ -67,6 +71,8 @@
 				--panel-stroke: rgba(56, 54, 52, 0.14);
 				--hero-title: #f9f8f5;
 				--hero-subtitle: #e3e0d8;
+				--page-fade-mid: rgba(230, 226, 216, 0.7);
+				--page-fade-end: rgba(206, 199, 188, 0.95);
 				--tab-active-bg: linear-gradient(135deg, #4a4948, #31312f, #6a6967);
 				--tab-active-shadow: 0 10px 22px rgba(26, 26, 26, 0.24);
 				--accent: #5b5956;
@@ -82,12 +88,59 @@
 				min-height: 100vh;
 				font-family: "Noto Serif KR", serif;
 				color: var(--ink);
+				position: relative;
 				background:
 					var(--page-bg-1),
 					var(--page-bg-2),
 					var(--page-bg-3),
 					var(--page-bg-base);
 				background-attachment: fixed;
+			}
+
+			body::before {
+				content: "";
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				pointer-events: none;
+				background-image: var(--hero-overlay), var(--hero-image);
+				background-size: 100% auto;
+				background-position: center top;
+				background-repeat: no-repeat;
+				opacity: 0.8;
+				-webkit-mask-image: linear-gradient(
+					to bottom,
+					rgba(0, 0, 0, 1) 0%,
+					rgba(0, 0, 0, 1) 52%,
+					rgba(0, 0, 0, 0.72) 72%,
+					rgba(0, 0, 0, 0.28) 86%,
+					rgba(0, 0, 0, 0.06) 95%,
+					transparent 100%
+				);
+				mask-image: linear-gradient(
+					to bottom,
+					rgba(0, 0, 0, 1) 0%,
+					rgba(0, 0, 0, 1) 52%,
+					rgba(0, 0, 0, 0.72) 72%,
+					rgba(0, 0, 0, 0.28) 86%,
+					rgba(0, 0, 0, 0.06) 95%,
+					transparent 100%
+				);
+			}
+
+			body::after {
+				content: "";
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				pointer-events: none;
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0) 0%,
+					rgba(255, 255, 255, 0.02) 42%,
+					var(--page-fade-mid) 74%,
+					var(--page-fade-end) 100%
+				);
 			}
 
 
@@ -334,6 +387,13 @@
 				max-width: 1100px;
 				margin: 0 auto;
 				padding: 28px 18px 42px;
+				position: relative;
+				z-index: 1;
+			}
+
+			header {
+				padding: 8px 6px 4px;
+				text-align: center;
 			}
 
 			.hero {
@@ -1575,6 +1635,7 @@
 			</div>
 
 			<header>
+				<h1 class="title">향과 맛을 즐기자</h1>
 				<p class="subtitle">위스키, 와인, 차</p>
 				<div class="tab-nav">
 					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'"><i class="lni lni-pencil-alt"></i>시음노트</button>
