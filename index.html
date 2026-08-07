@@ -1529,6 +1529,70 @@
 				color: #86675a;
 			}
 
+			.wine-rating-readonly {
+				display: grid;
+				gap: 6px;
+			}
+
+			.wine-rating-readonly .note {
+				grid-template-columns: 56px minmax(0, 1fr);
+			}
+
+			.wine-rating-readonly-control {
+				display: grid;
+				grid-template-columns: 1fr auto;
+				gap: 8px;
+				align-items: center;
+			}
+
+			.wine-rating-readonly-control input[type="range"] {
+				-webkit-appearance: none;
+				appearance: none;
+				height: 6px;
+				padding: 0;
+				border: 0;
+				border-radius: 999px;
+				background: linear-gradient(90deg, #4c8dff 0%, #ff6d57 100%);
+				box-shadow: inset 0 0 0 1px rgba(74, 82, 112, 0.14);
+				opacity: 1;
+				pointer-events: none;
+			}
+
+			.wine-rating-readonly-control input[type="range"]::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				border: 1px solid rgba(53, 62, 87, 0.42);
+				background: #fff;
+				box-shadow: 0 1px 3px rgba(37, 35, 40, 0.22);
+			}
+
+			.wine-rating-readonly-control input[type="range"]::-moz-range-track {
+				height: 6px;
+				border: 0;
+				border-radius: 999px;
+				background: linear-gradient(90deg, #4c8dff 0%, #ff6d57 100%);
+			}
+
+			.wine-rating-readonly-control input[type="range"]::-moz-range-thumb {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				border: 1px solid rgba(53, 62, 87, 0.42);
+				background: #fff;
+				box-shadow: 0 1px 3px rgba(37, 35, 40, 0.22);
+			}
+
+			.wine-rating-readonly-value {
+				min-width: 2.9em;
+				text-align: right;
+				font-size: 0.78rem;
+				font-weight: 700;
+				color: #624f47;
+			}
+
 			.trait-chip {
 				background: rgba(255, 246, 230, 0.7);
 				border: 1px solid rgba(211, 179, 145, 0.55);
@@ -2139,7 +2203,22 @@
 												<p class="note"><b>{{ getEntryDetailLabel(entry) }}</b>{{ getEntryDetailValue(entry) || "기록 없음" }}</p>
 											</div>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
-											<p class="note" v-if="getEntryDrinkCategory(entry) === 'wine'"><b>레이팅</b>{{ formatWineRating(entry.rating) }}</p>
+											<div class="wine-rating-readonly" v-if="getEntryDrinkCategory(entry) === 'wine'">
+												<p class="note" v-for="field in wineRatingFields" :key="`record-rating-${entry.id}-${field.key}`">
+													<b>{{ field.label }}</b>
+													<span class="wine-rating-readonly-control">
+														<input
+															type="range"
+															min="1"
+															max="5"
+															step="1"
+															:value="getWineRatingInputValue(entry.rating, field.key)"
+															disabled
+														/>
+														<span class="wine-rating-readonly-value">{{ getWineRatingDisplayValue(entry.rating, field.key) }}</span>
+													</span>
+												</p>
+											</div>
 											<p class="note" v-if="getEntryDrinkCategory(entry) === 'wine'"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note" v-else><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
@@ -3401,6 +3480,16 @@
 						}
 
 						return chunks.length ? chunks.join(", ") : "기록 없음";
+					},
+					getWineRatingInputValue(rating, key) {
+						const normalized = normalizeWineRating(rating);
+						const value = Number(normalized?.[key]);
+						return Number.isInteger(value) && value >= 1 && value <= 5 ? value : 1;
+					},
+					getWineRatingDisplayValue(rating, key) {
+						const normalized = normalizeWineRating(rating);
+						const value = Number(normalized?.[key]);
+						return Number.isInteger(value) && value >= 1 && value <= 5 ? `${value}/5` : "미입력";
 					},
 					normalizeTraitItems(items) {
 						if (!Array.isArray(items)) {
