@@ -955,6 +955,26 @@
 				color: #6b665f;
 			}
 
+			.layer-item-chips {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+				margin-top: 6px;
+			}
+
+			.layer-chip {
+				display: inline-flex;
+				align-items: center;
+				padding: 4px 9px;
+				border-radius: 999px;
+				background: rgba(238, 231, 223, 0.92);
+				border: 1px solid rgba(128, 119, 110, 0.24);
+				font-size: 0.78rem;
+				line-height: 1.15;
+				color: #5f5952;
+				white-space: nowrap;
+			}
+
 			.list-head {
 				display: flex;
 				align-items: center;
@@ -1572,6 +1592,15 @@
 					font-size: 0.83rem;
 				}
 
+				.layer-item-chips {
+					gap: 5px;
+				}
+
+				.layer-chip {
+					font-size: 0.75rem;
+					padding: 4px 8px;
+				}
+
 				.loading-screen {
 					padding: 20px;
 				}
@@ -2133,7 +2162,9 @@
 							<div class="layer-list">
 								<div class="layer-item" v-for="entry in activeCalendarEntries" :key="entry.id" @click="openRecordFromCalendar(entry.id)">
 									<p class="layer-item-name">{{ entry.whisky || "이름 없음" }}</p>
-									<p class="layer-item-meta">{{ getDrinkTypeLabel(getEntryDrinkCategory(entry)) }} · {{ entry.drinker || "마신이 미입력" }}</p>
+									<div class="layer-item-chips">
+										<span class="layer-chip" v-for="(chip, chipIndex) in getCalendarModalMetaChips(entry)" :key="`${entry.id}-meta-${chipIndex}`">{{ chip }}</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -3030,6 +3061,19 @@
 					},
 					getEntryDetailValue(entry) {
 						return getDrinkDetailValue(entry);
+					},
+					getCalendarModalMetaChips(entry) {
+						const drinkType = this.getDrinkTypeLabel(this.getEntryDrinkCategory(entry));
+						const categoryValue = String(entry?.category || "미입력").trim();
+						const drinkerValue = String(entry?.drinker || "미입력").trim();
+						const placeValue = String(entry?.place || "미입력").trim();
+
+						return [
+							drinkType,
+							categoryValue,
+							drinkerValue,
+							placeValue
+						];
 					},
 					getLabelPhotoTerm(drinkCategory) {
 						return drinkCategory === "tea" ? "차엽" : "라벨";
