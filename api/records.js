@@ -85,7 +85,11 @@ function getConfig() {
 }
 
 function sendJson(res, status, body) {
-	res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
+	res.status(status);
+	res.setHeader("Content-Type", "application/json; charset=utf-8");
+	res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+	res.setHeader("Pragma", "no-cache");
+	res.setHeader("Expires", "0");
 	res.end(JSON.stringify(body));
 }
 
@@ -140,12 +144,13 @@ async function githubRequest(path, options = {}) {
 }
 
 async function readRecordsFromGithub(config) {
-	const path = `/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(config.path)}?ref=${encodeURIComponent(config.branch)}`;
+	const path = `/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(config.path)}?ref=${encodeURIComponent(config.branch)}&t=${Date.now()}`;
 
 	const file = await githubRequest(path, {
 		headers: {
 			Authorization: `Bearer ${config.token}`,
-			Accept: "application/vnd.github+json"
+			Accept: "application/vnd.github+json",
+			"Cache-Control": "no-cache"
 		}
 	});
 

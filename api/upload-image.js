@@ -14,7 +14,11 @@ function getConfig() {
 }
 
 function sendJson(res, status, body) {
-	res.status(status).setHeader("Content-Type", "application/json; charset=utf-8");
+	res.status(status);
+	res.setHeader("Content-Type", "application/json; charset=utf-8");
+	res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+	res.setHeader("Pragma", "no-cache");
+	res.setHeader("Expires", "0");
 	res.end(JSON.stringify(body));
 }
 
@@ -115,14 +119,21 @@ export default async function handler(req, res) {
 		const baseName = sanitizeFileName(fileName).replace(/\.[a-z0-9]+$/, "") || "image";
 		const relativePath = `${config.uploadDir}/${timestamp}-${baseName}-${random}.${extension}`;
 
-		await uploadToGithub(config, relativePath, base64Content);
+		const uploadResult = await uploadToGithub(config, relativePath, base64Content);
 
 		const publicBase = config.publicBase.replace(/\/$/, "");
-		const publicUrl = `${publicBase}/${relativePath}`;
+		const branchUrl = `${publicBase}/${relativePath}`;
+		const commitSha = uploadResult?.commit?.sha || "";
+		const commitUrl = commitSha
+			? `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${commitSha}/${relativePath}`
+			: "";
+		const publicUrl = commitUrl || branchUrl;
 		return sendJson(res, 200, {
 			ok: true,
 			url: publicUrl,
-			path: relativePath
+			path: relativePath,
+			commitSha,
+			branchUrl
 		});
 	} catch (error) {
 		return sendJson(res, 500, {

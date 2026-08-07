@@ -1830,6 +1830,11 @@
 			const IMAGE_UPLOAD_API = "/api/upload-image";
 			const IMAGE_MAX_DIMENSION = 1280;
 			const IMAGE_WEBP_QUALITY = 0.82;
+			const IMAGE_FALLBACK_STEPS = [
+				{ maxDimension: 1280, quality: 0.82 },
+				{ maxDimension: 1024, quality: 0.76 },
+				{ maxDimension: 896, quality: 0.68 }
+			];
 			const DEFAULT_BOTTLE_IMAGE =
 				"data:image/svg+xml," +
 				encodeURIComponent(
@@ -2045,7 +2050,10 @@
 				});
 			}
 
-			async function resizeAndCompressImage(file) {
+			async function resizeAndCompressImage(file, options = {}) {
+				const maxDimension = Number(options.maxDimension) || IMAGE_MAX_DIMENSION;
+				const quality = Number(options.quality) || IMAGE_WEBP_QUALITY;
+				const outputMimeType = options.outputMimeType || "image/webp";
 				const originalDataUrl = await fileToDataUrl(file);
 				const image = await loadImageFromDataUrl(originalDataUrl);
 
@@ -2053,8 +2061,8 @@
 				let targetHeight = image.naturalHeight;
 				const longestSide = Math.max(targetWidth, targetHeight);
 
-				if (longestSide > IMAGE_MAX_DIMENSION) {
-					const ratio = IMAGE_MAX_DIMENSION / longestSide;
+				if (longestSide > maxDimension) {
+					const ratio = maxDimension / longestSide;
 					targetWidth = Math.max(1, Math.round(targetWidth * ratio));
 					targetHeight = Math.max(1, Math.round(targetHeight * ratio));
 				}
@@ -2079,15 +2087,35 @@
 							}
 							resolve(blob);
 						},
-						"image/webp",
-						IMAGE_WEBP_QUALITY
+						outputMimeType,
+						quality
 					);
 				});
 
 				const compressedDataUrl = await blobToDataUrl(compressedBlob);
 				return {
 					dataUrl: compressedDataUrl,
-					mimeType: "image/webp"
+					mimeType: outputMimeType
+				};
+			}
+
+			async function buildUploadPayload(file) {
+				for (const step of IMAGE_FALLBACK_STEPS) {
+					try {
+						return await resizeAndCompressImage(file, {
+							maxDimension: step.maxDimension,
+							quality: step.quality,
+							outputMimeType: "image/webp"
+						});
+					} catch {
+						// Continue trying smaller output settings.
+					}
+				}
+
+				const originalDataUrl = await fileToDataUrl(file);
+				return {
+					dataUrl: originalDataUrl,
+					mimeType: file.type || "image/jpeg"
 				};
 			}
 
@@ -2655,21 +2683,31 @@
 						this.syncMessage = "이미지를 GitHub에 업로드 중이에요...";
 
 						try {
-							const optimized = await resizeAndCompressImage(file);
-							this.formPreviewUrl = optimized.dataUrl;
+							const payload = await buildUploadPayload(file);
+							this.formPreviewUrl = payload.dataUrl;
 							const response = await fetch(IMAGE_UPLOAD_API, {
 								method: "POST",
 								headers: { "Content-Type": "application/json" },
 								body: JSON.stringify({
 									fileName: file.name,
-									mimeType: optimized.mimeType,
-									dataUrl: optimized.dataUrl
+									mimeType: payload.mimeType,
+									dataUrl: payload.dataUrl
 								})
 							});
 
-							const result = await response.json();
+							const responseText = await response.text();
+							let result = {};
+							try {
+								result = responseText ? JSON.parse(responseText) : {};
+							} catch {
+								result = { error: responseText || "알 수 없는 응답 오류" };
+							}
+
 							if (!response.ok || !result.url) {
-								throw new Error(result.error || "이미지 업로드 실패");
+								if (response.status === 404) {
+									throw new Error("현재 배포에는 업로드 API(/api/upload-image)가 없어 저장할 수 없어요. Vercel 같은 서버리스 배포에서 실행해 주세요.");
+								}
+								throw new Error(result.error || `이미지 업로드 실패 (HTTP ${response.status})`);
 							}
 
 							this.form.imageUrl = result.url;
