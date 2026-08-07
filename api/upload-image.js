@@ -57,7 +57,13 @@ async function githubRequest(path, options = {}) {
 }
 
 async function uploadToGithub(config, filePath, base64Content) {
-	const apiPath = `/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(filePath)}`;
+	// Encode each path segment, but keep '/' as separators for GitHub contents API.
+	const encodedPath = String(filePath)
+		.split("/")
+		.filter(Boolean)
+		.map((segment) => encodeURIComponent(segment))
+		.join("/");
+	const apiPath = `/repos/${config.owner}/${config.repo}/contents/${encodedPath}`;
 
 	return githubRequest(apiPath, {
 		method: "PUT",
