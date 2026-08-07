@@ -2953,7 +2953,12 @@
 						this.$refs.teaLeafGalleryInput.click();
 					},
 					openFileInput(refName) {
-						this.$refs[refName]?.click();
+						const refValue = this.$refs[refName];
+						const target = Array.isArray(refValue) ? refValue[0] : refValue;
+						const inputElement = target?.$el || target;
+						if (typeof inputElement?.click === "function") {
+							inputElement.click();
+						}
 					},
 					async deleteManagedImage(url) {
 						const cleaned = String(url || "").trim();
