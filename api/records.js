@@ -77,6 +77,32 @@ function getDrinkDetailValue(entry) {
 	return String(entry?.caskType || "").trim();
 }
 
+function createEmptyWineRating() {
+	return {
+		body: "",
+		acidity: "",
+		tannin: "",
+		alcohol: "",
+		sweetness: "",
+		complexity: "",
+		balance: ""
+	};
+}
+
+function normalizeWineRating(rating) {
+	const normalized = createEmptyWineRating();
+	if (!rating || typeof rating !== "object") {
+		return normalized;
+	}
+
+	for (const key of Object.keys(normalized)) {
+		const value = Number(rating[key]);
+		normalized[key] = Number.isInteger(value) && value >= 1 && value <= 5 ? String(value) : "";
+	}
+
+	return normalized;
+}
+
 function getConfig() {
 	return {
 		token: process.env.GITHUB_TOKEN,
@@ -104,6 +130,7 @@ function normalizeEntries(entries) {
 
 	return entries.map((entry) => {
 		const drinkCategory = getEntryDrinkCategory(entry);
+		const rating = normalizeWineRating(entry?.rating);
 		return {
 			id: entry?.id || crypto.randomUUID(),
 			createdAt: entry?.createdAt || "",
@@ -125,6 +152,7 @@ function normalizeEntries(entries) {
 			detailValue: getDrinkDetailValue(entry),
 			nose: entry?.nose || "",
 			palate: entry?.palate || "",
+			rating,
 			finish: entry?.finish || "",
 			memo: entry?.memo || ""
 		};

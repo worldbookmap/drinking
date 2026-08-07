@@ -1033,8 +1033,9 @@
 				background: rgba(225, 220, 212, 0.9);
 				border: 1px solid rgba(132, 123, 114, 0.24);
 				color: #5d5852;
-				padding: 6px 10px;
-				font-size: 0.74rem;
+				padding: 5px 9px;
+				font-size: 0.68rem;
+				letter-spacing: 0.01em;
 				box-shadow: inset 0 1px 0 rgba(255, 251, 240, 0.45);
 			}
 
@@ -1123,13 +1124,38 @@
 				margin-left: 8px;
 				max-width: 100%;
 				min-width: 0;
-				padding: 5px 10px;
+				padding: 4px 9px;
 				border-radius: 999px;
 				background: rgba(255, 255, 255, 0.72);
 				border: 1px solid #f1c8bc;
-				font-size: 0.78rem;
+				font-size: 0.7rem;
 				color: #7a4b49;
 				overflow-wrap: anywhere;
+			}
+
+			.record-filter-grid .search-row input,
+			.record-filter-grid .search-row select {
+				background: rgba(255, 255, 255, 0.98);
+				border: 1px solid rgba(120, 103, 88, 0.34);
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.9),
+					0 6px 14px rgba(75, 60, 49, 0.1);
+				font-size: 0.92rem;
+				font-weight: 600;
+			}
+
+			.record-filter-grid .search-row input:focus,
+			.record-filter-grid .search-row select:focus {
+				border-color: #8f6450;
+				box-shadow:
+					0 0 0 3px rgba(143, 100, 80, 0.22),
+					0 10px 20px rgba(71, 56, 46, 0.14);
+			}
+
+			.record-filter-grid .search-row label {
+				font-size: 0.84rem;
+				font-weight: 700;
+				color: #615147;
 			}
 
 			.toast {
@@ -1427,21 +1453,122 @@
 				margin-top: 8px;
 			}
 
-			.trait-chip {
-				background: #fff7e9;
-				border: 1px solid #f1d9b5;
-				color: #7a594b;
-				padding: 6px 10px;
-				border-radius: 999px;
+			.traits.grouped {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 8px;
+			}
+
+			.trait-group {
+				display: grid;
+				gap: 6px;
+				padding: 6px 8px;
+				border-radius: 12px;
+				background: rgba(252, 248, 241, 0.52);
+				border: 1px solid rgba(194, 169, 136, 0.14);
+				opacity: 0.94;
+			}
+
+			.trait-group-title {
+				margin: 0;
+				font-size: 0.66rem;
+				font-weight: 700;
+				letter-spacing: 0.02em;
+				color: #9a7b6c;
+			}
+
+			.trait-group-chips {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+
+			.wine-rating-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 8px;
+				margin-top: 6px;
+			}
+
+			.wine-rating-item {
+				display: grid;
+				gap: 4px;
+			}
+
+			.wine-rating-item label {
+				font-size: 0.8rem;
+				font-weight: 600;
+				color: #7a5e53;
+			}
+
+			.wine-rating-control {
+				display: grid;
+				grid-template-columns: 1fr auto;
+				gap: 8px;
+				align-items: center;
+			}
+
+			.wine-rating-control input[type="range"] {
+				padding: 0;
+				height: 20px;
+				background: transparent;
+				box-shadow: none;
+			}
+
+			.wine-rating-value {
+				min-width: 2.6em;
+				text-align: right;
+				font-size: 0.82rem;
+				font-weight: 700;
+				color: #6d4f42;
+			}
+
+			.wine-rating-note {
+				margin: 2px 0 0;
 				font-size: 0.78rem;
+				color: #86675a;
+			}
+
+			.trait-chip {
+				background: rgba(255, 246, 230, 0.7);
+				border: 1px solid rgba(211, 179, 145, 0.55);
+				color: #886a5d;
+				padding: 4px 8px;
+				border-radius: 999px;
+				font-size: 0.66rem;
 				line-height: 1;
+				opacity: 0.9;
 			}
 
 			.trait-chip.active {
-				background: #ffd8c2;
-				border-color: #ffb691;
-				color: #5d3629;
+				background: #ffe2d0;
+				border-color: #e6ae8f;
+				color: #684437;
 				font-weight: 700;
+				opacity: 1;
+			}
+
+			#caskType,
+			#nose,
+			#palate,
+			#finish {
+				background: rgba(255, 255, 255, 0.98);
+				border: 1px solid rgba(126, 100, 83, 0.38);
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.92),
+					0 8px 18px rgba(74, 58, 47, 0.1);
+				font-size: 0.94rem;
+				font-weight: 560;
+			}
+
+			#caskType:focus,
+			#nose:focus,
+			#palate:focus,
+			#finish:focus {
+				border-color: #8f6450;
+				box-shadow:
+					0 0 0 3px rgba(143, 100, 80, 0.24),
+					0 12px 24px rgba(71, 56, 46, 0.16);
 			}
 
 			@media (max-width: 900px) {
@@ -1509,6 +1636,10 @@
 				}
 
 				.form-top-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.wine-rating-grid {
 					grid-template-columns: 1fr;
 				}
 
@@ -1748,17 +1879,22 @@
 						<div v-if="activeWriteTab === 'whisky'" class="row">
 							<label for="caskType">숙성 캐스크 타입</label>
 							<textarea id="caskType" v-model.trim="form.caskType" placeholder="예: ex버번, 올로로소"></textarea>
-							<div class="traits">
-								<button
-									type="button"
-									class="trait-chip"
-									:class="{ active: isTraitSelected('caskType', trait) }"
-									v-for="trait in currentTraitCatalog.caskType"
-									:key="`cask-${trait}`"
-									@click="toggleTrait('caskType', trait)"
-								>
-									{{ trait }}
-								</button>
+							<div class="traits grouped">
+								<div class="trait-group" v-for="group in getTraitGroups('cask')" :key="`cask-group-${group.key}`">
+									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
+									<div class="trait-group-chips">
+										<button
+											type="button"
+											class="trait-chip"
+											:class="{ active: isTraitSelected('caskType', trait) }"
+											v-for="trait in group.items"
+											:key="`cask-${group.key}-${trait}`"
+											@click="toggleTrait('caskType', trait)"
+										>
+											{{ trait }}
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -1827,51 +1963,89 @@
 						<div class="row">
 							<label for="nose">향 (Nose)</label>
 							<textarea id="nose" v-model.trim="form.nose" placeholder="예: 꿀, 사과, 바닐라"></textarea>
-							<div class="traits">
-								<button
-									type="button"
-									class="trait-chip"
-									:class="{ active: isTraitSelected('nose', trait) }"
-									v-for="trait in currentTraitCatalog.nose"
-									:key="`nose-${trait}`"
-									@click="toggleTrait('nose', trait)"
-								>
-									{{ trait }}
-								</button>
+							<div class="traits grouped">
+								<div class="trait-group" v-for="group in getTraitGroups('nose')" :key="`nose-group-${group.key}`">
+									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
+									<div class="trait-group-chips">
+										<button
+											type="button"
+											class="trait-chip"
+											:class="{ active: isTraitSelected('nose', trait) }"
+											v-for="trait in group.items"
+											:key="`nose-${group.key}-${trait}`"
+											@click="toggleTrait('nose', trait)"
+										>
+											{{ trait }}
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 
 						<div class="row">
 							<label for="palate">맛 (Palate)</label>
-							<textarea id="palate" v-model.trim="form.palate" placeholder="예: 몰트 단맛, 시나몬, 약한 스모크"></textarea>
-							<div class="traits">
-								<button
-									type="button"
-									class="trait-chip"
-									:class="{ active: isTraitSelected('palate', trait) }"
-									v-for="trait in currentTraitCatalog.palate"
-									:key="`palate-${trait}`"
-									@click="toggleTrait('palate', trait)"
-								>
-									{{ trait }}
-								</button>
+							<div v-if="activeWriteTab === 'wine'" class="wine-rating-grid">
+								<div class="wine-rating-item" v-for="field in wineRatingFields" :key="`write-rating-${field.key}`">
+									<label :for="`wine-rating-${field.key}`">{{ field.label }}</label>
+									<div class="wine-rating-control">
+										<input
+											type="range"
+											:id="`wine-rating-${field.key}`"
+											v-model.number="form.rating[field.key]"
+											min="1"
+											max="5"
+											step="1"
+										/>
+										<span class="wine-rating-value">{{ form.rating[field.key] || 1 }}/5</span>
+									</div>
+								</div>
+							</div>
+							<p v-if="activeWriteTab === 'wine'" class="wine-rating-note">바디, 산미, 탄닌, 알코올, 당도, 복합성, 밸런스를 1~5로 기록해요.</p>
+							<textarea
+								v-if="activeWriteTab === 'wine'"
+								id="palate"
+								v-model.trim="form.palate"
+								placeholder="와인의 질감, 인상, 여운을 자유롭게 메모해 주세요"
+							></textarea>
+							<textarea v-else id="palate" v-model.trim="form.palate" placeholder="예: 몰트 단맛, 시나몬, 약한 스모크"></textarea>
+							<div v-if="activeWriteTab !== 'wine'" class="traits grouped">
+								<div class="trait-group" v-for="group in getTraitGroups('palate')" :key="`palate-group-${group.key}`">
+									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
+									<div class="trait-group-chips">
+										<button
+											type="button"
+											class="trait-chip"
+											:class="{ active: isTraitSelected('palate', trait) }"
+											v-for="trait in group.items"
+											:key="`palate-${group.key}-${trait}`"
+											@click="toggleTrait('palate', trait)"
+										>
+											{{ trait }}
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 
 						<div class="row">
 							<label for="finish">피니시 (Finish)</label>
 							<textarea id="finish" v-model.trim="form.finish" placeholder="예: 길고 따뜻함, 오크 향 lingering"></textarea>
-							<div class="traits">
-								<button
-									type="button"
-									class="trait-chip"
-									:class="{ active: isTraitSelected('finish', trait) }"
-									v-for="trait in currentTraitCatalog.finish"
-									:key="`finish-${trait}`"
-									@click="toggleTrait('finish', trait)"
-								>
-									{{ trait }}
-								</button>
+							<div class="traits grouped">
+								<div class="trait-group" v-for="group in getTraitGroups('finish')" :key="`finish-group-${group.key}`">
+									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
+									<div class="trait-group-chips">
+										<button
+											type="button"
+											class="trait-chip"
+											:class="{ active: isTraitSelected('finish', trait) }"
+											v-for="trait in group.items"
+											:key="`finish-${group.key}-${trait}`"
+											@click="toggleTrait('finish', trait)"
+										>
+											{{ trait }}
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -1965,7 +2139,9 @@
 												<p class="note"><b>{{ getEntryDetailLabel(entry) }}</b>{{ getEntryDetailValue(entry) || "기록 없음" }}</p>
 											</div>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
-											<p class="note"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
+											<p class="note" v-if="getEntryDrinkCategory(entry) === 'wine'"><b>레이팅</b>{{ formatWineRating(entry.rating) }}</p>
+											<p class="note" v-if="getEntryDrinkCategory(entry) === 'wine'"><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
+											<p class="note" v-else><b>맛</b>{{ entry.palate || "기록 없음" }}</p>
 											<p class="note"><b>피니시</b>{{ entry.finish || "기록 없음" }}</p>
 											<p class="note note-memo"><b>메모</b>{{ entry.memo || "기록 없음" }}</p>
 										</div>
@@ -2080,7 +2256,28 @@
 											</div>
 											<div class="row" style="margin: 0">
 												<label>맛</label>
-												<textarea v-model.trim="editForm.palate" placeholder="예: 몰트 단맛, 시나몬"></textarea>
+												<div v-if="editForm.drinkCategory === 'wine'" class="wine-rating-grid">
+													<div class="wine-rating-item" v-for="field in wineRatingFields" :key="`edit-rating-${field.key}`">
+														<label :for="`edit-wine-rating-${field.key}`">{{ field.label }}</label>
+														<div class="wine-rating-control">
+															<input
+																type="range"
+																:id="`edit-wine-rating-${field.key}`"
+																v-model.number="editForm.rating[field.key]"
+																min="1"
+																max="5"
+																step="1"
+															/>
+															<span class="wine-rating-value">{{ editForm.rating[field.key] || 1 }}/5</span>
+														</div>
+													</div>
+												</div>
+												<textarea
+													v-if="editForm.drinkCategory === 'wine'"
+													v-model.trim="editForm.palate"
+													placeholder="와인의 질감, 인상, 여운을 자유롭게 메모해 주세요"
+												></textarea>
+												<textarea v-else v-model.trim="editForm.palate" placeholder="예: 몰트 단맛, 시나몬"></textarea>
 											</div>
 											<div class="row" style="margin: 0">
 												<label>피니시</label>
@@ -2266,6 +2463,15 @@
 			const WRITE_TAB_ORDER = ["whisky", "wine", "tea"];
 			const DRINKER_OPTIONS = ["진욱", "지선", "함께"];
 			const WINE_COUNTRY_OPTIONS = ["프랑스", "스페인", "포르투칼", "조지아", "미국", "칠레", "아르헨티나", "호주", "기타 직접입력"];
+			const WINE_RATING_FIELDS = [
+				{ key: "body", label: "바디" },
+				{ key: "acidity", label: "산미" },
+				{ key: "tannin", label: "탄닌" },
+				{ key: "alcohol", label: "알코올" },
+				{ key: "sweetness", label: "당도" },
+				{ key: "complexity", label: "복합성" },
+				{ key: "balance", label: "밸런스" }
+			];
 			const TEA_SUBCATEGORY_OPTIONS = ["육보차", "고수차", "무이암차", "보이차", "단총"];
 			const WINE_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.wine.categoryOptions);
 			const TEA_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.tea.categoryOptions);
@@ -2374,8 +2580,35 @@
 				return entry?.caskType || "";
 			}
 
+			function createEmptyWineRating() {
+				return {
+					body: "",
+					acidity: "",
+					tannin: "",
+					alcohol: "",
+					sweetness: "",
+					complexity: "",
+					balance: ""
+				};
+			}
+
+			function normalizeWineRating(rating) {
+				const normalized = createEmptyWineRating();
+				if (!rating || typeof rating !== "object") {
+					return normalized;
+				}
+
+				for (const key of Object.keys(normalized)) {
+					const value = Number(rating[key]);
+					normalized[key] = Number.isInteger(value) && value >= 1 && value <= 5 ? String(value) : "";
+				}
+
+				return normalized;
+			}
+
 			function normalizeEntry(entry) {
 				const drinkCategory = getEntryDrinkCategory(entry);
+				const rating = normalizeWineRating(entry.rating);
 				return {
 					id: entry.id || crypto.randomUUID(),
 					createdAt: entry.createdAt || "",
@@ -2396,6 +2629,7 @@
 					detailValue: entry.detailValue || getDrinkDetailValue({ ...entry, drinkCategory }),
 					nose: entry.nose || "",
 					palate: entry.palate || "",
+					rating,
 					finish: entry.finish || "",
 					memo: entry.memo || ""
 				};
@@ -2529,16 +2763,93 @@
 						activeWriteTab: "whisky",
 						traitCatalogs: {
 							whisky: {
-								caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
-								nose: ["바닐라", "꿀", "사과", "배", "시트러스", "건포도", "오크", "스모크", "꽃향", "견과류", "토피", "셰리", "가죽", "해초", "요오드"],
-								palate: ["달콤함", "몰트", "카라멜", "초콜릿", "바닐라", "과일", "스파이스", "시나몬", "스모키", "오일리", "너티", "토피", "후추", "소금기", "꿀 질감"],
-								finish: ["짧음", "중간", "김", "아주 김", "따뜻함", "드라이", "오크", "스파이시", "스모키", "깔끔함", "달콤한 여운", "허브 여운", "쌉쌀함", "미네랄 여운"]
+								cask: {
+									oak: ["버진 오크", "아메리칸 오크", "유러피언 오크", "미즈나라", "체스트넛"],
+									bourbon: ["퍼스트필 버번", "리필 버번", "ex버번"],
+									sherry: ["올로로소", "PX", "피노", "만사니야", "아몬틸라도", "아모로소"],
+									wine: ["레드와인", "화이트와인", "포트", "마데이라", "소테른", "마르살라", "모스카텔", "샴페인"],
+									spirit: ["럼", "코냑", "암르냑"],
+									beer: ["IPA", "스타우트", "에일"],
+									other: ["기타"]
+								},
+								nose: {
+									fruit: ["사과", "배", "복숭아", "살구", "자두", "체리", "오렌지", "레몬", "시트러스", "바나나", "베리류", "건포도", "무화과", "대추", "말린 과일"],
+									sweet: ["바닐라", "꿀", "카라멜", "토피", "메이플시럽", "흑설탕"],
+									grain: ["몰트", "비스킷", "토스트", "브리오슈"],
+									spice: ["시나몬", "후추", "생강", "육두구", "정향"],
+									wood: ["오크", "삼나무"],
+									floral: ["꽃향", "허브", "민트"],
+									smoky: ["스모크", "피트", "해초", "요오드"],
+									roasted: ["다크초콜릿", "코코아", "커피", "에스프레소"],
+									earthy: ["가죽", "담배", "왁스"],
+									mineral: ["미네랄", "짭짤함"]
+								},
+								palate: {
+									fruit: ["사과", "배", "복숭아", "살구", "오렌지", "레몬", "건포도", "무화과", "건과일"],
+									sweet: ["달콤함", "바닐라", "카라멜", "토피", "꿀", "메이플시럽", "흑설탕"],
+									grain: ["몰트", "비스킷", "토스트", "브리오슈"],
+									spice: ["스파이스", "시나몬", "후추", "생강", "육두구", "정향", "오크 스파이스"],
+									nut: ["너티", "아몬드", "헤이즐넛", "호두"],
+									roasted: ["초콜릿", "다크초콜릿", "커피", "에스프레소", "코코아"],
+									smoky: ["스모키", "피트"],
+									texture: ["오일리", "크리미", "실키", "왁시", "꿀 질감"],
+									wood: ["오크", "탄닌"],
+									savory: ["소금기", "감칠맛"],
+									herbal: ["허브", "민트"]
+								},
+								finish: {
+									length: ["짧음", "중간", "김", "아주 김"],
+									sweetness: ["달콤한 여운", "꿀 여운", "바닐라 여운", "카라멜 여운", "토피 여운", "초콜릿 여운"],
+									spice: ["스파이시", "후추 여운", "시나몬 여운", "생강 여운", "따뜻한 스파이스"],
+									smoke: ["스모키", "은은한 스모크", "피트 여운"],
+									wood: ["오크", "탄닌감", "드라이"],
+									fruit: ["건과일 여운", "오렌지 껍질", "레몬 제스트"],
+									herbal: ["허브 여운", "민트 여운"],
+									roasted: ["커피 여운", "코코아 여운"],
+									texture: ["오일리한 여운", "크리미한 여운", "깔끔함"],
+									mineral: ["미네랄 여운", "짭짤한 여운"],
+									earthy: ["가죽 여운", "담배 여운"],
+									other: ["따뜻함", "쌉쌀함"]
+								}
 							},
 							wine: {
-								caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
-								nose: ["레드과일", "체리", "자두", "블랙베리", "시트러스", "꽃향", "바닐라", "오크", "허브", "미네랄", "사과", "배", "복숭아", "토스트", "버터리"],
-								palate: ["드라이", "산미", "탄닌", "오크", "과일맛", "체리", "자두", "스파이스", "바디감", "밸런스", "미네랄", "감미", "블랙커런트", "잼같은 풍미", "실키"],
-								finish: ["짧음", "중간", "김", "아주 김", "드라이", "탄닌", "오크", "스파이시", "부드러움", "미네랄", "과실 여운", "토스티 여운", "산뜻함", "초콜릿 여운"]
+								cask: {
+									oak: ["프렌치 오크", "아메리칸 오크", "유러피언 오크", "뉴오크", "중고 오크"],
+									wine: ["레드와인", "화이트와인", "포트", "마데이라", "샴페인"],
+									other: ["스테인리스", "콘크리트", "앙포라", "기타"]
+								},
+								nose: {
+									fruit: ["레드과일", "블랙과일", "체리", "자두", "블랙베리", "사과", "배", "복숭아", "살구", "오렌지", "레몬", "시트러스"],
+									sweet: ["바닐라", "꿀", "카라멜", "버터리", "잼"],
+									floral: ["꽃향", "장미", "제비꽃"],
+									herbal: ["허브", "민트", "유칼립투스"],
+									spice: ["시나몬", "후추", "정향", "감초"],
+									wood: ["오크", "삼나무", "토스트", "바닐라 오크"],
+									roasted: ["커피", "코코아", "초콜릿"],
+									earthy: ["가죽", "담배", "송로"],
+									mineral: ["미네랄", "돌내음"],
+									other: ["스모크", "왁스"]
+								},
+								palate: {
+									structure: ["드라이", "세미드라이", "산미", "탄닌", "바디감", "밸런스"],
+									fruit: ["과일맛", "체리", "자두", "블랙커런트", "감귤", "사과"],
+									sweet: ["감미", "잼같은 풍미", "꿀"],
+									spice: ["스파이스", "후추", "시나몬"],
+									wood: ["오크", "토스트", "바닐라 오크"],
+									mineral: ["미네랄", "짭짤함"],
+									texture: ["실키", "크리미", "벨벳"],
+									other: ["허브", "버터리"]
+								},
+								finish: {
+									length: ["짧음", "중간", "김", "아주 김"],
+									structure: ["드라이", "탄닌", "산뜻함", "부드러움"],
+									fruit: ["과실 여운", "체리 여운", "감귤 여운"],
+									wood: ["오크", "토스티 여운"],
+									spice: ["스파이시", "후추 여운"],
+									roasted: ["초콜릿 여운", "커피 여운"],
+									mineral: ["미네랄 여운"],
+									other: ["깔끔함"]
+								}
 							},
 							tea: {
 								caskType: ["버진", "ex버번", "올로로소", "px", "마데이라", "와인", "기타"],
@@ -2561,6 +2872,7 @@
 							teaSubcategory: "",
 							nose: "",
 							palate: "",
+							rating: createEmptyWineRating(),
 							finish: "",
 							memo: ""
 						},
@@ -2609,6 +2921,9 @@
 					},
 					wineCountryOptions() {
 						return WINE_COUNTRY_OPTIONS;
+					},
+					wineRatingFields() {
+						return WINE_RATING_FIELDS;
 					},
 					drinkerOptions() {
 						return DRINKER_OPTIONS;
@@ -2683,6 +2998,7 @@
 								entry.detailValue,
 								entry.nose,
 								entry.palate,
+								this.formatWineRating(entry.rating),
 								entry.finish,
 								entry.memo
 							];
@@ -2929,6 +3245,7 @@
 							teaSubcategory,
 							nose: normalized.nose,
 							palate: normalized.palate,
+							rating: normalizeWineRating(normalized.rating),
 							finish: normalized.finish,
 							memo: normalized.memo
 						};
@@ -3012,6 +3329,7 @@
 							detailValue,
 							nose: this.editForm.nose,
 							palate: this.editForm.palate,
+							rating: normalizeWineRating(this.editForm.rating),
 							finish: this.editForm.finish,
 							memo: this.editForm.memo
 						};
@@ -3061,6 +3379,147 @@
 					},
 					getEntryDetailValue(entry) {
 						return getDrinkDetailValue(entry);
+					},
+					formatWineRating(rating) {
+						const normalized = normalizeWineRating(rating);
+						const labels = {
+							body: "바디",
+							acidity: "산미",
+							tannin: "탄닌",
+							alcohol: "알코올",
+							sweetness: "당도",
+							complexity: "복합성",
+							balance: "밸런스"
+						};
+
+						const chunks = [];
+						for (const field of WINE_RATING_FIELDS) {
+							const value = normalized[field.key];
+							if (value) {
+								chunks.push(`${labels[field.key]} ${value}/5`);
+							}
+						}
+
+						return chunks.length ? chunks.join(", ") : "기록 없음";
+					},
+					normalizeTraitItems(items) {
+						if (!Array.isArray(items)) {
+							return [];
+						}
+
+						const cleaned = [];
+						for (const item of items) {
+							const value = String(item || "").trim();
+							if (value) {
+								cleaned.push(value);
+							}
+						}
+
+						return [...new Set(cleaned)];
+					},
+					getTraitGroupLabel(field, groupKey) {
+						const labelMap = {
+							cask: {
+								oak: "오크",
+								bourbon: "버번",
+								sherry: "셰리",
+								wine: "와인",
+								spirit: "증류주",
+								beer: "맥주",
+								other: "기타"
+							},
+							nose: {
+								fruit: "과일",
+								sweet: "단향",
+								grain: "곡물",
+								spice: "스파이스",
+								wood: "우디",
+								floral: "플로럴",
+								smoky: "스모키",
+								roasted: "로스티드",
+								earthy: "어시",
+								mineral: "미네랄",
+								herbal: "허브",
+								other: "기타"
+							},
+							palate: {
+								fruit: "과일",
+								sweet: "단맛",
+								grain: "곡물",
+								spice: "스파이스",
+								nut: "너트",
+								roasted: "로스티드",
+								smoky: "스모키",
+								texture: "질감",
+								wood: "우디",
+								savory: "감칠맛",
+								herbal: "허브",
+								structure: "구조감",
+								mineral: "미네랄",
+								other: "기타"
+							},
+							finish: {
+								length: "길이",
+								sweetness: "단맛 여운",
+								spice: "스파이스 여운",
+								smoke: "스모크 여운",
+								wood: "우디 여운",
+								fruit: "과일 여운",
+								herbal: "허브 여운",
+								roasted: "로스티드 여운",
+								texture: "질감 여운",
+								mineral: "미네랄 여운",
+								earthy: "어시 여운",
+								structure: "구조감",
+								other: "기타"
+							}
+						};
+
+						const lookup = labelMap[field] || {};
+						if (lookup[groupKey]) {
+							return lookup[groupKey];
+						}
+
+						return String(groupKey || "")
+							.replace(/[_-]+/g, " ")
+							.replace(/\b\w/g, (char) => char.toUpperCase());
+					},
+					getTraitGroups(field) {
+						const source = this.currentTraitCatalog?.[field];
+						if (!source) {
+							return [];
+						}
+
+						if (Array.isArray(source)) {
+							const items = this.normalizeTraitItems(source);
+							return items.length ? [{ key: "all", label: "", items }] : [];
+						}
+
+						if (typeof source === "object") {
+							const groups = [];
+							for (const [groupKey, groupItems] of Object.entries(source)) {
+								const items = this.normalizeTraitItems(groupItems);
+								if (!items.length) {
+									continue;
+								}
+
+								groups.push({
+									key: groupKey,
+									label: this.getTraitGroupLabel(field, groupKey),
+									items
+								});
+							}
+							return groups;
+						}
+
+						return [];
+					},
+					getTraitOptions(field) {
+						const merged = [];
+						for (const group of this.getTraitGroups(field)) {
+							merged.push(...group.items);
+						}
+						return [...new Set(merged)];
 					},
 					getCalendarModalMetaChips(entry) {
 						const drinkType = this.getDrinkTypeLabel(this.getEntryDrinkCategory(entry));
@@ -3379,6 +3838,7 @@
 							detailValue,
 							nose: this.form.nose,
 							palate: this.form.palate,
+							rating: normalizeWineRating(this.form.rating),
 							finish: this.form.finish,
 							memo: this.form.memo
 						};
@@ -3533,6 +3993,7 @@
 							teaSubcategory: "",
 							nose: "",
 							palate: "",
+							rating: createEmptyWineRating(),
 							finish: "",
 							memo: ""
 						};
