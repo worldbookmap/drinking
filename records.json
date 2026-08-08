@@ -1,38 +1,5 @@
 [
   {
-    "id": "22ae0851-3b35-4f42-b18f-a36c0475848b",
-    "createdAt": "2026-08-08T08:23:29.459Z",
-    "date": "2026-08-08",
-    "place": "노즈",
-    "drinker": "함께",
-    "whisky": "Mosellisa 2012",
-    "drinkCategory": "wine",
-    "drinkType": "wine",
-    "category": "스파클링",
-    "imageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/65e4f04b890d9a45b06d51834363066280bdd49b/uploads/20260808082215-image-5ya9bm.webp",
-    "teaLeafImageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/e6aa7bca29c10f78a55c862088d3e516bfdb7913/uploads/20260808082236-image-bwipsw.webp",
-    "labelImageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/e6aa7bca29c10f78a55c862088d3e516bfdb7913/uploads/20260808082236-image-bwipsw.webp",
-    "caskType": "",
-    "wineCountry": "기타 직접입력",
-    "wineCountryCustom": "독일",
-    "teaSubcategory": "",
-    "detailLabel": "국가",
-    "detailValue": "독일",
-    "nose": "미네랄",
-    "palate": "",
-    "rating": {
-      "body": "",
-      "acidity": "4",
-      "tannin": "1",
-      "alcohol": "",
-      "sweetness": "",
-      "complexity": "",
-      "balance": ""
-    },
-    "finish": "",
-    "memo": ""
-  },
-  {
     "id": "6a060f0b-7498-4580-b84f-4cd267515585",
     "createdAt": "2026-08-07T06:57:39.841Z",
     "date": "2026-08-07",
