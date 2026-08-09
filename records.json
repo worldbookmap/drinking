@@ -1,5 +1,38 @@
 [
   {
+    "id": "9c76cee6-fddc-4e23-88e5-dbb979669446",
+    "createdAt": "2026-08-09T08:47:10.406Z",
+    "date": "2026-08-09",
+    "place": "집",
+    "drinker": "함께",
+    "whisky": "26 임창 청화향 일과수",
+    "drinkCategory": "tea",
+    "drinkType": "tea",
+    "category": "흑차",
+    "imageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/f6d67e4b4218652ffcc7d2dc825f506f8fb26708/uploads/20260809084311-image-rk2ly9.webp",
+    "teaLeafImageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/e290f038eef3a8f558cc50afa8d5acf441fb2ca8/uploads/20260809084333-image-jmrsca.webp",
+    "labelImageUrl": "https://raw.githubusercontent.com/worldbookmap/drinking/e290f038eef3a8f558cc50afa8d5acf441fb2ca8/uploads/20260809084333-image-jmrsca.webp",
+    "caskType": "",
+    "wineCountry": "",
+    "wineCountryCustom": "",
+    "teaSubcategory": "고수차",
+    "detailLabel": "품종",
+    "detailValue": "고수차",
+    "nose": "난향, 꽃향, 청향",
+    "palate": "꽃맛, 과실감, 청량감\n하얀 꽂계열의 꽃향, 매실같은 과실미, 약간의 박하",
+    "rating": {
+      "body": "",
+      "acidity": "",
+      "tannin": "",
+      "alcohol": "",
+      "sweetness": "",
+      "complexity": "",
+      "balance": ""
+    },
+    "finish": "깔끔함, 여운, 상쾌함",
+    "memo": ""
+  },
+  {
     "id": "ad3452e9-36fa-491e-833b-ada507a09a27",
     "createdAt": "2026-08-08T08:43:34.208Z",
     "date": "2026-08-08",
