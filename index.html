@@ -1292,8 +1292,9 @@
 
 			.entry-category {
 				display: inline-block;
-				width: 3.6em;
-				flex: 0 0 3.6em;
+				width: 2.6em;
+				flex: 0 0 2.6em;
+				text-align: center;
 				font-size: 0.78rem;
 				color: var(--ink-soft);
 			}
@@ -4214,13 +4215,14 @@
 							// Ignore quota/storage errors and keep in-memory state.
 						}
 					},
-					markPendingSync() {
-						const count = Array.isArray(this.entries) ? this.entries.length : 0;
-						this.pendingSyncCount = count;
+					markPendingSync(increment = 1) {
+						const step = Number.isFinite(Number(increment)) ? Math.max(1, Math.trunc(Number(increment))) : 1;
+						const nextCount = Math.max(1, Number(this.pendingSyncCount || 0) + step);
+						this.pendingSyncCount = nextCount;
 						try {
 							localStorage.setItem(
 								LOCAL_PENDING_SYNC_KEY,
-								JSON.stringify({ pending: true, count, updatedAt: new Date().toISOString() })
+								JSON.stringify({ pending: true, count: nextCount, updatedAt: new Date().toISOString() })
 							);
 						} catch {
 							// Ignore storage errors.
