@@ -28,7 +28,6 @@
 				--page-bg-1: radial-gradient(circle at 18% 14%, rgba(110, 105, 98, 0.09) 0 15%, transparent 27%);
 				--page-bg-2: radial-gradient(circle at 78% 20%, rgba(140, 132, 123, 0.08) 0 13%, transparent 24%);
 				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(96, 91, 84, 0.07) 0 11%, transparent 22%);
-				--page-bg-base: linear-gradient(145deg, #fffdf9 0%, #f6f1e8 36%, #eee7dc 70%, #e4dbd0 100%);
 				--hero-overlay: linear-gradient(135deg, rgba(48, 44, 40, 0.56), rgba(96, 90, 83, 0.34), rgba(171, 164, 155, 0.12));
 				--hero-image: url("./assets/bg.jpg");
 				--panel-bg: rgba(253, 250, 244, 0.92);
@@ -2525,7 +2524,7 @@
 												{{ getLabelPhotoTerm(getEntryDrinkCategory(entry)) }}
 											</button>
 															<button
-																v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'wine' && entry.wineCountry && entry.wineCountry !== '기타' && entry.wineRegion"
+																v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'wine' && entry.wineCountry && entry.wineCountry !== '기타'"
 																class="tool-btn small region-trigger"
 																type="button"
 																@click="openWineRegionModal(entry)"
@@ -2607,21 +2606,21 @@
 												<label>장소</label>
 												<input v-model.trim="editForm.place" type="text" placeholder="예: 집, 바, 여행지" />
 											</div>
-											<div class="row" style="margin: 0">
-												<label>{{ editWriteConfig.label }} 사진 URL</label>
-												<input v-model.trim="editForm.imageUrl" @input="editFormPreviewUrl = ''" type="url" placeholder="https://..." />
-												<div class="upload-actions">
-													<button class="tool-btn small" type="button" @click="openFileInput('editImageCameraInput')" :disabled="isImageUploading">
-														<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "카메라로 찍기" }}
-													<button
-														v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'wine' && entry.wineCountry && entry.wineCountry !== '기타'"
-														<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
-													</button>
-												</div>
-												<p class="upload-hint">기존 사진이 있으면 새 사진으로 교체할 수 있어요.</p>
-														{{ hasWineRegions(entry.wineCountry) ? "산지" : "위치" }}
-												<input ref="editImageGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
-												<div class="bottle-preview">
+													<div class="row" style="margin: 0">
+														<label>{{ editWriteConfig.label }} 사진 URL</label>
+														<input v-model.trim="editForm.imageUrl" @input="editFormPreviewUrl = ''" type="url" placeholder="https://..." />
+														<div class="upload-actions">
+															<button class="tool-btn small" type="button" @click="openFileInput('editImageCameraInput')" :disabled="isImageUploading">
+																<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "카메라로 찍기" }}
+															</button>
+															<button class="tool-btn small" type="button" @click="openFileInput('editImageGalleryInput')" :disabled="isImageUploading">
+																<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
+															</button>
+														</div>
+														<p class="upload-hint">기존 사진이 있으면 새 사진으로 교체할 수 있어요.</p>
+														<input ref="editImageCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
+														<input ref="editImageGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
+														<div class="bottle-preview">
 													<img
 														:src="resolveBottleImage(editForm.imageUrl, editFormPreviewUrl)"
 														:data-origin-src="editForm.imageUrl"
