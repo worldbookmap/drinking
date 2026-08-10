@@ -44,6 +44,23 @@ const COUNTRY_CONFIGS = [
     ]
   },
   {
+    key: 'italy',
+    label: '이탈리아',
+    countryName: 'Italy',
+    gbIso: 'ITA',
+    gbAdm: 'ADM2',
+    zoom: 1.22,
+    focusKeys: ['piemonte', 'toscana', 'veneto', 'sicilia', 'puglia', 'emiliaromagna'],
+    regions: [
+      { key: 'piemonte', label: '피에몬테', units: ['piemonte'] },
+      { key: 'toscana', label: '토스카나', units: ['toscana', 'tuscany'] },
+      { key: 'veneto', label: '베네토', units: ['veneto'] },
+      { key: 'sicilia', label: '시칠리아', units: ['sicilia', 'sicily'] },
+      { key: 'puglia', label: '풀리아', units: ['puglia', 'apulia'] },
+      { key: 'emiliaromagna', label: '에밀리아로마냐', units: ['emilia romagna', 'emilia-romagna'] }
+    ]
+  },
+  {
     key: 'usa',
     label: '미국',
     countryName: 'United States of America',
