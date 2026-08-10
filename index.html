@@ -1268,6 +1268,8 @@
 			}
 
 			.entry-line {
+				display: flex;
+				align-items: baseline;
 				min-width: 0;
 				font-size: 0.96rem;
 				line-height: 1.45;
@@ -1289,11 +1291,18 @@
 			}
 
 			.entry-category {
+				display: inline-block;
+				width: 3.6em;
+				flex: 0 0 3.6em;
 				font-size: 0.78rem;
 				color: var(--ink-soft);
 			}
 
 			.entry-name {
+				min-width: 0;
+				flex: 1 1 auto;
+				overflow: hidden;
+				text-overflow: ellipsis;
 				font-weight: 600;
 			}
 
@@ -3742,10 +3751,13 @@
 						},
 						whiskyMapState: {
 							write: null,
+							writeElement: null,
 							writeMarker: null,
 							edit: null,
+							editElement: null,
 							editMarker: null,
 							modal: null,
+							modalElement: null,
 							modalMarker: null
 						},
 						teaRegionModal: {
@@ -4088,14 +4100,14 @@
 					},
 					getWhiskyMapStateKey(mode) {
 						if (mode === "edit") {
-							return { map: "edit", marker: "editMarker" };
+							return { map: "edit", marker: "editMarker", element: "editElement" };
 						}
 
 						if (mode === "modal") {
-							return { map: "modal", marker: "modalMarker" };
+							return { map: "modal", marker: "modalMarker", element: "modalElement" };
 						}
 
-						return { map: "write", marker: "writeMarker" };
+						return { map: "write", marker: "writeMarker", element: "writeElement" };
 					},
 					ensureWhiskyLeafletMap(mode) {
 						if (typeof window === "undefined" || typeof window.L === "undefined") {
@@ -4110,6 +4122,17 @@
 							return null;
 						}
 
+						const currentMap = this.whiskyMapState[stateKeys.map];
+						const currentElement = this.whiskyMapState[stateKeys.element];
+						if (currentMap && currentElement && currentElement !== element) {
+							if (this.whiskyMapState[stateKeys.marker]) {
+								this.whiskyMapState[stateKeys.marker] = null;
+							}
+							currentMap.remove();
+							this.whiskyMapState[stateKeys.map] = null;
+							this.whiskyMapState[stateKeys.element] = null;
+						}
+
 						if (!this.whiskyMapState[stateKeys.map]) {
 							const map = window.L.map(element, {
 								zoomControl: true,
@@ -4122,6 +4145,7 @@
 							}).addTo(map);
 
 							this.whiskyMapState[stateKeys.map] = map;
+							this.whiskyMapState[stateKeys.element] = element;
 						}
 
 						const map = this.whiskyMapState[stateKeys.map];
