@@ -2587,7 +2587,7 @@
 												</div>
 												<div class="row" style="margin: 0">
 													<label>음료</label>
-													<select v-model="editForm.drinkCategory">
+													<select v-model="editForm.drinkCategory" @change="handleEditDrinkCategoryChange">
 														<option v-for="type in writeTabOrder" :key="`edit-type-${type}`" :value="type">{{ getDrinkTypeLabel(type) }}</option>
 													</select>
 												</div>
@@ -2613,13 +2613,13 @@
 												<div class="upload-actions">
 													<button class="tool-btn small" type="button" @click="openFileInput('editImageCameraInput')" :disabled="isImageUploading">
 														<i class="lni lni-camera"></i>{{ isImageUploading ? "업로드 중..." : "카메라로 찍기" }}
-													</button>
-													<button class="tool-btn small" type="button" @click="openFileInput('editImageGalleryInput')" :disabled="isImageUploading">
+													<button
+														v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'wine' && entry.wineCountry && entry.wineCountry !== '기타'"
 														<i class="lni lni-image"></i>{{ isImageUploading ? "업로드 중..." : "사진첩에서 고르기" }}
 													</button>
 												</div>
 												<p class="upload-hint">기존 사진이 있으면 새 사진으로 교체할 수 있어요.</p>
-												<input ref="editImageCameraInput" type="file" accept="image/*" capture="environment" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
+														{{ hasWineRegions(entry.wineCountry) ? "산지" : "위치" }}
 												<input ref="editImageGalleryInput" type="file" accept="image/*" @change="onPickImageFile($event, 'editForm', 'imageUrl', 'editFormPreviewUrl', editForm.imageUrl)" style="display: none" />
 												<div class="bottle-preview">
 													<img
@@ -2725,6 +2725,7 @@
 															<p class="china-province-selected">선택: {{ editForm.teaChinaProvince || "없음" }}</p>
 														</div>
 											</div>
+													<p class="note" v-if="editForm.drinkCategory === 'wine' && editForm.wineCountry && editForm.wineCountry !== '기타'" style="margin-top: 8px"><b>와인 산지</b>{{ hasWineRegions(editForm.wineCountry) ? (editForm.wineRegion || "기록 없음") : `${editForm.wineCountry} 위치 표시` }}</p>
 													<p class="note" v-if="editForm.drinkCategory === 'tea'" style="margin-top: 8px"><b>중국 성</b>{{ editForm.teaChinaProvince || "기록 없음" }}</p>
 											<p class="note" style="margin-top: 8px"><b>{{ getEntryDetailLabel(editForm) }}</b>{{ getEntryDetailValue(editForm) || "기록 없음" }}</p>
 											<div class="row" style="margin: 0">
@@ -4421,6 +4422,33 @@
 						const isValidRegion = regions.some((region) => String(region.label || "").trim() === selected);
 						if (!isValidRegion) {
 							target.wineRegion = "";
+						}
+					},
+					handleEditDrinkCategoryChange() {
+						if (!this.editForm || typeof this.editForm !== "object") {
+							return;
+						}
+
+						const drinkType = String(this.editForm.drinkCategory || "whisky").trim();
+						const writeConfig = WRITE_TAB_CONFIGS[drinkType] || WRITE_TAB_CONFIGS.whisky;
+
+						if (!writeConfig.categoryOptions.includes(this.editForm.category)) {
+							this.editForm.category = "";
+						}
+
+						if (drinkType !== "wine") {
+							this.editForm.wineCountry = "";
+							this.editForm.wineCountryCustom = "";
+							this.editForm.wineRegion = "";
+						}
+
+						if (drinkType !== "tea") {
+							this.editForm.teaChinaProvince = "";
+						}
+
+						if (drinkType === "wine") {
+							this.editForm.rating = normalizeWineRating(this.editForm.rating);
+							this.handleWineCountryChange("editForm");
 						}
 					},
 					setWineRegion(formKey, regionLabel) {
