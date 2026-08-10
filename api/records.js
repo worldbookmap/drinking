@@ -148,6 +148,7 @@ function normalizeEntries(entries) {
 			wineCountry: entry?.wineCountry || "",
 			wineCountryCustom: entry?.wineCountryCustom || "",
 			teaSubcategory: entry?.teaSubcategory || "",
+			teaChinaProvince: entry?.teaChinaProvince || "",
 			detailLabel: getDrinkDetailLabel(entry),
 			detailValue: getDrinkDetailValue(entry),
 			nose: entry?.nose || "",

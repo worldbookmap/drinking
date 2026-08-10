@@ -1439,6 +1439,11 @@
 				margin-top: 0;
 			}
 
+			.region-trigger {
+				width: 100%;
+				margin-top: 0;
+			}
+
 			.tea-leaf-modal {
 				width: min(520px, calc(100vw - 28px));
 				margin: 0 auto;
@@ -1665,6 +1670,117 @@
 				opacity: 1;
 			}
 
+			.china-province-section {
+				margin-top: 10px;
+				padding: 10px;
+				border: 1px dashed rgba(147, 125, 102, 0.42);
+				border-radius: 12px;
+				background: rgba(255, 252, 246, 0.7);
+			}
+
+			.china-province-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				margin-bottom: 8px;
+			}
+
+			.china-province-title {
+				margin: 0;
+				font-size: 0.82rem;
+				font-weight: 700;
+				color: #6b5a4d;
+			}
+
+			.province-clear-btn {
+				padding: 4px 8px;
+				font-size: 0.74rem;
+			}
+
+			.china-province-map {
+				padding: 8px;
+				border-radius: 10px;
+				background: linear-gradient(160deg, rgba(244, 236, 222, 0.82), rgba(254, 250, 242, 0.96));
+				border: 1px solid rgba(156, 136, 111, 0.28);
+			}
+
+			.china-province-map-svg {
+				display: block;
+				width: 100%;
+				height: auto;
+				max-height: 280px;
+			}
+
+			.china-map-outline {
+				fill: rgba(230, 212, 187, 0.28);
+				stroke: rgba(136, 113, 90, 0.5);
+				stroke-width: 2;
+			}
+
+			.province-region {
+				fill: rgba(255, 251, 244, 0.96);
+				stroke: rgba(145, 119, 95, 0.62);
+				stroke-width: 1.4;
+				cursor: pointer;
+				transition: fill 0.12s ease, transform 0.12s ease, stroke 0.12s ease;
+			}
+
+			.province-region:hover {
+				fill: rgba(255, 234, 204, 0.96);
+				stroke: rgba(130, 102, 78, 0.84);
+			}
+
+			.province-region.active {
+				fill: #ffd9ab;
+				stroke: #c57b3c;
+				stroke-width: 2;
+			}
+
+			.province-region.readonly {
+				cursor: default;
+			}
+
+			.province-region.readonly:hover {
+				fill: rgba(255, 251, 244, 0.96);
+				stroke: rgba(145, 119, 95, 0.62);
+			}
+
+			.province-region.readonly.active:hover {
+				fill: #ffd9ab;
+				stroke: #c57b3c;
+			}
+
+			.province-region-label {
+				font-size: 12px;
+				font-weight: 700;
+				text-anchor: middle;
+				dominant-baseline: middle;
+				fill: #674a39;
+				pointer-events: none;
+			}
+
+			.china-province-selected {
+				margin: 8px 0 0;
+				font-size: 0.78rem;
+				color: #6e6157;
+			}
+
+			.tea-region-modal {
+				width: min(560px, calc(100vw - 28px));
+				margin: 0 auto;
+			}
+
+			.tea-region-backdrop {
+				z-index: 112;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.tea-region-map {
+				margin-top: 8px;
+			}
+
 			#caskType,
 			#nose,
 			#palate,
@@ -1712,6 +1828,10 @@
 					align-items: flex-start;
 					flex-direction: column;
 					gap: 6px;
+				}
+
+				.china-province-map-svg {
+					max-height: 240px;
 				}
 
 				.record-primary-tools > * {
@@ -2044,6 +2164,31 @@
 									{{ subcategory }}
 								</button>
 							</div>
+														<div class="china-province-section">
+															<div class="china-province-head">
+																<p class="china-province-title">중국 주요 성 선택</p>
+																<button type="button" class="tool-btn small province-clear-btn" @click="setTeaProvince('form', '')">선택 해제</button>
+															</div>
+															<div class="china-province-map" role="group" aria-label="중국 차 산지 주요 성 선택 지도">
+																<svg class="china-province-map-svg" viewBox="0 0 340 260" aria-hidden="true">
+																	<path class="china-map-outline" d="M36 194 L72 134 L112 96 L162 82 L212 90 L254 104 L290 144 L302 190 L266 236 L212 242 L164 232 L120 234 L82 226 L52 214 Z" />
+																	<g v-for="province in teaProvinceMapOptions" :key="`tea-province-${province.key}`">
+																		<path
+																			v-for="(regionPath, pathIndex) in province.paths"
+																			:key="`tea-province-${province.key}-path-${pathIndex}`"
+																			:d="regionPath"
+																			class="province-region"
+																			:class="{ active: isTeaProvinceSelected(form.teaChinaProvince, province.label) }"
+																			@click="setTeaProvince('form', province.label)"
+																		>
+																			<title>{{ province.label }}</title>
+																		</path>
+																		<text class="province-region-label" :x="province.textX" :y="province.textY">{{ getProvinceMapLabel(province.label) }}</text>
+																	</g>
+																</svg>
+															</div>
+															<p class="china-province-selected">선택: {{ form.teaChinaProvince || "없음" }}</p>
+														</div>
 						</div>
 
 						<div class="row">
@@ -2251,6 +2396,14 @@
 											>
 												{{ getLabelPhotoTerm(getEntryDrinkCategory(entry)) }}
 											</button>
+														<button
+															v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'tea' && entry.teaChinaProvince"
+															class="tool-btn small region-trigger"
+															type="button"
+															@click="openTeaRegionModal(entry)"
+														>
+															지역
+														</button>
 										</div>
 										<div class="notes" v-if="editingEntryId !== entry.id">
 											<div class="notes-top-grid">
@@ -2259,6 +2412,7 @@
 												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
 												<p class="note"><b>마신이</b>{{ entry.drinker || "기록 없음" }}</p>
 											</div>
+													<p class="note" v-if="getEntryDrinkCategory(entry) === 'tea'"><b>중국 성</b>{{ entry.teaChinaProvince || "기록 없음" }}</p>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
 											<div class="wine-rating-readonly" v-if="getEntryDrinkCategory(entry) === 'wine'">
 												<p class="note" v-for="field in wineRatingFields" :key="`record-rating-${entry.id}-${field.key}`">
@@ -2384,7 +2538,33 @@
 											<div v-else class="row" style="margin: 0">
 												<label>품종</label>
 												<textarea v-model.trim="editForm.teaSubcategory" placeholder="예: 육보차, 보이차"></textarea>
+														<div class="china-province-section">
+															<div class="china-province-head">
+																<p class="china-province-title">중국 주요 성 선택</p>
+																<button type="button" class="tool-btn small province-clear-btn" @click="setTeaProvince('editForm', '')">선택 해제</button>
+															</div>
+															<div class="china-province-map" role="group" aria-label="중국 차 산지 주요 성 선택 지도">
+																<svg class="china-province-map-svg" viewBox="0 0 340 260" aria-hidden="true">
+																	<path class="china-map-outline" d="M36 194 L72 134 L112 96 L162 82 L212 90 L254 104 L290 144 L302 190 L266 236 L212 242 L164 232 L120 234 L82 226 L52 214 Z" />
+																	<g v-for="province in teaProvinceMapOptions" :key="`edit-tea-province-${province.key}`">
+																		<path
+																			v-for="(regionPath, pathIndex) in province.paths"
+																			:key="`edit-tea-province-${province.key}-path-${pathIndex}`"
+																			:d="regionPath"
+																			class="province-region"
+																			:class="{ active: isTeaProvinceSelected(editForm.teaChinaProvince, province.label) }"
+																			@click="setTeaProvince('editForm', province.label)"
+																		>
+																			<title>{{ province.label }}</title>
+																		</path>
+																		<text class="province-region-label" :x="province.textX" :y="province.textY">{{ getProvinceMapLabel(province.label) }}</text>
+																	</g>
+																</svg>
+															</div>
+															<p class="china-province-selected">선택: {{ editForm.teaChinaProvince || "없음" }}</p>
+														</div>
 											</div>
+													<p class="note" v-if="editForm.drinkCategory === 'tea'" style="margin-top: 8px"><b>중국 성</b>{{ editForm.teaChinaProvince || "기록 없음" }}</p>
 											<p class="note" style="margin-top: 8px"><b>{{ getEntryDetailLabel(editForm) }}</b>{{ getEntryDetailValue(editForm) || "기록 없음" }}</p>
 											<div class="row" style="margin: 0">
 												<label>향</label>
@@ -2525,9 +2705,37 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="calendar-modal-backdrop tea-region-backdrop" v-if="teaRegionModal.visible" @click="closeTeaRegionModal">
+				<div class="calendar-modal tea-region-modal" @click.stop>
+					<div class="calendar-modal-head">
+						<p class="layer-title" style="margin: 0">중국 주요 성 지도</p>
+						<button class="modal-close" type="button" @click="closeTeaRegionModal">X</button>
+					</div>
+					<div class="china-province-map tea-region-map" role="img" aria-label="선택한 중국 성 지도">
+						<svg class="china-province-map-svg" viewBox="0 0 340 260" aria-hidden="true">
+							<path class="china-map-outline" d="M36 194 L72 134 L112 96 L162 82 L212 90 L254 104 L290 144 L302 190 L266 236 L212 242 L164 232 L120 234 L82 226 L52 214 Z" />
+							<g v-for="province in teaProvinceMapOptions" :key="`modal-tea-province-${province.key}`">
+								<path
+									v-for="(regionPath, pathIndex) in province.paths"
+									:key="`modal-tea-province-${province.key}-path-${pathIndex}`"
+									:d="regionPath"
+									class="province-region readonly"
+									:class="{ active: isTeaProvinceSelected(teaRegionModal.province, province.label) }"
+								>
+									<title>{{ province.label }}</title>
+								</path>
+								<text class="province-region-label" :x="province.textX" :y="province.textY">{{ getProvinceMapLabel(province.label) }}</text>
+							</g>
+						</svg>
+					</div>
+					<p class="china-province-selected">선택 지역: {{ teaRegionModal.province || "없음" }}</p>
+				</div>
+			</div>
 			</div>
 		</div>
 
+		<script src="./assets/tea-province-map-data.js"></script>
 		<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 		<script>
 			const RECORDS_FILE = "./records.json";
@@ -2611,6 +2819,9 @@
 				{ key: "balance", label: "밸런스" }
 			];
 			const TEA_SUBCATEGORY_OPTIONS = ["육보차", "고수차", "무이암차", "보이차", "단총"];
+			const TEA_CHINA_PROVINCE_OPTIONS = Array.isArray(window.TEA_PROVINCE_MAP_DATA)
+				? window.TEA_PROVINCE_MAP_DATA
+				: [];
 			const WINE_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.wine.categoryOptions);
 			const TEA_CATEGORY_SET = new Set(WRITE_TAB_CONFIGS.tea.categoryOptions);
 			const TEA_SUBCATEGORY_SET = new Set(TEA_SUBCATEGORY_OPTIONS);
@@ -2763,6 +2974,7 @@
 					wineCountry: entry.wineCountry || "",
 					wineCountryCustom: entry.wineCountryCustom || "",
 					teaSubcategory: entry.teaSubcategory || "",
+					teaChinaProvince: entry.teaChinaProvince || "",
 					detailLabel: entry.detailLabel || getDrinkDetailLabel({ ...entry, drinkCategory }),
 					detailValue: entry.detailValue || getDrinkDetailValue({ ...entry, drinkCategory }),
 					nose: entry.nose || "",
@@ -3008,6 +3220,7 @@
 							wineCountry: "",
 							wineCountryCustom: "",
 							teaSubcategory: "",
+							teaChinaProvince: "",
 							nose: "",
 							palate: "",
 							rating: createEmptyWineRating(),
@@ -3030,6 +3243,10 @@
 							url: "",
 							label: "라벨"
 						},
+						teaRegionModal: {
+							visible: false,
+							province: ""
+						},
 						isInitialLoading: true,
 						isReadyToDismissLoading: false,
 						loadingProgress: 0,
@@ -3048,6 +3265,7 @@
 						},
 						toastTimer: null,
 						isOnline: typeof navigator !== "undefined" ? navigator.onLine : true,
+						isCompactProvinceMapLabels: false,
 						pendingSyncCount: 0,
 						syncMessage: "GitHub에서 records.json을 불러왔어요."
 					};
@@ -3073,6 +3291,9 @@
 					},
 					teaSubcategoryOptions() {
 						return TEA_SUBCATEGORY_OPTIONS;
+					},
+					teaProvinceMapOptions() {
+						return TEA_CHINA_PROVINCE_OPTIONS;
 					},
 					editWriteConfig() {
 						const drinkType = this.editForm?.drinkCategory || "whisky";
@@ -3134,6 +3355,7 @@
 								entry.wineCountry,
 								entry.wineCountryCustom,
 								entry.teaSubcategory,
+								entry.teaChinaProvince,
 								entry.detailLabel,
 								entry.detailValue,
 								entry.nose,
@@ -3255,10 +3477,12 @@
 				},
 				async mounted() {
 					this.syncWriteTheme();
+					this.updateProvinceMapLabelMode();
 					this.updateOnlineStatus();
 					this.loadFromLocalCache();
 					this.syncPendingStateFromStorage();
 					window.addEventListener("keydown", this.onGlobalKeydown);
+					window.addEventListener("resize", this.updateProvinceMapLabelMode);
 					window.addEventListener("online", this.handleOnlineStatusChange);
 					window.addEventListener("offline", this.handleOnlineStatusChange);
 					this.startInitialLoadingProgress();
@@ -3277,6 +3501,7 @@
 				},
 				beforeUnmount() {
 					window.removeEventListener("keydown", this.onGlobalKeydown);
+					window.removeEventListener("resize", this.updateProvinceMapLabelMode);
 					window.removeEventListener("online", this.handleOnlineStatusChange);
 					window.removeEventListener("offline", this.handleOnlineStatusChange);
 					if (this.loadingProgressTimer) {
@@ -3290,6 +3515,22 @@
 					}
 				},
 				methods: {
+					updateProvinceMapLabelMode() {
+						if (typeof window === "undefined") {
+							this.isCompactProvinceMapLabels = false;
+							return;
+						}
+
+						this.isCompactProvinceMapLabels = window.innerWidth <= 480;
+					},
+					getProvinceMapLabel(label) {
+						const text = String(label || "").trim();
+						if (!this.isCompactProvinceMapLabels || !text) {
+							return text;
+						}
+
+						return text.slice(0, 2);
+					},
 					updateOnlineStatus() {
 						this.isOnline = typeof navigator === "undefined" ? true : navigator.onLine;
 					},
@@ -3427,6 +3668,11 @@
 							return;
 						}
 
+						if (this.teaRegionModal.visible) {
+							this.closeTeaRegionModal();
+							return;
+						}
+
 						if (this.editingEntryId) {
 							this.cancelEditEntry();
 						}
@@ -3438,6 +3684,7 @@
 						let wineCountry = normalized.wineCountry;
 						let wineCountryCustom = normalized.wineCountryCustom;
 						let teaSubcategory = normalized.teaSubcategory;
+						let teaChinaProvince = normalized.teaChinaProvince;
 
 						if (normalized.drinkCategory === "whisky" && !caskType && detailValue) {
 							caskType = detailValue;
@@ -3469,6 +3716,7 @@
 							wineCountry,
 							wineCountryCustom,
 							teaSubcategory,
+							teaChinaProvince,
 							nose: normalized.nose,
 							palate: normalized.palate,
 							rating: normalizeWineRating(normalized.rating),
@@ -3551,6 +3799,7 @@
 							wineCountry: this.editForm.wineCountry,
 							wineCountryCustom: this.editForm.wineCountryCustom,
 							teaSubcategory: this.editForm.teaSubcategory,
+							teaChinaProvince: drinkType === "tea" ? this.editForm.teaChinaProvince : "",
 							detailLabel: writeConfig.extraLabel,
 							detailValue,
 							nose: this.editForm.nose,
@@ -3761,16 +4010,29 @@
 					},
 					getCalendarModalMetaChips(entry) {
 						const drinkType = this.getDrinkTypeLabel(this.getEntryDrinkCategory(entry));
+						const drinkCategory = this.getEntryDrinkCategory(entry);
 						const categoryValue = String(entry?.category || "미입력").trim();
 						const drinkerValue = String(entry?.drinker || "미입력").trim();
 						const placeValue = String(entry?.place || "미입력").trim();
+						const teaProvinceValue = String(entry?.teaChinaProvince || "").trim();
 
-						return [
-							drinkType,
-							categoryValue,
-							drinkerValue,
-							placeValue
-						];
+						if (drinkCategory === "tea") {
+							return [drinkType, categoryValue, teaProvinceValue || "중국 성 미입력", drinkerValue, placeValue];
+						}
+
+						return [drinkType, categoryValue, drinkerValue, placeValue];
+					},
+					isTeaProvinceSelected(currentProvince, candidate) {
+						return String(currentProvince || "").trim() === String(candidate || "").trim();
+					},
+					setTeaProvince(formKey, province) {
+						const target = this[formKey];
+						if (!target || typeof target !== "object") {
+							return;
+						}
+
+						const selected = String(province || "").trim();
+						target.teaChinaProvince = target.teaChinaProvince === selected ? "" : selected;
 					},
 					getLabelPhotoTerm(drinkCategory) {
 						return drinkCategory === "tea" ? "차엽" : "라벨";
@@ -3998,6 +4260,19 @@
 						this.teaLeafModal.url = "";
 						this.teaLeafModal.label = "라벨";
 					},
+					openTeaRegionModal(entry) {
+						const province = String(entry?.teaChinaProvince || "").trim();
+						if (!province) {
+							return;
+						}
+
+						this.teaRegionModal.visible = true;
+						this.teaRegionModal.province = province;
+					},
+					closeTeaRegionModal() {
+						this.teaRegionModal.visible = false;
+						this.teaRegionModal.province = "";
+					},
 					openRecordFromCalendar(entryId) {
 						if (!entryId) {
 							return;
@@ -4072,6 +4347,7 @@
 							wineCountry: this.form.wineCountry,
 							wineCountryCustom: this.form.wineCountryCustom,
 							teaSubcategory: this.form.teaSubcategory,
+							teaChinaProvince: drinkType === "tea" ? this.form.teaChinaProvince : "",
 							detailLabel,
 							detailValue,
 							nose: this.form.nose,
@@ -4263,6 +4539,7 @@
 							wineCountry: "",
 							wineCountryCustom: "",
 							teaSubcategory: "",
+							teaChinaProvince: "",
 							nose: "",
 							palate: "",
 							rating: createEmptyWineRating(),
