@@ -11,6 +11,12 @@
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+			integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+			crossorigin=""
+		/>
 		<style>
 			:root {
 				--bg-cream: #fbf7ef;
@@ -1788,6 +1794,52 @@
 				color: #6a513e;
 			}
 
+			.distillery-search-wrap {
+				display: grid;
+				gap: 6px;
+			}
+
+			.distillery-suggestions {
+				position: relative;
+				max-height: 220px;
+				overflow-y: auto;
+				padding: 6px;
+				margin-bottom: 2px;
+				border: 1px solid rgba(170, 123, 85, 0.26);
+				border-radius: 12px;
+				background: rgba(255, 251, 245, 0.98);
+				box-shadow: 0 14px 30px rgba(80, 56, 37, 0.14);
+			}
+
+			.distillery-suggestion {
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				gap: 10px;
+				padding: 10px 12px;
+				border: 0;
+				border-radius: 10px;
+				background: transparent;
+				text-align: left;
+				cursor: pointer;
+				color: #4e392a;
+			}
+
+			.distillery-suggestion:hover,
+			.distillery-suggestion:focus-visible {
+				background: rgba(255, 233, 207, 0.95);
+				outline: none;
+			}
+
+			.distillery-suggestion-name {
+				font-weight: 700;
+			}
+
+			.distillery-suggestion-ko {
+				font-size: 0.76rem;
+				color: #856b57;
+			}
+
 			.wine-map-wrap {
 				padding: 8px;
 				border-radius: 10px;
@@ -1857,6 +1909,40 @@
 				dominant-baseline: middle;
 				fill: #644531;
 				pointer-events: none;
+			}
+
+			.world-pin-shadow {
+				fill: rgba(83, 49, 25, 0.2);
+			}
+
+			.world-pin-shape {
+				fill: #bf612b;
+				stroke: #7b3412;
+				stroke-width: 1.2;
+			}
+
+			.world-pin-core {
+				fill: #fff5ec;
+				stroke: rgba(123, 52, 18, 0.4);
+				stroke-width: 0.8;
+			}
+
+			.whisky-leaflet-map {
+				width: 100%;
+				height: 300px;
+				border-radius: 8px;
+				overflow: hidden;
+			}
+
+			.leaflet-container {
+				font-family: "Noto Serif KR", serif;
+				background: #efe2d1;
+			}
+
+			.leaflet-popup-content {
+				margin: 10px 12px;
+				font-size: 0.82rem;
+				color: #4c3a2f;
 			}
 
 			@media (max-width: 640px) {
@@ -2236,6 +2322,40 @@
 									</div>
 								</div>
 							</div>
+							<div class="wine-region-section">
+								<div class="wine-region-head">
+									<p class="wine-region-title">증류소</p>
+									<button v-if="form.whiskyDistillery" type="button" class="tool-btn small province-clear-btn" @click="setWhiskyDistillery('form', '')">선택 해제</button>
+								</div>
+								<div class="distillery-search-wrap">
+									<input
+										id="whiskyDistillery"
+										v-model.trim="form.whiskyDistillery"
+										type="search"
+										placeholder="증류소 영문명 또는 한글명을 검색해 선택해 주세요"
+										autocomplete="off"
+										@focus="openWhiskyDistillerySuggestions('form')"
+										@input="openWhiskyDistillerySuggestions('form')"
+										@blur="scheduleCloseWhiskyDistillerySuggestions('form')"
+									/>
+									<div v-if="shouldShowWhiskyDistillerySuggestions('form')" class="distillery-suggestions">
+										<button
+											v-for="distillery in getWhiskyDistillerySuggestions(form.whiskyDistillery)"
+											:key="`write-distillery-${distillery.name}`"
+											type="button"
+											class="distillery-suggestion"
+											@mousedown.prevent="setWhiskyDistillery('form', distillery.name)"
+										>
+												<span class="distillery-suggestion-name">{{ distillery.name }}</span>
+												<span class="distillery-suggestion-ko">{{ distillery.name_ko }}</span>
+										</button>
+									</div>
+								</div>
+								<div class="wine-map-wrap" role="img" :aria-label="form.whiskyDistillery ? `${form.whiskyDistillery} 위치 세계 지도` : '증류소 세계 지도'">
+									<div ref="whiskyWriteMap" class="whisky-leaflet-map"></div>
+								</div>
+								<p class="china-province-selected">{{ form.whiskyDistillery ? (hasWhiskyDistillerySelection(form.whiskyDistillery) ? `${form.whiskyDistillery} 위치가 세계 지도에 표시됩니다.` : '검색 목록에 있는 증류소를 선택해 주세요.') : '증류소를 검색하면 세계 지도에 핀이 표시됩니다.' }}</p>
+							</div>
 						</div>
 
 						<div v-else-if="activeWriteTab === 'wine'" class="row">
@@ -2523,6 +2643,14 @@
 											>
 												{{ getLabelPhotoTerm(getEntryDrinkCategory(entry)) }}
 											</button>
+											<button
+												v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'whisky' && entry.whiskyDistillery"
+												class="tool-btn small region-trigger"
+												type="button"
+												@click="openWhiskyDistilleryModal(entry)"
+											>
+												증류소
+											</button>
 															<button
 																v-if="editingEntryId !== entry.id && getEntryDrinkCategory(entry) === 'wine' && entry.wineCountry && entry.wineCountry !== '기타'"
 																class="tool-btn small region-trigger"
@@ -2547,6 +2675,7 @@
 												<p class="note"><b>장소</b>{{ entry.place || "기록 없음" }}</p>
 												<p class="note"><b>마신이</b>{{ entry.drinker || "기록 없음" }}</p>
 											</div>
+											<p class="note" v-if="getEntryDrinkCategory(entry) === 'whisky'"><b>증류소</b>{{ entry.whiskyDistillery || "기록 없음" }}</p>
 																	<p class="note" v-if="getEntryDrinkCategory(entry) === 'wine' && entry.wineCountry !== '기타'"><b>와인 산지</b>{{ entry.wineRegion || "기록 없음" }}</p>
 																	<p class="note" v-if="getEntryDrinkCategory(entry) === 'tea'"><b>중국 성</b>{{ entry.teaChinaProvince || "기록 없음" }}</p>
 											<p class="note"><b>향</b>{{ entry.nose || "기록 없음" }}</p>
@@ -2657,6 +2786,31 @@
 											<div v-if="editForm.drinkCategory === 'whisky'" class="row" style="margin: 0">
 												<label>숙성 캐스크 타입</label>
 												<textarea v-model.trim="editForm.caskType" placeholder="예: ex버번, 올로로소"></textarea>
+													<div class="wine-region-section">
+														<div class="wine-region-head">
+															<p class="wine-region-title">증류소</p>
+															<button v-if="editForm.whiskyDistillery" type="button" class="tool-btn small province-clear-btn" @click="setWhiskyDistillery('editForm', '')">선택 해제</button>
+														</div>
+														<div class="distillery-search-wrap">
+															<input v-model.trim="editForm.whiskyDistillery" type="search" placeholder="증류소 영문명 또는 한글명을 검색해 선택해 주세요" autocomplete="off" @focus="openWhiskyDistillerySuggestions('editForm')" @input="openWhiskyDistillerySuggestions('editForm')" @blur="scheduleCloseWhiskyDistillerySuggestions('editForm')" />
+															<div v-if="shouldShowWhiskyDistillerySuggestions('editForm')" class="distillery-suggestions">
+																<button
+																	v-for="distillery in getWhiskyDistillerySuggestions(editForm.whiskyDistillery)"
+																	:key="`edit-distillery-${distillery.name}`"
+																	type="button"
+																	class="distillery-suggestion"
+																	@mousedown.prevent="setWhiskyDistillery('editForm', distillery.name)"
+																>
+																	<span class="distillery-suggestion-name">{{ distillery.name }}</span>
+																	<span class="distillery-suggestion-ko">{{ distillery.name_ko }}</span>
+																</button>
+															</div>
+														</div>
+														<div class="wine-map-wrap" role="img" :aria-label="editForm.whiskyDistillery ? `${editForm.whiskyDistillery} 위치 세계 지도` : '증류소 세계 지도'">
+															<div ref="whiskyEditMap" class="whisky-leaflet-map"></div>
+														</div>
+														<p class="china-province-selected">{{ editForm.whiskyDistillery ? (hasWhiskyDistillerySelection(editForm.whiskyDistillery) ? `${editForm.whiskyDistillery} 위치가 세계 지도에 표시됩니다.` : '검색 목록에 있는 증류소를 선택해 주세요.') : '증류소를 검색하면 세계 지도에 핀이 표시됩니다.' }}</p>
+													</div>
 											</div>
 											<div v-else-if="editForm.drinkCategory === 'wine'" class="row" style="margin: 0">
 												<label>지역</label>
@@ -2724,6 +2878,7 @@
 															<p class="china-province-selected">선택: {{ editForm.teaChinaProvince || "없음" }}</p>
 														</div>
 											</div>
+													<p class="note" v-if="editForm.drinkCategory === 'whisky'" style="margin-top: 8px"><b>증류소</b>{{ editForm.whiskyDistillery || "기록 없음" }}</p>
 													<p class="note" v-if="editForm.drinkCategory === 'wine' && editForm.wineCountry && editForm.wineCountry !== '기타'" style="margin-top: 8px"><b>와인 산지</b>{{ hasWineRegions(editForm.wineCountry) ? (editForm.wineRegion || "기록 없음") : `${editForm.wineCountry} 위치 표시` }}</p>
 													<p class="note" v-if="editForm.drinkCategory === 'tea'" style="margin-top: 8px"><b>중국 성</b>{{ editForm.teaChinaProvince || "기록 없음" }}</p>
 											<p class="note" style="margin-top: 8px"><b>{{ getEntryDetailLabel(editForm) }}</b>{{ getEntryDetailValue(editForm) || "기록 없음" }}</p>
@@ -2894,6 +3049,19 @@
 				</div>
 			</div>
 
+			<div class="calendar-modal-backdrop tea-region-backdrop" v-if="whiskyDistilleryModal.visible" @click="closeWhiskyDistilleryModal">
+				<div class="calendar-modal tea-region-modal" @click.stop>
+					<div class="calendar-modal-head">
+						<p class="layer-title" style="margin: 0">{{ whiskyDistilleryModal.distilleryName }} 세계 지도</p>
+						<button class="modal-close" type="button" @click="closeWhiskyDistilleryModal">X</button>
+					</div>
+					<div class="wine-map-wrap tea-region-map" role="img" :aria-label="`${whiskyDistilleryModal.distilleryName} 위치 세계 지도`">
+						<div ref="whiskyModalMap" class="whisky-leaflet-map"></div>
+					</div>
+					<p class="china-province-selected">선택 증류소: {{ whiskyDistilleryModal.distilleryName || "없음" }}</p>
+				</div>
+			</div>
+
 			<div class="calendar-modal-backdrop tea-region-backdrop" v-if="wineRegionModal.visible" @click="closeWineRegionModal">
 				<div class="calendar-modal tea-region-modal" @click.stop>
 					<div class="calendar-modal-head">
@@ -2929,6 +3097,11 @@
 
 		<script src="./assets/tea-province-map-data.js"></script>
 		<script src="./assets/wine-region-map-data.js"></script>
+		<script
+			src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+			integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+			crossorigin=""
+		></script>
 		<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 		<script>
 			const RECORDS_FILE = "./records.json";
@@ -2946,6 +3119,7 @@
 			const DEFAULT_BOTTLE_IMAGE = "./assets/iconMang.png";
 			const LOCAL_ENTRIES_KEY = "drinking.records.local.v1";
 			const LOCAL_PENDING_SYNC_KEY = "drinking.records.pendingSync.v1";
+			const WHISKY_DISTILLERY_DATA_FILE = "./assets/major_whisky_distilleries_100.json";
 
 			async function readEntriesFromRepo() {
 				const apiResponse = await fetch(`${RECORDS_API}?t=${Date.now()}`, { cache: "no-store" });
@@ -3266,6 +3440,7 @@
 					category: entry.category || "",
 					imageUrl: entry.imageUrl || "",
 					teaLeafImageUrl: entry.teaLeafImageUrl || entry.labelImageUrl || "",
+					whiskyDistillery: entry.whiskyDistillery || "",
 					caskType: entry.caskType || "",
 					wineCountry: entry.wineCountry || "",
 					wineCountryCustom: entry.wineCountryCustom || "",
@@ -3312,6 +3487,25 @@
 			function getDataUrlSizeBytes(dataUrl) {
 				const base64 = String(dataUrl || "").split(",")[1] || "";
 				return Math.floor((base64.length * 3) / 4);
+			}
+
+			function projectWorldMapPoint(latitude, longitude) {
+				const lat = Number(latitude);
+				const lng = Number(longitude);
+				if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+					return null;
+				}
+
+				const [minXText, minYText, widthText, heightText] = String(WINE_WORLD_MAP.viewBox || "0 0 320 240").split(/\s+/);
+				const minX = Number(minXText) || 0;
+				const minY = Number(minYText) || 0;
+				const width = Number(widthText) || 320;
+				const height = Number(heightText) || 240;
+
+				return {
+					x: minX + ((lng + 180) / 360) * width,
+					y: minY + ((90 - lat) / 180) * height
+				};
 			}
 
 			async function resizeAndCompressImage(file, options = {}) {
@@ -3513,6 +3707,7 @@
 							category: "",
 							imageUrl: "",
 							teaLeafImageUrl: "",
+							whiskyDistillery: "",
 							caskType: "",
 							wineCountry: "",
 							wineCountryCustom: "",
@@ -3540,6 +3735,18 @@
 							visible: false,
 							url: "",
 							label: "라벨"
+						},
+						whiskyDistilleryModal: {
+							visible: false,
+							distilleryName: ""
+						},
+						whiskyMapState: {
+							write: null,
+							writeMarker: null,
+							edit: null,
+							editMarker: null,
+							modal: null,
+							modalMarker: null
 						},
 						teaRegionModal: {
 							visible: false,
@@ -3569,6 +3776,10 @@
 						toastTimer: null,
 						isOnline: typeof navigator !== "undefined" ? navigator.onLine : true,
 						isCompactProvinceMapLabels: false,
+						isWhiskyDistilleryWriteOpen: false,
+						isWhiskyDistilleryEditOpen: false,
+						whiskyDistilleryOptions: [],
+						whiskyDistilleryLookup: {},
 						pendingSyncCount: 0,
 						syncMessage: "GitHub에서 records.json을 불러왔어요."
 					};
@@ -3653,6 +3864,7 @@
 
 							const targets = [
 								entry.whisky,
+								entry.whiskyDistillery,
 								entry.drinkCategory,
 								entry.drinkType,
 								entry.category,
@@ -3792,6 +4004,7 @@
 					this.syncWriteTheme();
 					this.updateProvinceMapLabelMode();
 					this.updateOnlineStatus();
+					const distilleryPromise = this.loadWhiskyDistilleryOptions();
 					this.loadFromLocalCache();
 					this.syncPendingStateFromStorage();
 					window.addEventListener("keydown", this.onGlobalKeydown);
@@ -3806,13 +4019,23 @@
 					const maxLoadingWaitMs = 5000;
 					await Promise.all([
 						this.wait(minLoadingMs),
-						Promise.race([loadPromise, this.wait(maxLoadingWaitMs)])
+						Promise.race([loadPromise, this.wait(maxLoadingWaitMs)]),
+						distilleryPromise
 					]);
+					this.$nextTick(() => {
+						this.updateWhiskyLeafletMap("write", this.form.whiskyDistillery, { keepWorldViewWhenEmpty: true });
+					});
 					this.completeInitialLoadingProgress();
 					this.isReadyToDismissLoading = true;
 					this.finishInitialLoading();
 				},
 				beforeUnmount() {
+					for (const key of ["write", "edit", "modal"]) {
+						const map = this.whiskyMapState?.[key];
+						if (map && typeof map.remove === "function") {
+							map.remove();
+						}
+					}
 					window.removeEventListener("keydown", this.onGlobalKeydown);
 					window.removeEventListener("resize", this.updateProvinceMapLabelMode);
 					window.removeEventListener("online", this.handleOnlineStatusChange);
@@ -3825,9 +4048,122 @@
 				watch: {
 					activeWriteTab() {
 						this.syncWriteTheme();
+						this.$nextTick(() => {
+							this.updateWhiskyLeafletMap("write", this.form.whiskyDistillery, { keepWorldViewWhenEmpty: true });
+						});
+					}
+					,
+					"form.whiskyDistillery"() {
+						this.$nextTick(() => {
+							this.updateWhiskyLeafletMap("write", this.form.whiskyDistillery, { keepWorldViewWhenEmpty: true });
+						});
+					},
+					"editForm.whiskyDistillery"() {
+						this.$nextTick(() => {
+							this.updateWhiskyLeafletMap("edit", this.editForm?.whiskyDistillery || "", { keepWorldViewWhenEmpty: true });
+						});
+					},
+					editingEntryId() {
+						this.$nextTick(() => {
+							this.updateWhiskyLeafletMap("edit", this.editForm?.whiskyDistillery || "", { keepWorldViewWhenEmpty: true });
+						});
+					},
+					"whiskyDistilleryModal.visible"() {
+						this.$nextTick(() => {
+							this.updateWhiskyLeafletMap("modal", this.whiskyDistilleryModal.distilleryName, { keepWorldViewWhenEmpty: true });
+						});
 					}
 				},
 				methods: {
+					getWhiskyMapRefName(mode) {
+						if (mode === "edit") {
+							return "whiskyEditMap";
+						}
+
+						if (mode === "modal") {
+							return "whiskyModalMap";
+						}
+
+						return "whiskyWriteMap";
+					},
+					getWhiskyMapStateKey(mode) {
+						if (mode === "edit") {
+							return { map: "edit", marker: "editMarker" };
+						}
+
+						if (mode === "modal") {
+							return { map: "modal", marker: "modalMarker" };
+						}
+
+						return { map: "write", marker: "writeMarker" };
+					},
+					ensureWhiskyLeafletMap(mode) {
+						if (typeof window === "undefined" || typeof window.L === "undefined") {
+							return null;
+						}
+
+						const refName = this.getWhiskyMapRefName(mode);
+						const stateKeys = this.getWhiskyMapStateKey(mode);
+						const refValue = this.$refs[refName];
+						const element = Array.isArray(refValue) ? refValue[0] : refValue;
+						if (!element) {
+							return null;
+						}
+
+						if (!this.whiskyMapState[stateKeys.map]) {
+							const map = window.L.map(element, {
+								zoomControl: true,
+								worldCopyJump: true
+							}).setView([20, 0], 2);
+
+							window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+								attribution: '&copy; OpenStreetMap contributors',
+								maxZoom: 18
+							}).addTo(map);
+
+							this.whiskyMapState[stateKeys.map] = map;
+						}
+
+						const map = this.whiskyMapState[stateKeys.map];
+						map.invalidateSize();
+						return map;
+					},
+					updateWhiskyLeafletMap(mode, distilleryName, options = {}) {
+						const { keepWorldViewWhenEmpty = false } = options;
+						const map = this.ensureWhiskyLeafletMap(mode);
+						if (!map || !this.whiskyMapState) {
+							return;
+						}
+
+						const stateKeys = this.getWhiskyMapStateKey(mode);
+						const marker = this.whiskyMapState[stateKeys.marker];
+						if (marker) {
+							map.removeLayer(marker);
+							this.whiskyMapState[stateKeys.marker] = null;
+						}
+
+						const record = this.getWhiskyDistilleryRecord(distilleryName);
+						if (!record) {
+							if (keepWorldViewWhenEmpty) {
+								map.setView([20, 0], 2);
+							}
+							return;
+						}
+
+						const nextMarker = window.L.marker([record.latitude, record.longitude]).addTo(map);
+						const recordCount = this.getWhiskyDistilleryEntryCount(record.name);
+						nextMarker.bindPopup(`<b>${record.name}</b><br>${record.name_ko || ""}<br>기록 수 ${recordCount}건`.trim());
+						this.whiskyMapState[stateKeys.marker] = nextMarker;
+						if (mode === "modal") {
+							map.once("moveend", () => {
+								nextMarker.openPopup();
+							});
+						}
+						map.flyTo([record.latitude, record.longitude], 8, {
+							animate: true,
+							duration: 0.9
+						});
+					},
 					updateProvinceMapLabelMode() {
 						if (typeof window === "undefined") {
 							this.isCompactProvinceMapLabels = false;
@@ -3982,6 +4318,16 @@
 							return;
 						}
 
+						if (this.whiskyDistilleryModal.visible) {
+							this.closeWhiskyDistilleryModal();
+							return;
+						}
+
+						if (this.isWhiskyDistilleryWriteOpen || this.isWhiskyDistilleryEditOpen) {
+							this.closeWhiskyDistillerySuggestions();
+							return;
+						}
+
 						if (this.teaRegionModal.visible) {
 							this.closeTeaRegionModal();
 							return;
@@ -4041,6 +4387,7 @@
 							category: normalized.category,
 							imageUrl: normalized.imageUrl,
 							teaLeafImageUrl: normalized.teaLeafImageUrl,
+							whiskyDistillery: normalized.whiskyDistillery,
 							caskType,
 							wineCountry,
 							wineCountryCustom,
@@ -4094,6 +4441,12 @@
 
 						let detailValue = "";
 						if (drinkType === "whisky") {
+							const normalizedDistillery = this.normalizeWhiskyDistillerySelection(this.editForm.whiskyDistillery);
+							if (String(this.editForm.whiskyDistillery || "").trim() && !normalizedDistillery) {
+								this.showToast("error", "증류소는 검색 목록에서 선택해 주세요.");
+								return;
+							}
+							this.editForm.whiskyDistillery = normalizedDistillery;
 							detailValue = this.editForm.caskType;
 						} else if (drinkType === "wine") {
 							if (this.editForm.wineCountry === "기타") {
@@ -4132,6 +4485,7 @@
 							imageUrl: this.editForm.imageUrl,
 							teaLeafImageUrl: this.editForm.teaLeafImageUrl,
 							labelImageUrl: this.editForm.teaLeafImageUrl,
+							whiskyDistillery: drinkType === "whisky" ? this.editForm.whiskyDistillery : "",
 							caskType: this.editForm.caskType,
 							wineCountry: drinkType === "wine" ? this.editForm.wineCountry : "",
 							wineCountryCustom: drinkType === "wine" ? this.editForm.wineCountryCustom : "",
@@ -4353,12 +4707,177 @@
 						const drinkerValue = String(entry?.drinker || "미입력").trim();
 						const placeValue = String(entry?.place || "미입력").trim();
 						const teaProvinceValue = String(entry?.teaChinaProvince || "").trim();
+						const distilleryValue = String(entry?.whiskyDistillery || "").trim();
 
 						if (drinkCategory === "tea") {
 							return [drinkType, categoryValue, teaProvinceValue || "중국 성 미입력", drinkerValue, placeValue];
 						}
 
+						if (drinkCategory === "whisky" && distilleryValue) {
+							return [drinkType, categoryValue, distilleryValue, drinkerValue, placeValue];
+						}
+
 						return [drinkType, categoryValue, drinkerValue, placeValue];
+					},
+					async loadWhiskyDistilleryOptions() {
+						try {
+							const response = await fetch(`${WHISKY_DISTILLERY_DATA_FILE}?t=${Date.now()}`, { cache: "no-store" });
+							if (!response.ok) {
+								throw new Error("whisky distillery data fetch failed");
+							}
+
+							const parsed = await response.json();
+							const options = Array.isArray(parsed)
+								? parsed
+									.map((item) => ({
+										name: String(item?.name || "").trim(),
+										name_ko: String(item?.name_ko || "").trim(),
+										latitude: Number(item?.latitude),
+										longitude: Number(item?.longitude)
+									}))
+									.filter((item) => item.name_ko && Number.isFinite(item.latitude) && Number.isFinite(item.longitude))
+								: [];
+
+							this.whiskyDistilleryOptions = options;
+							this.whiskyDistilleryLookup = Object.fromEntries(
+								options.flatMap((item) => {
+									const pairs = [];
+									if (item.name) {
+										pairs.push([item.name, item]);
+									}
+									if (item.name_ko) {
+										pairs.push([item.name_ko, item]);
+									}
+									return pairs;
+								})
+							);
+						} catch {
+							this.whiskyDistilleryOptions = [];
+							this.whiskyDistilleryLookup = {};
+						}
+					},
+					getWorldMapViewBox() {
+						return WINE_WORLD_MAP.viewBox;
+					},
+					getWorldMapOutlinePath() {
+						return WINE_WORLD_MAP.outlinePath;
+					},
+					getWhiskyDistilleryRecord(distilleryName) {
+						const key = String(distilleryName || "").trim();
+						if (!key) {
+							return null;
+						}
+
+						return this.whiskyDistilleryLookup[key] || null;
+					},
+					getWhiskyDistilleryEntryCount(distilleryName) {
+						const key = String(distilleryName || "").trim();
+						if (!key) {
+							return 0;
+						}
+
+						return (this.entries || []).filter((entry) => {
+							const raw = String(entry?.whiskyDistillery || "").trim();
+							if (!raw) {
+								return false;
+							}
+
+							const record = this.getWhiskyDistilleryRecord(raw);
+							return String(record?.name || raw).trim() === key;
+						}).length;
+					},
+					getWhiskyDistillerySuggestions(query) {
+						const normalized = String(query || "").trim().toLowerCase();
+						const seen = new Set();
+						const suggestions = [];
+
+						for (const item of this.whiskyDistilleryOptions) {
+							if (!item?.name || seen.has(item.name)) {
+								continue;
+							}
+
+							const english = String(item.name || "").toLowerCase();
+							const korean = String(item.name_ko || "").toLowerCase();
+							if (normalized && !english.includes(normalized) && !korean.includes(normalized)) {
+								continue;
+							}
+
+							seen.add(item.name);
+							suggestions.push(item);
+							if (suggestions.length >= 8) {
+								break;
+							}
+						}
+
+						return suggestions;
+					},
+					openWhiskyDistillerySuggestions(formKey) {
+						if (formKey === "editForm") {
+							this.isWhiskyDistilleryEditOpen = true;
+							return;
+						}
+
+						this.isWhiskyDistilleryWriteOpen = true;
+					},
+					closeWhiskyDistillerySuggestions(formKey = "") {
+						if (!formKey || formKey === "form") {
+							this.isWhiskyDistilleryWriteOpen = false;
+						}
+
+						if (!formKey || formKey === "editForm") {
+							this.isWhiskyDistilleryEditOpen = false;
+						}
+					},
+					shouldShowWhiskyDistillerySuggestions(formKey) {
+						const target = this[formKey];
+						if (!target || typeof target !== "object") {
+							return false;
+						}
+
+						const isOpen = formKey === "editForm" ? this.isWhiskyDistilleryEditOpen : this.isWhiskyDistilleryWriteOpen;
+						if (!isOpen) {
+							return false;
+						}
+
+						return this.getWhiskyDistillerySuggestions(target.whiskyDistillery).length > 0;
+					},
+					scheduleCloseWhiskyDistillerySuggestions(formKey) {
+						window.setTimeout(() => {
+							this.closeWhiskyDistillerySuggestions(formKey);
+						}, 120);
+					},
+					normalizeWhiskyDistillerySelection(distilleryName) {
+						const normalized = String(distilleryName || "").trim();
+						return this.getWhiskyDistilleryRecord(normalized)?.name || "";
+					},
+					hasWhiskyDistillerySelection(distilleryName) {
+						return Boolean(this.getWhiskyDistilleryRecord(distilleryName));
+					},
+					getWhiskyDistilleryMarker(distilleryName) {
+						const record = this.getWhiskyDistilleryRecord(distilleryName);
+						if (!record) {
+							return null;
+						}
+
+						const point = projectWorldMapPoint(record.latitude, record.longitude);
+						if (!point) {
+							return null;
+						}
+
+						return {
+							...record,
+							...point
+						};
+					},
+					setWhiskyDistillery(formKey, distilleryName) {
+						const target = this[formKey];
+						if (!target || typeof target !== "object") {
+							return;
+						}
+
+						const normalized = this.normalizeWhiskyDistillerySelection(distilleryName) || String(distilleryName || "").trim();
+						target.whiskyDistillery = normalized;
+						this.closeWhiskyDistillerySuggestions(formKey);
 					},
 					getWineMapKey(country) {
 						const normalized = String(country || "").trim();
@@ -4439,6 +4958,10 @@
 							this.editForm.wineCountry = "";
 							this.editForm.wineCountryCustom = "";
 							this.editForm.wineRegion = "";
+						}
+
+						if (drinkType !== "whisky") {
+							this.editForm.whiskyDistillery = "";
 						}
 
 						if (drinkType !== "tea") {
@@ -4748,6 +5271,19 @@
 						this.teaLeafModal.url = "";
 						this.teaLeafModal.label = "라벨";
 					},
+					openWhiskyDistilleryModal(entry) {
+						const distilleryName = this.normalizeWhiskyDistillerySelection(entry?.whiskyDistillery);
+						if (!distilleryName) {
+							return;
+						}
+
+						this.whiskyDistilleryModal.visible = true;
+						this.whiskyDistilleryModal.distilleryName = distilleryName;
+					},
+					closeWhiskyDistilleryModal() {
+						this.whiskyDistilleryModal.visible = false;
+						this.whiskyDistilleryModal.distilleryName = "";
+					},
 					openTeaRegionModal(entry) {
 						const province = String(entry?.teaChinaProvince || "").trim();
 						if (!province) {
@@ -4822,6 +5358,12 @@
 						let detailValue = "";
 
 						if (drinkType === "whisky") {
+							const normalizedDistillery = this.normalizeWhiskyDistillerySelection(this.form.whiskyDistillery);
+							if (String(this.form.whiskyDistillery || "").trim() && !normalizedDistillery) {
+								this.showToast("error", "증류소는 검색 목록에서 선택해 주세요.");
+								return;
+							}
+							this.form.whiskyDistillery = normalizedDistillery;
 							detailValue = this.form.caskType;
 						} else if (drinkType === "wine") {
 							if (this.form.wineCountry === "기타") {
@@ -4860,6 +5402,7 @@
 							imageUrl: this.form.imageUrl,
 							teaLeafImageUrl: this.form.teaLeafImageUrl,
 							labelImageUrl: this.form.teaLeafImageUrl,
+							whiskyDistillery: drinkType === "whisky" ? this.form.whiskyDistillery : "",
 							caskType: this.form.caskType,
 							wineCountry: drinkType === "wine" ? this.form.wineCountry : "",
 							wineCountryCustom: drinkType === "wine" ? this.form.wineCountryCustom : "",
@@ -5053,6 +5596,7 @@
 							category: "",
 							imageUrl: "",
 							teaLeafImageUrl: "",
+							whiskyDistillery: "",
 							caskType: "",
 							wineCountry: "",
 							wineCountryCustom: "",

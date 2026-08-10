@@ -1,0 +1,602 @@
+[
+  {
+    "latitude": 56.62508,
+    "longitude": -3.85052,
+    "name": "Aberfeldy Distillery",
+    "name_ko": "애버펠디 증류소"
+  },
+  {
+    "latitude": 57.46728,
+    "longitude": -3.22997,
+    "name": "Aberlour Distillery",
+    "name_ko": "아벨라워 증류소"
+  },
+  {
+    "latitude": 55.64018,
+    "longitude": -6.10911,
+    "name": "Ardbeg Distillery",
+    "name_ko": "아드벡 증류소"
+  },
+  {
+    "latitude": 57.35044,
+    "longitude": -2.74388,
+    "name": "Ardmore Distillery",
+    "name_ko": "아드모어 증류소"
+  },
+  {
+    "latitude": 55.69948,
+    "longitude": -5.27964,
+    "name": "Lochranza Distillery (Arran)",
+    "name_ko": "로크란자 증류소 (아란)"
+  },
+  {
+    "latitude": 55.92231,
+    "longitude": -4.43951,
+    "name": "Auchentoshan Distillery",
+    "name_ko": "오켄토션 증류소"
+  },
+  {
+    "latitude": 57.8426,
+    "longitude": -4.17811,
+    "name": "Balblair Distillery",
+    "name_ko": "발블레어 증류소"
+  },
+  {
+    "latitude": 57.45487,
+    "longitude": -3.12794,
+    "name": "The Balvenie Distillery",
+    "name_ko": "발베니 증류소"
+  },
+  {
+    "latitude": 56.83482,
+    "longitude": -5.07377,
+    "name": "Ben Nevis Distillery",
+    "name_ko": "벤 네비스 증류소"
+  },
+  {
+    "latitude": 57.60863,
+    "longitude": -3.28188,
+    "name": "The BenRiach Distillery",
+    "name_ko": "벤리악 증류소"
+  },
+  {
+    "latitude": 57.61361,
+    "longitude": -3.62003,
+    "name": "Benromach Distillery",
+    "name_ko": "벤로막 증류소"
+  },
+  {
+    "latitude": 56.69768,
+    "longitude": -3.71859,
+    "name": "Blair Athol Distillery",
+    "name_ko": "블레어 아솔 증류소"
+  },
+  {
+    "latitude": 55.75622,
+    "longitude": -6.29024,
+    "name": "Bowmore Distillery",
+    "name_ko": "보모어 증류소"
+  },
+  {
+    "latitude": 55.7684,
+    "longitude": -6.35968,
+    "name": "Bruichladdich Distillery",
+    "name_ko": "브룩라디 증류소"
+  },
+  {
+    "latitude": 55.88237,
+    "longitude": -6.12395,
+    "name": "Bunnahabhain Distillery",
+    "name_ko": "부나하벤 증류소"
+  },
+  {
+    "latitude": 55.85473,
+    "longitude": -6.10963,
+    "name": "Caol Ila Distillery",
+    "name_ko": "쿨일라 증류소"
+  },
+  {
+    "latitude": 57.47036,
+    "longitude": -3.3561,
+    "name": "Cardhu Distillery",
+    "name_ko": "카듀 증류소"
+  },
+  {
+    "latitude": 58.02375,
+    "longitude": -3.87033,
+    "name": "Clynelish Distillery",
+    "name_ko": "클라이넬리시 증류소"
+  },
+  {
+    "latitude": 57.48792,
+    "longitude": -3.19083,
+    "name": "Craigellachie Distillery",
+    "name_ko": "크레이겔라키 증류소"
+  },
+  {
+    "latitude": 57.41172,
+    "longitude": -3.38784,
+    "name": "Cragganmore Distillery",
+    "name_ko": "크래건모어 증류소"
+  },
+  {
+    "latitude": 57.68868,
+    "longitude": -4.23894,
+    "name": "The Dalmore Distillery",
+    "name_ko": "달모어 증류소"
+  },
+  {
+    "latitude": 56.93543,
+    "longitude": -4.24166,
+    "name": "Dalwhinnie Distillery",
+    "name_ko": "달위니 증류소"
+  },
+  {
+    "latitude": 56.18868,
+    "longitude": -4.07017,
+    "name": "Deanston Distillery",
+    "name_ko": "딘스톤 증류소"
+  },
+  {
+    "latitude": 56.7016,
+    "longitude": -3.70242,
+    "name": "Edradour Distillery",
+    "name_ko": "에드라두어 증류소"
+  },
+  {
+    "latitude": 57.33834,
+    "longitude": -2.31719,
+    "name": "Glen Garioch Distillery",
+    "name_ko": "글렌 기어리 증류소"
+  },
+  {
+    "latitude": 57.53034,
+    "longitude": -3.21079,
+    "name": "Glen Grant Distillery",
+    "name_ko": "글렌 그란트 증류소"
+  },
+  {
+    "latitude": 57.45585,
+    "longitude": -3.22752,
+    "name": "The GlenAllachie Distillery",
+    "name_ko": "글렌알라키 증류소"
+  },
+  {
+    "latitude": 57.49283,
+    "longitude": -2.64914,
+    "name": "The GlenDronach Distillery",
+    "name_ko": "글렌드로낙 증류소"
+  },
+  {
+    "latitude": 57.42675,
+    "longitude": -3.31821,
+    "name": "Glenfarclas Distillery",
+    "name_ko": "글렌파클라스 증류소"
+  },
+  {
+    "latitude": 57.45487,
+    "longitude": -3.12794,
+    "name": "Glenfiddich Distillery",
+    "name_ko": "글렌피딕 증류소"
+  },
+  {
+    "latitude": 56.01494,
+    "longitude": -4.36304,
+    "name": "Glengoyne Distillery",
+    "name_ko": "글렌고인 증류소"
+  },
+  {
+    "latitude": 55.88999,
+    "longitude": -2.89126,
+    "name": "Glenkinchie Distillery",
+    "name_ko": "글렌킨치 증류소"
+  },
+  {
+    "latitude": 57.34334,
+    "longitude": -3.33872,
+    "name": "The Glenlivet Distillery",
+    "name_ko": "더 글렌리벳 증류소"
+  },
+  {
+    "latitude": 57.82409,
+    "longitude": -4.07611,
+    "name": "Glenmorangie Distillery",
+    "name_ko": "글렌모렌지 증류소"
+  },
+  {
+    "latitude": 55.42968,
+    "longitude": -5.6038,
+    "name": "Glen Scotia Distillery",
+    "name_ko": "글렌 스코시아 증류소"
+  },
+  {
+    "latitude": 56.39106,
+    "longitude": -3.85522,
+    "name": "The Glenturret Distillery",
+    "name_ko": "글렌터렛 증류소"
+  },
+  {
+    "latitude": 58.96712,
+    "longitude": -2.9521,
+    "name": "Highland Park Distillery",
+    "name_ko": "하이랜드 파크 증류소"
+  },
+  {
+    "latitude": 55.83279,
+    "longitude": -5.95153,
+    "name": "Jura Distillery",
+    "name_ko": "주라 증류소"
+  },
+  {
+    "latitude": 55.6358,
+    "longitude": -6.12593,
+    "name": "Lagavulin Distillery",
+    "name_ko": "라가불린 증류소"
+  },
+  {
+    "latitude": 55.62982,
+    "longitude": -6.15357,
+    "name": "Laphroaig Distillery",
+    "name_ko": "라프로익 증류소"
+  },
+  {
+    "latitude": 57.62935,
+    "longitude": -3.28271,
+    "name": "Linkwood Distillery",
+    "name_ko": "링크우드 증류소"
+  },
+  {
+    "latitude": 55.99357,
+    "longitude": -4.57683,
+    "name": "Loch Lomond Distillery",
+    "name_ko": "로크 로몬드 증류소"
+  },
+  {
+    "latitude": 57.60821,
+    "longitude": -3.28817,
+    "name": "Longmorn Distillery",
+    "name_ko": "롱몬 증류소"
+  },
+  {
+    "latitude": 57.48465,
+    "longitude": -3.20696,
+    "name": "The Macallan Distillery",
+    "name_ko": "맥캘란 증류소"
+  },
+  {
+    "latitude": 57.4439,
+    "longitude": -3.11907,
+    "name": "Mortlach Distillery",
+    "name_ko": "모틀락 증류소"
+  },
+  {
+    "latitude": 56.41514,
+    "longitude": -5.47207,
+    "name": "Oban Distillery",
+    "name_ko": "오반 증류소"
+  },
+  {
+    "latitude": 58.43517,
+    "longitude": -3.08553,
+    "name": "Old Pulteney Distillery",
+    "name_ko": "올드 풀트니 증류소"
+  },
+  {
+    "latitude": 57.53748,
+    "longitude": -3.90547,
+    "name": "Royal Brackla Distillery",
+    "name_ko": "로얄 브라클라 증류소"
+  },
+  {
+    "latitude": 57.03439,
+    "longitude": -3.21894,
+    "name": "Royal Lochnagar Distillery",
+    "name_ko": "로얄 로크나가 증류소"
+  },
+  {
+    "latitude": 58.96366,
+    "longitude": -2.9958,
+    "name": "Scapa Distillery",
+    "name_ko": "스카파 증류소"
+  },
+  {
+    "latitude": 57.54612,
+    "longitude": -3.22013,
+    "name": "Speyburn Distillery",
+    "name_ko": "스페이번 증류소"
+  },
+  {
+    "latitude": 55.42889,
+    "longitude": -5.60136,
+    "name": "Springbank Distillery",
+    "name_ko": "스프링뱅크 증류소"
+  },
+  {
+    "latitude": 57.5465,
+    "longitude": -2.95425,
+    "name": "Strathisla Distillery",
+    "name_ko": "스트라스아일라 증류소"
+  },
+  {
+    "latitude": 57.30096,
+    "longitude": -6.35242,
+    "name": "Talisker Distillery",
+    "name_ko": "탈리스커 증류소"
+  },
+  {
+    "latitude": 57.45815,
+    "longitude": -3.34826,
+    "name": "Tamdhu Distillery",
+    "name_ko": "탐듀 증류소"
+  },
+  {
+    "latitude": 56.62073,
+    "longitude": -6.0698,
+    "name": "Tobermory Distillery",
+    "name_ko": "토버모리 증류소"
+  },
+  {
+    "latitude": 57.341,
+    "longitude": -4.01028,
+    "name": "Tomatin Distillery",
+    "name_ko": "토마틴 증류소"
+  },
+  {
+    "latitude": 57.31249,
+    "longitude": -3.41212,
+    "name": "Tomintoul Distillery",
+    "name_ko": "토민타울 증류소"
+  },
+  {
+    "latitude": 56.25916,
+    "longitude": -3.78256,
+    "name": "Tullibardine Distillery",
+    "name_ko": "툴리바딘 증류소"
+  },
+  {
+    "latitude": 56.85355,
+    "longitude": -2.57861,
+    "name": "Fettercairn Distillery",
+    "name_ko": "페터케언 증류소"
+  },
+  {
+    "latitude": 51.91722,
+    "longitude": -8.1747,
+    "name": "Midleton Distillery",
+    "name_ko": "미들턴 증류소"
+  },
+  {
+    "latitude": 55.20435,
+    "longitude": -6.51948,
+    "name": "Old Bushmills Distillery",
+    "name_ko": "올드 부시밀스 증류소"
+  },
+  {
+    "latitude": 53.33715,
+    "longitude": -6.2771,
+    "name": "Teeling Whiskey Distillery",
+    "name_ko": "틸링 위스키 증류소"
+  },
+  {
+    "latitude": 53.27344,
+    "longitude": -7.49336,
+    "name": "Tullamore D.E.W. Distillery",
+    "name_ko": "툴라모어 D.E.W. 증류소"
+  },
+  {
+    "latitude": 53.36907,
+    "longitude": -7.49761,
+    "name": "Kilbeggan Distillery",
+    "name_ko": "킬베간 증류소"
+  },
+  {
+    "latitude": 52.14091,
+    "longitude": -10.27722,
+    "name": "Dingle Distillery",
+    "name_ko": "딩글 증류소"
+  },
+  {
+    "latitude": 52.25765,
+    "longitude": -7.11045,
+    "name": "Waterford Distillery",
+    "name_ko": "워터퍼드 증류소"
+  },
+  {
+    "latitude": 53.70914,
+    "longitude": -6.55735,
+    "name": "Slane Distillery",
+    "name_ko": "슬레인 증류소"
+  },
+  {
+    "latitude": 34.89236,
+    "longitude": 135.67455,
+    "name": "Yamazaki Distillery",
+    "name_ko": "야마자키 증류소"
+  },
+  {
+    "latitude": 35.82583,
+    "longitude": 138.31231,
+    "name": "Hakushu Distillery",
+    "name_ko": "하쿠슈 증류소"
+  },
+  {
+    "latitude": 43.00036,
+    "longitude": 140.76698,
+    "name": "Yoichi Distillery",
+    "name_ko": "요이치 증류소"
+  },
+  {
+    "latitude": 38.30817,
+    "longitude": 140.64964,
+    "name": "Miyagikyo Distillery",
+    "name_ko": "미야기쿄 증류소"
+  },
+  {
+    "latitude": 35.99749,
+    "longitude": 139.0848,
+    "name": "Chichibu Distillery",
+    "name_ko": "치치부 증류소"
+  },
+  {
+    "latitude": 35.30528,
+    "longitude": 138.93451,
+    "name": "Fuji Gotemba Distillery",
+    "name_ko": "후지 고텐바 증류소"
+  },
+  {
+    "latitude": 35.78676,
+    "longitude": 137.94264,
+    "name": "Mars Shinshu Distillery",
+    "name_ko": "마르스 신슈 증류소"
+  },
+  {
+    "latitude": 31.47469,
+    "longitude": 130.32491,
+    "name": "Mars Tsunuki Distillery",
+    "name_ko": "마르스 츠누키 증류소"
+  },
+  {
+    "latitude": 43.05103,
+    "longitude": 144.84182,
+    "name": "Akkeshi Distillery",
+    "name_ko": "앗케시 증류소"
+  },
+  {
+    "latitude": 35.11953,
+    "longitude": 138.24613,
+    "name": "Shizuoka Distillery",
+    "name_ko": "시즈오카 증류소"
+  },
+  {
+    "latitude": 35.28457,
+    "longitude": -86.37452,
+    "name": "Jack Daniel Distillery",
+    "name_ko": "잭 다니엘 증류소"
+  },
+  {
+    "latitude": 35.41643,
+    "longitude": -86.25739,
+    "name": "George Dickel Cascade Hollow Distillery",
+    "name_ko": "조지 디켈 캐스케이드 할로우 증류소"
+  },
+  {
+    "latitude": 38.21647,
+    "longitude": -84.87062,
+    "name": "Buffalo Trace Distillery",
+    "name_ko": "버팔로 트레이스 증류소"
+  },
+  {
+    "latitude": 38.05045,
+    "longitude": -84.73929,
+    "name": "Woodford Reserve Distillery",
+    "name_ko": "우드포드 리저브 증류소"
+  },
+  {
+    "latitude": 37.64718,
+    "longitude": -85.52743,
+    "name": "Maker's Mark Distillery",
+    "name_ko": "메이커스 마크 증류소"
+  },
+  {
+    "latitude": 38.03808,
+    "longitude": -84.89764,
+    "name": "Four Roses Distillery",
+    "name_ko": "포 로지스 증류소"
+  },
+  {
+    "latitude": 38.03908,
+    "longitude": -84.84661,
+    "name": "Wild Turkey Distillery",
+    "name_ko": "와일드 터키 증류소"
+  },
+  {
+    "latitude": 37.92934,
+    "longitude": -85.65214,
+    "name": "James B. Beam Distilling Co.",
+    "name_ko": "제임스 B. 빔 증류소"
+  },
+  {
+    "latitude": 38.20093,
+    "longitude": -85.72116,
+    "name": "Bernheim Distillery (Heaven Hill)",
+    "name_ko": "번하임 증류소 (헤븐힐)"
+  },
+  {
+    "latitude": 38.22677,
+    "longitude": -85.75943,
+    "name": "Old Forester Distilling Co.",
+    "name_ko": "올드 포레스터 증류소"
+  },
+  {
+    "latitude": 38.25696,
+    "longitude": -85.76456,
+    "name": "Angel's Envy Distillery",
+    "name_ko": "엔젤스 엔비 증류소"
+  },
+  {
+    "latitude": 38.19247,
+    "longitude": -85.69394,
+    "name": "Michter's Shively Distillery",
+    "name_ko": "믹터스 시블리 증류소"
+  },
+  {
+    "latitude": 37.80924,
+    "longitude": -85.47839,
+    "name": "Willett Distillery",
+    "name_ko": "윌렛 증류소"
+  },
+  {
+    "latitude": 37.76822,
+    "longitude": -85.50379,
+    "name": "Bardstown Bourbon Company Distillery",
+    "name_ko": "바즈타운 버번 컴퍼니 증류소"
+  },
+  {
+    "latitude": 24.69415,
+    "longitude": 121.69091,
+    "name": "Kavalan Distillery",
+    "name_ko": "카발란 증류소"
+  },
+  {
+    "latitude": 23.97768,
+    "longitude": 120.70145,
+    "name": "Nantou Distillery",
+    "name_ko": "난터우 증류소"
+  },
+  {
+    "latitude": 13.07155,
+    "longitude": 77.58915,
+    "name": "Amrut Distilleries",
+    "name_ko": "암룻 증류소"
+  },
+  {
+    "latitude": 15.30945,
+    "longitude": 74.01188,
+    "name": "Paul John Distillery",
+    "name_ko": "폴 존 증류소"
+  },
+  {
+    "latitude": 28.80432,
+    "longitude": 79.02543,
+    "name": "Rampur Distillery",
+    "name_ko": "람푸르 증류소"
+  },
+  {
+    "latitude": 42.32067,
+    "longitude": -83.00944,
+    "name": "Hiram Walker & Sons Distillery",
+    "name_ko": "하이럼 워커 앤 선즈 증류소"
+  },
+  {
+    "latitude": 50.63461,
+    "longitude": -96.99552,
+    "name": "Gimli Distillery (Crown Royal)",
+    "name_ko": "김리 증류소 (크라운 로열)"
+  },
+  {
+    "latitude": -42.88224,
+    "longitude": 147.32536,
+    "name": "Lark Distillery",
+    "name_ko": "라크 증류소"
+  }
+]

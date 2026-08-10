@@ -147,6 +147,7 @@ function normalizeEntries(entries) {
 			imageUrl: entry?.imageUrl || "",
 			teaLeafImageUrl: entry?.teaLeafImageUrl || entry?.labelImageUrl || "",
 			labelImageUrl: entry?.labelImageUrl || entry?.teaLeafImageUrl || "",
+			whiskyDistillery: entry?.whiskyDistillery || "",
 			caskType: entry?.caskType || "",
 			wineCountry: entry?.wineCountry || "",
 			wineCountryCustom: entry?.wineCountryCustom || "",
