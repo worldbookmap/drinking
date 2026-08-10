@@ -12,7 +12,7 @@ function inferLegacyDrinkCategory(entry) {
 	const detailLabel = String(entry?.detailLabel || "").trim();
 	const caskType = String(entry?.caskType || "").trim();
 
-	if (hasText(entry?.wineCountry) || hasText(entry?.wineCountryCustom) || detailLabel === "국가") {
+	if (hasText(entry?.wineCountry) || hasText(entry?.wineCountryCustom) || detailLabel === "국가" || detailLabel === "지역") {
 		return "wine";
 	}
 
@@ -45,12 +45,15 @@ function getDrinkDetailLabel(entry) {
 		if (getEntryDrinkCategory(entry) === "tea" && entry.detailLabel === "하위카테고리") {
 			return "품종";
 		}
+		if (getEntryDrinkCategory(entry) === "wine" && entry.detailLabel === "국가") {
+			return "지역";
+		}
 		return entry.detailLabel;
 	}
 
 	const drinkCategory = getEntryDrinkCategory(entry);
 	if (drinkCategory === "wine") {
-		return "국가";
+		return "지역";
 	}
 
 	if (drinkCategory === "tea") {
@@ -67,7 +70,7 @@ function getDrinkDetailValue(entry) {
 
 	const drinkCategory = getEntryDrinkCategory(entry);
 	if (drinkCategory === "wine") {
-		return String(entry?.wineCountryCustom || entry?.wineCountry || "").trim();
+		return String(entry?.wineCountry || entry?.wineCountryCustom || "").trim();
 	}
 
 	if (drinkCategory === "tea") {
@@ -147,6 +150,7 @@ function normalizeEntries(entries) {
 			caskType: entry?.caskType || "",
 			wineCountry: entry?.wineCountry || "",
 			wineCountryCustom: entry?.wineCountryCustom || "",
+			wineRegion: entry?.wineRegion || "",
 			teaSubcategory: entry?.teaSubcategory || "",
 			teaChinaProvince: entry?.teaChinaProvince || "",
 			detailLabel: getDrinkDetailLabel(entry),
