@@ -598,5 +598,11 @@
     "longitude": 147.32536,
     "name": "Lark Distillery",
     "name_ko": "라크 증류소"
+  },
+  {
+    "latitude": 38.25861,
+    "longitude": -85.76690,
+    "name": "Peerless Distillery",
+    "name_ko": "피어리스 증류소"
   }
 ]
