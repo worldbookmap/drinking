@@ -29,25 +29,29 @@
 				--bg-lemon: #b8b0a4;
 				--ink: #2d2a27;
 				--ink-soft: #756f68;
-				--card: rgba(252, 249, 243, 0.9);
+				--card: rgba(247, 239, 230, 0.94);
 				--stroke: rgba(73, 64, 59, 0.12);
-				--accent: #7a726a;
-				--accent-strong: #544d47;
-				--chip: #e4ded4;
-				--shadow: 0 16px 34px rgba(53, 48, 44, 0.08);
+				--accent: #8b6b57;
+				--accent-strong: #5f4b3f;
+				--chip: #e6d9cb;
+				--shadow: 0 18px 36px rgba(62, 46, 37, 0.08);
+				--warm-gold: #d8b88a;
+				--warm-rose: #c58972;
+				--warm-amber: #ebdcc5;
+				--sepia-panel: linear-gradient(180deg, rgba(249, 242, 234, 0.97), rgba(236, 225, 212, 0.94));
 				--page-bg-1: radial-gradient(circle at 18% 14%, rgba(110, 105, 98, 0.09) 0 15%, transparent 27%);
 				--page-bg-2: radial-gradient(circle at 78% 20%, rgba(140, 132, 123, 0.08) 0 13%, transparent 24%);
 				--page-bg-3: radial-gradient(circle at 74% 82%, rgba(96, 91, 84, 0.07) 0 11%, transparent 22%);
 				--hero-overlay: linear-gradient(135deg, rgba(48, 44, 40, 0.56), rgba(96, 90, 83, 0.34), rgba(171, 164, 155, 0.12));
 				--hero-image: url("./assets/bg.jpg");
-				--panel-bg: rgba(253, 250, 244, 0.92);
+				--panel-bg: var(--sepia-panel);
 				--panel-stroke: rgba(73, 64, 59, 0.12);
 				--hero-title: #fffaf3;
 				--hero-subtitle: #f0e8dc;
 				--page-fade-mid: rgba(245, 238, 228, 0.68);
 				--page-fade-end: rgba(228, 219, 208, 0.96);
-				--tab-active-bg: linear-gradient(135deg, #726b64, #5b564f, #988f85);
-				--tab-active-shadow: 0 10px 22px rgba(88, 56, 40, 0.24);
+				--tab-active-bg: linear-gradient(135deg, #9a7b62 0%, #6f5c4d 35%, #c8a786 100%);
+				--tab-active-shadow: 0 12px 24px rgba(88, 56, 40, 0.24);
 			}
 
 			body.theme-wine {
@@ -465,95 +469,182 @@
 			.tab-nav {
 				display: flex;
 				justify-content: center;
+				align-items: center;
 				gap: 10px;
 				margin-top: 14px;
 				margin-left: auto;
 				margin-right: auto;
-				padding: 8px;
-				border-radius: 999px;
-				background: linear-gradient(135deg, rgba(95, 90, 85, 0.18), rgba(146, 138, 131, 0.14));
-				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.32);
+				padding: 0;
+				border: none;
+				border-radius: 0;
+				background: transparent;
+				box-shadow: none;
+				backdrop-filter: none;
 				width: fit-content;
 				max-width: 100%;
 			}
 
 			.tab-btn {
+				position: relative;
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				gap: 6px;
-				border: 1px solid rgba(116, 83, 66, 0.18);
-				background: linear-gradient(180deg, rgba(255, 254, 251, 0.96), rgba(238, 233, 226, 0.94));
-				color: var(--ink-soft);
-				padding: 9px 12px;
+				padding: 9px 18px 8px;
 				border-radius: 999px;
+				border: 1px solid rgba(255, 246, 231, 0.38);
+				background: rgba(255, 249, 242, 0.08);
+				color: #4b372f;
 				font-family: "Noto Serif KR", serif;
-				font-weight: 600;
-				font-size: 0.9rem;
-				letter-spacing: 0.01em;
+				font-weight: 700;
+				font-size: 0.92rem;
+				letter-spacing: 0.04em;
+				text-transform: none;
 				text-align: center;
 				white-space: nowrap;
 				line-height: 1.1;
 				flex-shrink: 0;
-				backdrop-filter: blur(8px);
+				backdrop-filter: blur(6px);
 				box-shadow:
-					inset 0 1px 0 rgba(255, 255, 255, 0.74),
-					0 3px 8px rgba(60, 55, 50, 0.07);
-				opacity: 0.44;
-				filter: saturate(0.5);
+					inset 0 1px 0 rgba(255,255,255,0.34),
+					0 6px 14px rgba(49, 38, 31, 0.04);
+				opacity: 1;
+				filter: saturate(0.94);
+				text-rendering: optimizeLegibility;
+				-webkit-font-smoothing: antialiased;
 				will-change: transform, box-shadow;
 				transition:
 					opacity 0.18s ease,
 					filter 0.18s ease,
 					transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
 					box-shadow 0.18s ease,
-					background-color 0.18s ease,
+					background 0.2s ease,
 					border-color 0.18s ease;
 			}
 
+			.tab-btn::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.05) 28%, transparent 56%, rgba(92, 73, 63, 0.04) 100%);
+				pointer-events: none;
+			}
+
 			.tab-btn:not(.active):hover {
-				opacity: 0.62;
-				filter: saturate(0.68);
+				opacity: 1;
+				filter: saturate(1);
+				background: rgba(255, 249, 242, 0.12);
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.44),
+					0 8px 16px rgba(63, 54, 48, 0.07);
 			}
 
 			.tab-btn.active {
-				background: var(--tab-active-bg);
+				background: linear-gradient(180deg, rgba(149, 111, 79, 0.32), rgba(104, 81, 66, 0.18));
 				color: #fffaf2;
-				border-color: transparent;
+				border-color: rgba(173, 136, 108, 0.32);
 				opacity: 1;
-				filter: saturate(1.12);
-				transform: translateY(-1px) scale(1.03);
+				filter: saturate(1.08);
+				transform: translateY(-1px);
 				box-shadow:
-					var(--tab-active-shadow),
-					inset 0 1px 0 rgba(255, 239, 219, 0.28);
-				text-shadow: 0 1px 2px rgba(34, 16, 8, 0.26);
+					inset 0 1px 0 rgba(255,255,255,0.6),
+					0 10px 18px rgba(65, 47, 36, 0.12);
+				text-shadow: 0 1px 2px rgba(34, 16, 8, 0.2);
 			}
 
 			.tab-btn:active {
-				transform: translateY(0) scale(0.98);
+				transform: translateY(0) scale(0.985);
+			}
+
+			.write-tab-nav {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 8px;
+				margin: 0 0 16px;
+				padding: 7px;
+				border-radius: 999px;
+				background: linear-gradient(180deg, rgba(119, 101, 88, 0.08), rgba(255, 255, 255, 0.08));
+				border: 1px solid rgba(137, 117, 103, 0.14);
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+			}
+
+			.write-tab-nav .tab-btn {
+				position: relative;
+				overflow: hidden;
+				min-height: 44px;
+				padding: 10px 14px 9px;
+				border-radius: 999px;
+				background: linear-gradient(180deg, rgba(255,255,255,0.24), rgba(236, 227, 218, 0.72) 52%, rgba(192, 184, 178, 0.14));
+				border: 1px solid rgba(255,255,255,0.44);
+				font-size: 0.9rem;
+				letter-spacing: 0.04em;
+				text-transform: none;
+				backdrop-filter: blur(10px);
+				box-shadow:
+					inset 0 1px 0 rgba(255,255,255,0.7),
+					inset 0 -8px 14px rgba(101, 86, 77, 0.07),
+					0 1px 0 rgba(255,255,255,0.6),
+					0 8px 12px rgba(67, 53, 45, 0.04);
+			}
+
+			.write-tab-nav .tab-btn::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08) 30%, transparent 58%, rgba(88, 72, 64, 0.05) 100%);
+				pointer-events: none;
+			}
+
+			.write-tab-nav .tab-btn.active {
+				transform: translateY(-1px);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.8),
+					inset 0 -8px 14px rgba(101, 86, 77, 0.1),
+					0 1px 0 rgba(255,255,255,0.6),
+					0 10px 14px rgba(57, 44, 36, 0.08);
 			}
 
 			.write-tab-nav .tab-btn.whisky-tab.active {
-				background: linear-gradient(135deg, #f2ddb1, #dec28f, #c9a86e);
-				color: #5c4724;
+				background: linear-gradient(135deg, rgba(247, 231, 191, 0.92), rgba(234, 203, 134, 0.88) 48%, rgba(200, 157, 95, 0.8));
+				color: #563e1d;
+				border-color: rgba(130, 91, 34, 0.2);
 				box-shadow:
-					0 10px 20px rgba(145, 114, 62, 0.2),
-					inset 0 1px 0 rgba(255, 255, 255, 0.42);
+					inset 0 2px 0 rgba(255,255,255,0.75),
+					inset 0 -10px 18px rgba(128, 94, 41, 0.12),
+					0 1px 0 rgba(255,255,255,0.65),
+					0 11px 16px rgba(129, 96, 52, 0.13);
 				text-shadow: none;
 			}
 
-			.write-tab-nav .tab-btn.whisky-tab:active {
-				transform: translateY(0) scale(0.98);
+			.write-tab-nav .tab-btn:nth-child(2).active {
+				background: linear-gradient(135deg, #e9d5c7, #d2b0a0 48%, #b8846c);
+				color: #3f2b25;
+				border-color: rgba(122, 99, 90, 0.2);
 				box-shadow:
-					0 6px 14px rgba(145, 114, 62, 0.14),
-					inset 0 1px 0 rgba(255, 255, 255, 0.38);
+					0 12px 24px rgba(129, 96, 80, 0.16),
+					inset 0 1px 0 rgba(255, 255, 255, 0.42);
+			}
+
+			.write-tab-nav .tab-btn:nth-child(3).active {
+				background: linear-gradient(135deg, #dfeadf, #b9d0b2 48%, #7ea67c);
+				color: #243d2b;
+				border-color: rgba(71, 112, 82, 0.2);
+				box-shadow:
+					0 12px 24px rgba(77, 110, 80, 0.16),
+					inset 0 1px 0 rgba(255, 255, 255, 0.42);
+			}
+
+			.write-tab-nav .tab-btn.whisky-tab:active,
+			.write-tab-nav .tab-btn:nth-child(2):active,
+			.write-tab-nav .tab-btn:nth-child(3):active {
+				transform: translateY(0) scale(0.985);
 			}
 
 			.panel {
 				border-radius: 24px;
 				border: 1px solid var(--stroke);
-				background: rgba(255, 249, 243, 0.82);
 				background: var(--panel-bg);
+				background-clip: padding-box;
 				backdrop-filter: blur(14px);
 				box-shadow: var(--shadow);
 			}
@@ -608,21 +699,221 @@
 				letter-spacing: 0.01em;
 			}
 
+			.custom-select {
+				position: relative;
+				width: 100%;
+			}
+
+			.write-type-select,
+			.record-filter-select {
+				width: fit-content;
+				min-width: 150px;
+				margin-bottom: 12px;
+			}
+
+			.top-tab-popup {
+				position: fixed;
+				z-index: 60;
+				transform: translateX(-50%);
+				width: min(190px, calc(100vw - 32px));
+			}
+
+			.top-tab-popup .custom-select-panel {
+				position: static;
+				display: block;
+				min-width: 0;
+				padding: 8px;
+				border-radius: 18px;
+				background: rgba(255, 250, 246, 0.98);
+				box-shadow:
+					0 18px 32px rgba(64, 49, 42, 0.14),
+					0 8px 20px rgba(85, 63, 52, 0.08);
+			}
+
+			.custom-select-trigger {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
+				width: 100%;
+				min-height: 46px;
+				padding: 11px 14px;
+				border: 1px solid rgba(146, 113, 92, 0.22);
+				border-radius: 14px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 240, 234, 0.9));
+				color: var(--ink);
+				font: inherit;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 600;
+				letter-spacing: 0.01em;
+				text-align: left;
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.76),
+					0 8px 18px rgba(89, 69, 58, 0.06);
+				transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+			}
+
+			.write-type-select .custom-select-trigger,
+			.record-filter-select .custom-select-trigger {
+				min-width: 150px;
+				padding: 10px 16px 9px;
+				border-radius: 999px;
+				background: linear-gradient(180deg, rgba(255, 248, 240, 0.22), rgba(255, 248, 240, 0.08));
+				border-color: rgba(164, 128, 103, 0.24);
+				box-shadow:
+					inset 0 1px 0 rgba(255,255,255,0.48),
+					0 10px 18px rgba(71, 55, 47, 0.08);
+			}
+
+			.custom-select-trigger:hover {
+				border-color: rgba(146, 113, 92, 0.38);
+			}
+
+			.custom-select-trigger:focus-visible {
+				outline: none;
+				border-color: rgba(122, 92, 72, 0.82);
+				box-shadow:
+					0 0 0 3px rgba(126, 101, 80, 0.18),
+					0 12px 22px rgba(98, 75, 60, 0.1);
+			}
+
+			.custom-select-trigger-label {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				font-size: 0.96rem;
+			}
+
+			.custom-select-arrow {
+				position: relative;
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				flex-shrink: 0;
+			}
+
+			.custom-select-arrow::before,
+			.custom-select-arrow::after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				width: 6px;
+				height: 2px;
+				border-radius: 999px;
+				background: #7e6657;
+				transform-origin: center;
+			}
+
+			.custom-select-arrow::before {
+				left: 1px;
+				transform: translateY(-50%) rotate(45deg);
+			}
+
+			.custom-select-arrow::after {
+				right: 1px;
+				transform: translateY(-50%) rotate(-45deg);
+			}
+
+			.custom-select-panel {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: calc(100% + 8px);
+				z-index: 30;
+				max-height: 260px;
+				overflow-y: auto;
+				padding: 8px;
+				border: 1px solid rgba(170, 123, 85, 0.26);
+				border-radius: 16px;
+				background: rgba(255, 251, 245, 0.98);
+				box-shadow: 0 18px 36px rgba(70, 55, 46, 0.16);
+			}
+
+			.write-type-select .custom-select-panel,
+			.record-filter-select .custom-select-panel {
+				display: none;
+				left: 0;
+				right: auto;
+				min-width: 180px;
+				padding: 8px;
+				border-radius: 18px;
+				background: rgba(255, 250, 246, 0.98);
+				box-shadow:
+					0 18px 32px rgba(64, 49, 42, 0.14),
+					0 8px 20px rgba(85, 63, 52, 0.08);
+			}
+
+			.write-type-select.is-open .custom-select-panel,
+			.record-filter-select.is-open .custom-select-panel {
+				display: block;
+			}
+
+			.custom-select-option {
+				display: block;
+				width: 100%;
+				border: 0;
+				border-radius: 10px;
+				padding: 10px 12px;
+				margin: 2px 0;
+				background: transparent;
+				color: #43362d;
+				text-align: left;
+				font-family: "Noto Serif KR", serif;
+				font-size: 0.96rem;
+				font-weight: 500;
+				letter-spacing: 0.01em;
+				cursor: pointer;
+				transition: background 0.16s ease, transform 0.16s ease, color 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+			}
+
+			.custom-select-option:hover,
+			.custom-select-option:focus-visible {
+				background: linear-gradient(135deg, rgba(255, 236, 200, 0.9), rgba(250, 220, 180, 0.7));
+				outline: none;
+				box-shadow: inset 0 0 0 1px rgba(164, 121, 81, 0.12);
+			}
+
+			.custom-select-option.active {
+				background: linear-gradient(135deg, rgba(115, 89, 73, 0.12), rgba(176, 122, 83, 0.2));
+				font-weight: 700;
+				color: #2c211d;
+				box-shadow: inset 0 0 0 1px rgba(125, 92, 69, 0.12);
+			}
+
 			input,
 			textarea,
 			select {
 				width: 100%;
 				max-width: 100%;
 				min-width: 0;
-				border: 1px solid rgba(146, 113, 92, 0.24);
-				border: 1px solid rgba(104, 96, 90, 0.18);
-				border-radius: 12px;
-				padding: 11px 12px;
+				border: 1px solid rgba(146, 113, 92, 0.2);
+				border-radius: 14px;
+				padding: 11px 14px;
 				font: inherit;
 				color: var(--ink);
-				background: rgba(252, 250, 246, 0.92);
-				box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.62);
-				transition: border-color 0.15s ease, box-shadow 0.15s ease;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 240, 234, 0.88));
+				box-shadow:
+					inset 0 1px 0 rgba(255, 255, 255, 0.76),
+					0 8px 18px rgba(89, 69, 58, 0.06);
+				transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+			}
+
+			select {
+				appearance: none;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				padding-right: 42px;
+				background-image:
+					linear-gradient(45deg, transparent 50%, #7e6657 50%),
+					linear-gradient(135deg, #7e6657 50%, transparent 50%),
+					linear-gradient(to right, rgba(126, 102, 87, 0.12), rgba(126, 102, 87, 0.12));
+				background-position:
+					calc(100% - 20px) calc(50% - 3px),
+					calc(100% - 14px) calc(50% - 3px),
+					calc(100% - 32px) 50%;
+				background-size: 6px 6px, 6px 6px, 1px 24px;
+				background-repeat: no-repeat;
+				cursor: pointer;
 			}
 
 			/* iOS Safari date input can keep intrinsic width; force full-width within form grid. */
@@ -634,20 +925,22 @@
 				max-width: 100%;
 				min-inline-size: 0;
 				min-width: 0;
-				-webkit-appearance: none;
-				appearance: none;
-				padding-right: 40px;
-					background-image: url("./assets/date-icon.svg");
+				padding-right: 42px;
+				background-image: url("./assets/date-icon.svg");
 				background-repeat: no-repeat;
 				background-position: right 12px center;
 				background-size: 17px 17px;
+				cursor: pointer;
+				color-scheme: light;
+				-webkit-appearance: auto;
+				appearance: auto;
 			}
 
 			input[type="date"]::-webkit-calendar-picker-indicator {
 				opacity: 0;
 				margin: 0;
-				width: 20px;
-				height: 20px;
+				width: 28px;
+				height: 28px;
 				padding: 0;
 				cursor: pointer;
 			}
@@ -656,8 +949,11 @@
 			textarea:focus,
 			select:focus {
 				outline: none;
-				border-color: var(--accent);
-				box-shadow: 0 0 0 3px rgba(111, 102, 95, 0.2);
+				border-color: rgba(122, 92, 72, 0.72);
+				box-shadow:
+					0 0 0 3px rgba(126, 101, 80, 0.18),
+					0 12px 22px rgba(98, 75, 60, 0.1);
+				transform: translateY(-1px);
 			}
 
 			textarea {
@@ -676,7 +972,13 @@
 				border-radius: 12px;
 				padding: 10px 14px;
 				font: inherit;
+				font-family: "Noto Serif KR", serif;
+				font-weight: 600;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
 				cursor: pointer;
+				text-rendering: optimizeLegibility;
+				-webkit-font-smoothing: antialiased;
 				will-change: transform, box-shadow;
 				transition:
 					transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -710,11 +1012,13 @@
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				gap: 7px;
-				background: linear-gradient(135deg, #6f6760, #4f4944);
+				gap: 8px;
+				padding: 12px 18px 11px;
+				background: linear-gradient(135deg, #9a7b62, #695947 40%, #4f4541 100%);
 				color: #fff;
 				font-weight: 700;
-				box-shadow: 0 10px 20px rgba(72, 59, 50, 0.22);
+				letter-spacing: 0.06em;
+				box-shadow: 0 10px 20px rgba(72, 59, 50, 0.22), inset 0 1px 0 rgba(255,255,255,0.2);
 			}
 
 			.btn-add:active {
@@ -726,11 +1030,13 @@
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				gap: 7px;
-				background: rgba(255, 251, 246, 0.9);
+				gap: 8px;
+				padding: 11px 16px 10px;
+				background: linear-gradient(180deg, rgba(255, 251, 246, 0.96), rgba(239, 232, 224, 0.94));
 				border: 1px solid rgba(116, 111, 105, 0.18);
 				color: var(--ink-soft);
-				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+				letter-spacing: 0.03em;
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 6px 10px rgba(84, 67, 58, 0.06);
 			}
 
 			.btn-reset:active {
@@ -743,7 +1049,8 @@
 			}
 
 			.calendar-panel {
-				padding: 14px 12px;
+				padding: 16px 14px 14px;
+				background: linear-gradient(180deg, rgba(255, 249, 244, 0.96), rgba(248, 242, 236, 0.88));
 			}
 
 			.calendar-head {
@@ -758,6 +1065,8 @@
 				display: flex;
 				align-items: center;
 				gap: 8px;
+				flex-wrap: wrap;
+				justify-content: flex-end;
 			}
 
 			.calendar-title {
@@ -772,7 +1081,7 @@
 			.calendar-grid {
 				display: grid;
 				grid-template-columns: repeat(7, minmax(0, 1fr));
-				gap: 5px;
+				gap: 6px;
 			}
 
 			.calendar-weekday {
@@ -784,14 +1093,14 @@
 
 			.calendar-day {
 				position: relative;
-				border: 1px solid #ecd3c4;
 				border: 1px solid rgba(109, 101, 94, 0.16);
 				border-radius: 14px;
 				background: rgba(250, 248, 244, 0.9);
 				padding: 0;
-				min-height: 86px;
+				min-height: 90px;
 				overflow: hidden;
-				transition: background-color 0.16s ease, border-color 0.16s ease;
+				transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
 			}
 
 			.calendar-day-button {
@@ -809,34 +1118,34 @@
 			}
 
 			.calendar-day.has-entry {
-				background: rgba(228, 226, 219, 0.9);
+				background: rgba(228, 226, 219, 0.92);
 				border-color: rgba(100, 94, 88, 0.34);
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 6px 14px rgba(88, 73, 62, 0.06);
 			}
 
 			.calendar-day.has-entry.entry-wine {
-				background: rgba(244, 218, 214, 0.9);
+				background: linear-gradient(180deg, rgba(244, 218, 214, 0.94), rgba(235, 199, 191, 0.9));
 				border-color: rgba(148, 67, 58, 0.34);
 			}
 
 			.calendar-day.has-entry.entry-whisky {
-				background: rgba(239, 227, 205, 0.92);
+				background: linear-gradient(180deg, rgba(239, 227, 205, 0.96), rgba(229, 209, 169, 0.9));
 				border-color: rgba(147, 117, 77, 0.34);
 			}
 
 			.calendar-day.has-entry.entry-tea {
-				background: rgba(219, 231, 222, 0.9);
+				background: linear-gradient(180deg, rgba(219, 231, 222, 0.96), rgba(194, 218, 201, 0.9));
 				border-color: rgba(86, 120, 99, 0.34);
 			}
 
 			.calendar-day.outside {
 				opacity: 0.45;
-				background: #fffbf7;
-				background: rgba(242, 239, 232, 0.78);
+				background: rgba(242, 239, 232, 0.8);
 			}
 
 			.calendar-day.today {
-				border-color: #ff8f6f;
-				box-shadow: inset 0 0 0 1px rgba(110, 102, 96, 0.16);
+				border-color: rgba(255, 143, 111, 0.7);
+				box-shadow: inset 0 0 0 1px rgba(255, 143, 111, 0.38), 0 8px 16px rgba(170, 95, 66, 0.08);
 			}
 
 			.day-top {
@@ -2317,19 +2626,24 @@
 				<h1 class="title">향과 맛을 즐기자</h1>
 				<p class="subtitle">위스키, 와인, 차</p>
 				<div class="tab-nav">
-					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'"><i class="lni lni-pencil-alt"></i>시음노트</button>
-					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'"><i class="lni lni-agenda"></i>기록</button>
-					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="activeTab = 'calendar'"><i class="lni lni-calendar"></i>달력</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="openTopTabPopup('write', $event)">시음노트</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="openTopTabPopup('records', $event)">기록</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="setActiveTab('calendar')">달력</button>
 				</div>
 			</header>
 
+			<div v-if="activeCustomSelect === 'write-type' || activeCustomSelect === 'record-filter'" class="top-tab-popup" :style="{ left: `${topTabPopup.x}px`, top: `${topTabPopup.y}px` }">
+				<div class="custom-select-panel">
+					<button v-if="activeCustomSelect === 'write-type'" v-for="type in writeTabOrder" :key="`write-type-${type}`" type="button" class="custom-select-option" :class="{ active: activeWriteTab === type }" @click.stop="activeWriteTab = type; activeCustomSelect = ''">{{ getDrinkTypeLabel(type) }}</button>
+					<button v-if="activeCustomSelect === 'record-filter'" type="button" class="custom-select-option" :class="{ active: recordDrinkFilter === 'all' }" @click.stop="recordDrinkFilter = 'all'; activeCustomSelect = ''">전체</button>
+					<button v-if="activeCustomSelect === 'record-filter'" type="button" class="custom-select-option" :class="{ active: recordDrinkFilter === 'whisky' }" @click.stop="recordDrinkFilter = 'whisky'; activeCustomSelect = ''">위스키</button>
+					<button v-if="activeCustomSelect === 'record-filter'" type="button" class="custom-select-option" :class="{ active: recordDrinkFilter === 'wine' }" @click.stop="recordDrinkFilter = 'wine'; activeCustomSelect = ''">와인</button>
+					<button v-if="activeCustomSelect === 'record-filter'" type="button" class="custom-select-option" :class="{ active: recordDrinkFilter === 'tea' }" @click.stop="recordDrinkFilter = 'tea'; activeCustomSelect = ''">차</button>
+				</div>
+			</div>
+
 			<main class="grid">
 				<section class="panel form-panel" v-if="activeTab === 'write'">
-					<div class="tab-nav write-tab-nav">
-							<button class="tab-btn whisky-tab" :class="{ active: activeWriteTab === 'whisky' }" type="button" @click="activeWriteTab = 'whisky'">위스키</button>
-						<button class="tab-btn" :class="{ active: activeWriteTab === 'wine' }" type="button" @click="activeWriteTab = 'wine'">와인</button>
-						<button class="tab-btn" :class="{ active: activeWriteTab === 'tea' }" type="button" @click="activeWriteTab = 'tea'">차</button>
-					</div>
 					<form @submit.prevent="addEntry">
 						<div class="form-top-grid">
 							<div class="row">
@@ -2344,18 +2658,28 @@
 
 							<div class="row">
 								<label for="drinker">마신 사람</label>
-								<select id="drinker" v-model="form.drinker" required>
-									<option value="" disabled>선택해 주세요</option>
-									<option v-for="drinker in drinkerOptions" :key="drinker" :value="drinker">{{ drinker }}</option>
-								</select>
+								<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'form-drinker' }">
+									<button id="drinker" type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('form-drinker')">
+										<span class="custom-select-trigger-label">{{ form.drinker || '선택해 주세요' }}</span>
+										<span class="custom-select-arrow" aria-hidden="true"></span>
+									</button>
+									<div v-if="activeCustomSelect === 'form-drinker'" class="custom-select-panel">
+										<button v-for="drinker in drinkerOptions" :key="drinker" type="button" class="custom-select-option" :class="{ active: form.drinker === drinker }" @click.stop="selectCustomOption('form', 'drinker', drinker)">{{ drinker }}</button>
+									</div>
+								</div>
 							</div>
 
 							<div class="row">
 								<label for="category">{{ currentWriteConfig.categoryLabel }}</label>
-								<select id="category" v-model="form.category" required>
-									<option value="" disabled>선택해 주세요</option>
-									<option v-for="option in currentWriteConfig.categoryOptions" :key="option" :value="option">{{ option }}</option>
-								</select>
+								<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'form-category' }">
+									<button id="category" type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('form-category')">
+										<span class="custom-select-trigger-label">{{ form.category || '선택해 주세요' }}</span>
+										<span class="custom-select-arrow" aria-hidden="true"></span>
+									</button>
+									<div v-if="activeCustomSelect === 'form-category'" class="custom-select-panel">
+										<button v-for="option in currentWriteConfig.categoryOptions" :key="option" type="button" class="custom-select-option" :class="{ active: form.category === option }" @click.stop="selectCustomOption('form', 'category', option)">{{ option }}</button>
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -2452,12 +2776,17 @@
 						</div>
 
 						<div v-else-if="activeWriteTab === 'wine'" class="row">
-							<label for="wineCountry">지역</label>
-														<select id="wineCountry" v-model="form.wineCountry" @change="handleWineCountryChange('form')" required>
-								<option value="" disabled>선택해 주세요</option>
-								<option v-for="country in wineCountryOptions" :key="country" :value="country">{{ country }}</option>
-							</select>
-														<div v-if="form.wineCountry !== '기타'" class="wine-region-section">
+											<label for="wineCountry">지역</label>
+											<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'form-wineCountry' }">
+												<button id="wineCountry" type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('form-wineCountry')">
+													<span class="custom-select-trigger-label">{{ form.wineCountry || '선택해 주세요' }}</span>
+													<span class="custom-select-arrow" aria-hidden="true"></span>
+												</button>
+												<div v-if="activeCustomSelect === 'form-wineCountry'" class="custom-select-panel">
+													<button v-for="country in wineCountryOptions" :key="country" type="button" class="custom-select-option" :class="{ active: form.wineCountry === country }" @click.stop="selectCustomOption('form', 'wineCountry', country)">{{ country }}</button>
+												</div>
+											</div>
+											<div v-if="form.wineCountry !== '기타'" class="wine-region-section">
 															<div class="wine-region-head">
 																<p class="wine-region-title">{{ form.wineCountry ? (hasWineRegions(form.wineCountry) ? `${form.wineCountry} 대표 산지 선택` : `${form.wineCountry} 위치 표시`) : "세계 지도" }}</p>
 																<button v-if="form.wineCountry && hasWineRegions(form.wineCountry)" type="button" class="tool-btn small province-clear-btn" @click="setWineRegion('form', '')">선택 해제</button>
@@ -2774,28 +3103,25 @@
 				<section class="panel list-panel" v-if="activeTab === 'records'">
 					<div class="record-primary-tools">
 						<span v-if="hasRecordFilters" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
-						<div class="record-type-filter">
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'all' }" type="button" @click="recordDrinkFilter = 'all'">전체</button>
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'whisky' }" type="button" @click="recordDrinkFilter = 'whisky'">위스키</button>
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'wine' }" type="button" @click="recordDrinkFilter = 'wine'">와인</button>
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'tea' }" type="button" @click="recordDrinkFilter = 'tea'">차</button>
-						</div>
-						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
-							<i class="lni lni-save"></i>{{ isSaving ? "저장 중..." : "저장" }}
-						</button>
 						<span v-if="!isOnline" class="count-chip">오프라인 · 로컬 저장</span>
 						<span v-else-if="pendingSyncCount" class="count-chip">동기화 대기 {{ pendingSyncCount }}건</span>
 						<span v-if="lastCommitSha" class="sha-chip">최근 SHA {{ lastCommitSha }}</span>
 					</div>
 
 					<div class="record-filter-grid" v-if="entries.length">
-						<div class="row search-row" style="margin: 0">
-							<label for="recordMonth">월별 보기</label>
-							<select id="recordMonth" v-model="selectedRecordMonth">
-								<option value="">전체 월</option>
-								<option v-for="month in recordMonthOptions" :key="month.value" :value="month.value">{{ month.label }}</option>
-							</select>
-						</div>
+										<div class="row search-row" style="margin: 0">
+											<label for="recordMonth">월별 보기</label>
+											<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'record-month' }">
+												<button id="recordMonth" type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('record-month')">
+													<span class="custom-select-trigger-label">{{ selectedRecordMonth ? (recordMonthOptions.find((month) => month.value === selectedRecordMonth)?.label || selectedRecordMonth) : '전체 월' }}</span>
+													<span class="custom-select-arrow" aria-hidden="true"></span>
+												</button>
+												<div v-if="activeCustomSelect === 'record-month'" class="custom-select-panel">
+													<button type="button" class="custom-select-option" :class="{ active: !selectedRecordMonth }" @click.stop="selectCustomOption('record', 'selectedRecordMonth', '')">전체 월</button>
+													<button v-for="month in recordMonthOptions" :key="month.value" type="button" class="custom-select-option" :class="{ active: selectedRecordMonth === month.value }" @click.stop="selectCustomOption('record', 'selectedRecordMonth', month.value)">{{ month.label }}</button>
+												</div>
+											</div>
+										</div>
 						<div class="row search-row" style="margin: 0">
 							<label for="recordSearch">기록 검색</label>
 							<input
@@ -2906,25 +3232,41 @@
 													<input v-model="editForm.date" type="date" required />
 												</div>
 												<div class="row" style="margin: 0">
-													<label>마신이</label>
-													<select v-model="editForm.drinker" required>
-														<option value="" disabled>선택해 주세요</option>
-														<option v-for="drinker in drinkerOptions" :key="`edit-${drinker}`" :value="drinker">{{ drinker }}</option>
-													</select>
-												</div>
-												<div class="row" style="margin: 0">
-													<label>음료</label>
-													<select v-model="editForm.drinkCategory" @change="handleEditDrinkCategoryChange">
-														<option v-for="type in writeTabOrder" :key="`edit-type-${type}`" :value="type">{{ getDrinkTypeLabel(type) }}</option>
-													</select>
-												</div>
-												<div class="row" style="margin: 0">
-													<label>{{ editWriteConfig.categoryLabel }}</label>
-													<select v-model="editForm.category" required>
-														<option value="" disabled>선택해 주세요</option>
-														<option v-for="option in editWriteConfig.categoryOptions" :key="`edit-category-${option}`" :value="option">{{ option }}</option>
-													</select>
-												</div>
+																<label>마신이</label>
+																<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'edit-drinker' }">
+																	<button type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('edit-drinker')">
+																		<span class="custom-select-trigger-label">{{ editForm.drinker || '선택해 주세요' }}</span>
+																		<span class="custom-select-arrow" aria-hidden="true"></span>
+																	</button>
+																	<div v-if="activeCustomSelect === 'edit-drinker'" class="custom-select-panel">
+																		<button v-for="drinker in drinkerOptions" :key="`edit-${drinker}`" type="button" class="custom-select-option" :class="{ active: editForm.drinker === drinker }" @click.stop="selectCustomOption('editForm', 'drinker', drinker)">{{ drinker }}</button>
+																	</div>
+																</div>
+															</div>
+															<div class="row" style="margin: 0">
+																<label>음료</label>
+																<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'edit-drinkCategory' }">
+																	<button type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('edit-drinkCategory')">
+																		<span class="custom-select-trigger-label">{{ getDrinkTypeLabel(editForm.drinkCategory) }}</span>
+																		<span class="custom-select-arrow" aria-hidden="true"></span>
+																	</button>
+																	<div v-if="activeCustomSelect === 'edit-drinkCategory'" class="custom-select-panel">
+																		<button v-for="type in writeTabOrder" :key="`edit-type-${type}`" type="button" class="custom-select-option" :class="{ active: editForm.drinkCategory === type }" @click.stop="selectCustomOption('editForm', 'drinkCategory', type)">{{ getDrinkTypeLabel(type) }}</button>
+																	</div>
+																</div>
+															</div>
+															<div class="row" style="margin: 0">
+																<label>{{ editWriteConfig.categoryLabel }}</label>
+																<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'edit-category' }">
+																	<button type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('edit-category')">
+																		<span class="custom-select-trigger-label">{{ editForm.category || '선택해 주세요' }}</span>
+																		<span class="custom-select-arrow" aria-hidden="true"></span>
+																	</button>
+																	<div v-if="activeCustomSelect === 'edit-category'" class="custom-select-panel">
+																		<button v-for="option in editWriteConfig.categoryOptions" :key="`edit-category-${option}`" type="button" class="custom-select-option" :class="{ active: editForm.category === option }" @click.stop="selectCustomOption('editForm', 'category', option)">{{ option }}</button>
+																	</div>
+																</div>
+															</div>
 											</div>
 											<div class="row" style="margin: 0">
 												<label>{{ editWriteConfig.nameLabel }}</label>
@@ -3013,11 +3355,16 @@
 											</div>
 											<div v-else-if="editForm.drinkCategory === 'wine'" class="row" style="margin: 0">
 												<label>지역</label>
-														<select v-model="editForm.wineCountry" @change="handleWineCountryChange('editForm')" required>
-													<option value="" disabled>선택해 주세요</option>
-													<option v-for="country in wineCountryOptions" :key="`edit-country-${country}`" :value="country">{{ country }}</option>
-												</select>
-														<div v-if="editForm.wineCountry !== '기타'" class="wine-region-section">
+																	<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'edit-wineCountry' }">
+																		<button type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('edit-wineCountry')">
+																			<span class="custom-select-trigger-label">{{ editForm.wineCountry || '선택해 주세요' }}</span>
+																			<span class="custom-select-arrow" aria-hidden="true"></span>
+																		</button>
+																		<div v-if="activeCustomSelect === 'edit-wineCountry'" class="custom-select-panel">
+																			<button v-for="country in wineCountryOptions" :key="`edit-country-${country}`" type="button" class="custom-select-option" :class="{ active: editForm.wineCountry === country }" @click.stop="selectCustomOption('editForm', 'wineCountry', country)">{{ country }}</button>
+																		</div>
+																	</div>
+																	<div v-if="editForm.wineCountry !== '기타'" class="wine-region-section">
 															<div class="wine-region-head">
 																<p class="wine-region-title">{{ editForm.wineCountry ? (hasWineRegions(editForm.wineCountry) ? `${editForm.wineCountry} 대표 산지 선택` : `${editForm.wineCountry} 위치 표시`) : "세계 지도" }}</p>
 																<button v-if="editForm.wineCountry && hasWineRegions(editForm.wineCountry)" type="button" class="tool-btn small province-clear-btn" @click="setWineRegion('editForm', '')">선택 해제</button>
@@ -3955,6 +4302,10 @@
 				data() {
 					return {
 						activeWriteTab: "whisky",
+						topTabPopup: {
+							x: 0,
+							y: 0
+						},
 						traitCatalogs: {
 							whisky: {
 								cask: {
@@ -4084,6 +4435,7 @@
 						recordDrinkFilter: "all",
 						searchQuery: "",
 						selectedRecordMonth: "",
+						activeCustomSelect: "",
 						weekLabels: WEEK_LABELS,
 						calendarMonthKey: getCurrentMonthKey(),
 						activeCalendarKey: "",
@@ -4379,6 +4731,7 @@
 					this.loadFromLocalCache();
 					this.syncPendingStateFromStorage();
 					window.addEventListener("keydown", this.onGlobalKeydown);
+					document.addEventListener("click", this.closeCustomSelect, true);
 					window.addEventListener("resize", this.updateProvinceMapLabelMode);
 					window.addEventListener("online", this.handleOnlineStatusChange);
 					window.addEventListener("offline", this.handleOnlineStatusChange);
@@ -4409,6 +4762,7 @@
 						}
 					}
 					window.removeEventListener("keydown", this.onGlobalKeydown);
+					document.removeEventListener("click", this.closeCustomSelect, true);
 					window.removeEventListener("resize", this.updateProvinceMapLabelMode);
 					window.removeEventListener("online", this.handleOnlineStatusChange);
 					window.removeEventListener("offline", this.handleOnlineStatusChange);
@@ -4877,6 +5231,11 @@
 							return;
 						}
 
+						if (this.activeCustomSelect) {
+							this.activeCustomSelect = "";
+							return;
+						}
+
 						if (this.wineRegionModal.visible) {
 							this.closeWineRegionModal();
 							return;
@@ -4884,6 +5243,82 @@
 
 						if (this.editingEntryId) {
 							this.cancelEditEntry();
+						}
+					},
+					toggleCustomSelect(key) {
+						this.activeCustomSelect = this.activeCustomSelect === key ? "" : key;
+					},
+					openTopTabPopup(nextTab, event) {
+						if (!nextTab) {
+							return;
+						}
+
+						this.activeTab = nextTab;
+						this.activeCustomSelect = nextTab === "write" ? "write-type" : nextTab === "records" ? "record-filter" : "";
+						if (nextTab !== "calendar") {
+							this.activeCalendarKey = "";
+						}
+
+						const button = event?.currentTarget;
+						if (button) {
+							const rect = button.getBoundingClientRect();
+							this.topTabPopup = {
+								x: rect.left + rect.width / 2,
+								y: rect.bottom + 12
+							};
+						} else {
+							this.topTabPopup = { x: window.innerWidth / 2, y: 120 };
+						}
+					},
+					setActiveTab(nextTab) {
+						if (!nextTab) {
+							return;
+						}
+						this.activeTab = nextTab;
+						this.activeCustomSelect = "";
+						this.topTabPopup = { x: 0, y: 0 };
+						if (nextTab !== "calendar") {
+							this.activeCalendarKey = "";
+						}
+					},
+					closeCustomSelect(event) {
+						if (!this.activeCustomSelect) {
+							return;
+						}
+
+						const target = event?.target;
+						if (target && target.closest && (target.closest(".custom-select") || target.closest(".top-tab-popup") || target.closest(".tab-btn"))) {
+							return;
+						}
+
+						this.activeCustomSelect = "";
+						this.topTabPopup = { x: 0, y: 0 };
+					},
+					selectCustomOption(formKey, field, value, triggerChange = false, changeHandlerName = "") {
+						const target = formKey === "record" ? this : this[formKey];
+						if (target && typeof target === "object") {
+							target[field] = value;
+						}
+
+						this.activeCustomSelect = "";
+
+						if (formKey === "form" && field === "wineCountry") {
+							this.handleWineCountryChange("form");
+							return;
+						}
+
+						if (formKey === "editForm" && field === "wineCountry") {
+							this.handleWineCountryChange("editForm");
+							return;
+						}
+
+						if (formKey === "editForm" && field === "drinkCategory") {
+							this.handleEditDrinkCategoryChange();
+							return;
+						}
+
+						if (triggerChange && changeHandlerName && typeof this[changeHandlerName] === "function") {
+							this[changeHandlerName](formKey);
 						}
 					},
 					buildEditForm(entry) {
