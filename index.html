@@ -18,6 +18,10 @@
 			crossorigin=""
 		/>
 		<style>
+			[v-cloak] {
+				display: none;
+			}
+
 			:root {
 				--bg-cream: #fbf7ef;
 				--bg-peach: #9a8f84;
@@ -2290,7 +2294,7 @@
 		</style>
 	</head>
 	<body>
-		<div id="app" class="shell">
+		<div id="app" class="shell" v-cloak>
 			<div class="loading-screen" :class="{ hidden: !isInitialLoading }" aria-hidden="true" @click="skipInitialLoading">
 					<div class="loading-particles"></div>
 				<div class="loading-copy">
