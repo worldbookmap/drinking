@@ -1523,6 +1523,35 @@
 				gap: 6px;
 			}
 
+			.trait-selected-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+				margin-top: 6px;
+			}
+
+			.trait-custom-row {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) auto;
+				gap: 6px;
+				align-items: center;
+			}
+
+			.trait-custom-input {
+				min-width: 0;
+				padding: 8px 10px;
+				border: 1px solid rgba(150, 122, 100, 0.28);
+				border-radius: 10px;
+				background: rgba(255, 255, 255, 0.96);
+				font-size: 0.86rem;
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+			}
+
+			.trait-custom-input:focus {
+				border-color: #8f6450;
+				box-shadow: 0 0 0 3px rgba(143, 100, 80, 0.16);
+			}
+
 			.wine-rating-grid {
 				display: grid;
 				grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1683,6 +1712,16 @@
 				color: #684437;
 				font-weight: 700;
 				opacity: 1;
+			}
+
+			.trait-chip.removable {
+				cursor: pointer;
+			}
+
+			.trait-chip-remove {
+				margin-left: 4px;
+				font-size: 0.72em;
+				opacity: 0.7;
 			}
 
 			.china-province-section {
@@ -2498,6 +2537,27 @@
 										</button>
 									</div>
 								</div>
+								<div class="trait-selected-tags" v-if="getTraitValues('form', 'nose').length">
+									<button
+										type="button"
+										class="trait-chip active removable"
+										v-for="trait in getTraitValues('form', 'nose')"
+										:key="`nose-selected-${trait}`"
+										@click="toggleTrait('nose', trait)"
+									>
+										{{ trait }}<span class="trait-chip-remove">×</span>
+									</button>
+								</div>
+							</div>
+							<div class="trait-custom-row" style="margin-top: 8px">
+								<input
+									v-model.trim="formTraitDrafts.nose"
+									type="text"
+									class="trait-custom-input"
+									placeholder="향 태그 추가"
+									@keydown.enter.prevent="addCustomTrait('form', 'nose')"
+								/>
+								<button class="tool-btn small" type="button" @click="addCustomTrait('form', 'nose')">추가</button>
 							</div>
 						</div>
 
@@ -2543,6 +2603,27 @@
 										</button>
 									</div>
 								</div>
+								<div class="trait-selected-tags" v-if="getTraitValues('form', 'palate').length">
+									<button
+										type="button"
+										class="trait-chip active removable"
+										v-for="trait in getTraitValues('form', 'palate')"
+										:key="`palate-selected-${trait}`"
+										@click="toggleTrait('palate', trait)"
+									>
+										{{ trait }}<span class="trait-chip-remove">×</span>
+									</button>
+								</div>
+							</div>
+							<div class="trait-custom-row" v-if="activeWriteTab !== 'wine'" style="margin-top: 8px">
+								<input
+									v-model.trim="formTraitDrafts.palate"
+									type="text"
+									class="trait-custom-input"
+									placeholder="맛 태그 추가"
+									@keydown.enter.prevent="addCustomTrait('form', 'palate')"
+								/>
+								<button class="tool-btn small" type="button" @click="addCustomTrait('form', 'palate')">추가</button>
 							</div>
 						</div>
 
@@ -2565,6 +2646,27 @@
 										</button>
 									</div>
 								</div>
+								<div class="trait-selected-tags" v-if="getTraitValues('form', 'finish').length">
+									<button
+										type="button"
+										class="trait-chip active removable"
+										v-for="trait in getTraitValues('form', 'finish')"
+										:key="`finish-selected-${trait}`"
+										@click="toggleTrait('finish', trait)"
+									>
+										{{ trait }}<span class="trait-chip-remove">×</span>
+									</button>
+								</div>
+							</div>
+							<div class="trait-custom-row" style="margin-top: 8px">
+								<input
+									v-model.trim="formTraitDrafts.finish"
+									type="text"
+									class="trait-custom-input"
+									placeholder="피니시 태그 추가"
+									@keydown.enter.prevent="addCustomTrait('form', 'finish')"
+								/>
+								<button class="tool-btn small" type="button" @click="addCustomTrait('form', 'finish')">추가</button>
 							</div>
 						</div>
 
@@ -2895,6 +2997,21 @@
 											<div class="row" style="margin: 0">
 												<label>향</label>
 												<textarea v-model.trim="editForm.nose" placeholder="예: 꿀, 사과, 바닐라"></textarea>
+												<div class="trait-selected-tags" v-if="getTraitValues('editForm', 'nose').length">
+													<button
+														type="button"
+														class="trait-chip active removable"
+														v-for="trait in getTraitValues('editForm', 'nose')"
+														:key="`edit-nose-selected-${trait}`"
+														@click="toggleTrait('nose', trait, 'editForm')"
+													>
+														{{ trait }}<span class="trait-chip-remove">×</span>
+													</button>
+												</div>
+												<div class="trait-custom-row" style="margin-top: 8px">
+													<input v-model.trim="editTraitDrafts.nose" type="text" class="trait-custom-input" placeholder="향 태그 추가" @keydown.enter.prevent="addCustomTrait('editForm', 'nose')" />
+													<button class="tool-btn small" type="button" @click="addCustomTrait('editForm', 'nose')">추가</button>
+												</div>
 											</div>
 											<div class="row" style="margin: 0">
 												<label>맛</label>
@@ -2920,10 +3037,40 @@
 													placeholder="와인의 질감, 인상, 여운을 자유롭게 메모해 주세요"
 												></textarea>
 												<textarea v-else v-model.trim="editForm.palate" placeholder="예: 몰트 단맛, 시나몬"></textarea>
+												<div class="trait-selected-tags" v-if="getTraitValues('editForm', 'palate').length">
+													<button
+														type="button"
+														class="trait-chip active removable"
+														v-for="trait in getTraitValues('editForm', 'palate')"
+														:key="`edit-palate-selected-${trait}`"
+														@click="toggleTrait('palate', trait, 'editForm')"
+													>
+														{{ trait }}<span class="trait-chip-remove">×</span>
+													</button>
+												</div>
+												<div class="trait-custom-row" style="margin-top: 8px">
+													<input v-model.trim="editTraitDrafts.palate" type="text" class="trait-custom-input" placeholder="맛 태그 추가" @keydown.enter.prevent="addCustomTrait('editForm', 'palate')" />
+													<button class="tool-btn small" type="button" @click="addCustomTrait('editForm', 'palate')">추가</button>
+												</div>
 											</div>
 											<div class="row" style="margin: 0">
 												<label>피니시</label>
 												<textarea v-model.trim="editForm.finish" placeholder="예: 중간, 따뜻함"></textarea>
+												<div class="trait-selected-tags" v-if="getTraitValues('editForm', 'finish').length">
+													<button
+														type="button"
+														class="trait-chip active removable"
+														v-for="trait in getTraitValues('editForm', 'finish')"
+														:key="`edit-finish-selected-${trait}`"
+														@click="toggleTrait('finish', trait, 'editForm')"
+													>
+														{{ trait }}<span class="trait-chip-remove">×</span>
+													</button>
+												</div>
+												<div class="trait-custom-row" style="margin-top: 8px">
+													<input v-model.trim="editTraitDrafts.finish" type="text" class="trait-custom-input" placeholder="피니시 태그 추가" @keydown.enter.prevent="addCustomTrait('editForm', 'finish')" />
+													<button class="tool-btn small" type="button" @click="addCustomTrait('editForm', 'finish')">추가</button>
+												</div>
 											</div>
 											<div class="row" style="margin: 0">
 												<label>메모</label>
@@ -2948,6 +3095,7 @@
 						<button class="tool-btn small" type="button" @click="reloadFromRepo"><i class="lni lni-reload"></i>GitHub JSON 다시 불러오기</button>
 						<button class="tool-btn small" type="button" @click="exportEntries"><i class="lni lni-download"></i>records.json 내보내기</button>
 						<button class="tool-btn small" type="button" @click="openImport"><i class="lni lni-upload"></i>로컬 JSON 미리보기</button>
+						<button class="tool-btn small" type="button" @click="cleanupTraitRecords" :disabled="isSaving || isTraitCleaning"><i class="lni lni-broom"></i>{{ isTraitCleaning ? "정리 중..." : "태그 정리" }}</button>
 					</div>
 					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 				</section>
@@ -3129,6 +3277,7 @@
 			const DEFAULT_BOTTLE_IMAGE = "./assets/iconMang.png";
 			const LOCAL_ENTRIES_KEY = "drinking.records.local.v1";
 			const LOCAL_PENDING_SYNC_KEY = "drinking.records.pendingSync.v1";
+			const LOCAL_CUSTOM_TRAITS_KEY = "drinking.records.customTraits.v1";
 			const WHISKY_DISTILLERY_DATA_FILE = "./assets/major_whisky_distilleries_100.json";
 
 			async function readEntriesFromRepo() {
@@ -3421,6 +3570,59 @@
 				};
 			}
 
+			function createEmptyTraitDrafts() {
+				return {
+					nose: "",
+					palate: "",
+					finish: ""
+				};
+			}
+
+			function createEmptyCustomTraitCatalogs() {
+				return {
+					whisky: { nose: [], palate: [], finish: [] },
+					wine: { nose: [], palate: [], finish: [] },
+					tea: { nose: [], palate: [], finish: [] }
+				};
+			}
+
+			function loadCustomTraitCatalogs() {
+				if (typeof localStorage === "undefined") {
+					return createEmptyCustomTraitCatalogs();
+				}
+
+				try {
+					const raw = localStorage.getItem(LOCAL_CUSTOM_TRAITS_KEY);
+					if (!raw) {
+						return createEmptyCustomTraitCatalogs();
+					}
+
+					const parsed = JSON.parse(raw);
+					const normalized = createEmptyCustomTraitCatalogs();
+					for (const drinkType of Object.keys(normalized)) {
+						for (const field of Object.keys(normalized[drinkType])) {
+							const items = Array.isArray(parsed?.[drinkType]?.[field]) ? parsed[drinkType][field] : [];
+							normalized[drinkType][field] = [...new Set(items.map((item) => String(item || "").trim()).filter(Boolean))];
+						}
+					}
+					return normalized;
+				} catch {
+					return createEmptyCustomTraitCatalogs();
+				}
+			}
+
+			function saveCustomTraitCatalogs(catalogs) {
+				if (typeof localStorage === "undefined") {
+					return;
+				}
+
+				try {
+					localStorage.setItem(LOCAL_CUSTOM_TRAITS_KEY, JSON.stringify(catalogs || createEmptyCustomTraitCatalogs()));
+				} catch {
+					// Ignore storage errors.
+				}
+			}
+
 			function normalizeWineRating(rating) {
 				const normalized = createEmptyWineRating();
 				if (!rating || typeof rating !== "object") {
@@ -3709,6 +3911,7 @@
 								finish: ["짧음", "중간", "김", "아주 김", "깔끔함", "달큰함", "여운", "구수함", "떫은 여운", "상쾌함", "화한 여운", "미네랄 여운", "단향 지속", "입안 코팅감"]
 							}
 						},
+						customTraitCatalogs: loadCustomTraitCatalogs(),
 						form: {
 							date: "",
 							place: "",
@@ -3730,10 +3933,12 @@
 							finish: "",
 							memo: ""
 						},
+						formTraitDrafts: createEmptyTraitDrafts(),
 						entries: [],
 						activeEntryId: null,
 						editingEntryId: null,
 						editForm: null,
+						editTraitDrafts: createEmptyTraitDrafts(),
 						activeTab: "records",
 						recordDrinkFilter: "all",
 						searchQuery: "",
@@ -3775,6 +3980,7 @@
 						loadingProgress: 0,
 						loadingProgressTimer: null,
 						isSaving: false,
+						isTraitCleaning: false,
 						isImageUploading: false,
 						lastCommitSha: "",
 						formPreviewUrl: "",
@@ -4264,6 +4470,7 @@
 							}
 
 							this.entries = parsed.map((entry) => normalizeEntry(entry));
+							this.rebuildCustomTraitCatalogsFromEntries();
 							this.syncMessage = "로컬에 임시 저장된 기록을 먼저 불러왔어요.";
 						} catch {
 							// Ignore malformed cache data.
@@ -4434,12 +4641,14 @@
 
 						this.editingEntryId = entry.id;
 						this.editForm = this.buildEditForm(entry);
+						this.editTraitDrafts = createEmptyTraitDrafts();
 						this.editFormPreviewUrl = "";
 						this.editTeaLeafPreviewUrl = "";
 					},
 					cancelEditEntry() {
 						this.editingEntryId = null;
 						this.editForm = null;
+						this.editTraitDrafts = createEmptyTraitDrafts();
 						this.editFormPreviewUrl = "";
 						this.editTeaLeafPreviewUrl = "";
 					},
@@ -4622,7 +4831,7 @@
 
 						return [...new Set(cleaned)];
 					},
-					getTraitGroupLabel(field, groupKey) {
+						getTraitGroupLabel(field, groupKey) {
 						const labelMap = {
 							cask: {
 								oak: "오크",
@@ -4689,43 +4898,142 @@
 							.replace(/[_-]+/g, " ")
 							.replace(/\b\w/g, (char) => char.toUpperCase());
 					},
-					getTraitGroups(field) {
-						const source = this.currentTraitCatalog?.[field];
-						if (!source) {
+						getTraitCategory(formKey = "form") {
+							if (formKey === "editForm") {
+								return String(this.editForm?.drinkCategory || this.activeWriteTab || "whisky").trim();
+							}
+
+							return String(this.activeWriteTab || "whisky").trim();
+						},
+						getTraitSource(formKey = "form") {
+							const category = this.getTraitCategory(formKey);
+							return this.traitCatalogs[category] || this.traitCatalogs.whisky;
+						},
+						getBaseTraitValues(category, field) {
+							const source = this.traitCatalogs?.[category]?.[field];
+							if (Array.isArray(source)) {
+								return this.normalizeTraitItems(source);
+							}
+
+							if (source && typeof source === "object") {
+								const items = [];
+								for (const groupItems of Object.values(source)) {
+									items.push(...this.normalizeTraitItems(groupItems));
+								}
+								return [...new Set(items)];
+							}
+
 							return [];
-						}
+						},
+						getCustomTraitValues(formKey, field) {
+							const category = this.getTraitCategory(formKey);
+							return this.normalizeTraitItems(this.customTraitCatalogs?.[category]?.[field] || []);
+						},
+						getTraitGroups(field, formKey = "form") {
+							const source = this.getTraitSource(formKey)?.[field];
+							const customItems = this.getCustomTraitValues(formKey, field);
+							const baseItems = this.getBaseTraitValues(this.getTraitCategory(formKey), field);
+							const customOnlyItems = customItems.filter((item) => !baseItems.includes(item));
+							if (!source) {
+								return customOnlyItems.length ? [{ key: "custom", label: "내 태그", items: customOnlyItems }] : [];
+							}
 
-						if (Array.isArray(source)) {
-							const items = this.normalizeTraitItems(source);
-							return items.length ? [{ key: "all", label: "", items }] : [];
-						}
+							if (Array.isArray(source)) {
+								const items = this.normalizeTraitItems([...source, ...customOnlyItems]);
+								return items.length ? [{ key: "all", label: "", items }] : [];
+							}
 
-						if (typeof source === "object") {
-							const groups = [];
-							for (const [groupKey, groupItems] of Object.entries(source)) {
-								const items = this.normalizeTraitItems(groupItems);
-								if (!items.length) {
-									continue;
+							if (typeof source === "object") {
+								const groups = [];
+								for (const [groupKey, groupItems] of Object.entries(source)) {
+									const items = this.normalizeTraitItems(groupItems);
+									if (!items.length) {
+										continue;
+									}
+
+									groups.push({
+										key: groupKey,
+										label: this.getTraitGroupLabel(field, groupKey),
+										items
+									});
 								}
 
-								groups.push({
-									key: groupKey,
-									label: this.getTraitGroupLabel(field, groupKey),
-									items
-								});
-							}
-							return groups;
-						}
+								if (customOnlyItems.length) {
+									groups.push({
+										key: "custom",
+										label: "내 태그",
+										items: customOnlyItems
+									});
+								}
 
-						return [];
-					},
-					getTraitOptions(field) {
-						const merged = [];
-						for (const group of this.getTraitGroups(field)) {
-							merged.push(...group.items);
-						}
-						return [...new Set(merged)];
-					},
+								return groups;
+							}
+
+							return [];
+						},
+						getTraitOptions(field, formKey = "form") {
+							const merged = [];
+							for (const group of this.getTraitGroups(field, formKey)) {
+								merged.push(...group.items);
+							}
+							return [...new Set(merged)];
+						},
+						getTraitTarget(formKey = "form") {
+							return formKey === "editForm" ? this.editForm : this.form;
+						},
+						getTraitDraftTarget(formKey = "form") {
+							return formKey === "editForm" ? this.editTraitDrafts : this.formTraitDrafts;
+						},
+						getTraitValues(formKey, field) {
+							const target = this.getTraitTarget(formKey);
+							return this.parseTraits(target?.[field] || "");
+						},
+						setTraitValues(formKey, field, values) {
+							const target = this.getTraitTarget(formKey);
+							if (!target) {
+								return;
+							}
+
+							const cleaned = [];
+							for (const item of values || []) {
+								const value = String(item || "").trim();
+								if (value && !cleaned.includes(value)) {
+									cleaned.push(value);
+								}
+							}
+
+							target[field] = cleaned.join(", ");
+						},
+						rememberCustomTraits(formKey, field, values) {
+							const category = this.getTraitCategory(formKey);
+							if (!this.customTraitCatalogs[category]) {
+								this.customTraitCatalogs[category] = { nose: [], palate: [], finish: [] };
+							}
+
+							const existing = this.getCustomTraitValues(formKey, field);
+							const baseItems = this.getBaseTraitValues(category, field);
+							const merged = [...existing, ...this.normalizeTraitItems(values || [])].filter((item) => !baseItems.includes(item));
+							this.customTraitCatalogs[category][field] = [...new Set(merged)];
+							saveCustomTraitCatalogs(this.customTraitCatalogs);
+						},
+						rebuildCustomTraitCatalogsFromEntries() {
+							const rebuilt = loadCustomTraitCatalogs();
+							for (const entry of this.entries || []) {
+								const category = String(entry?.drinkCategory || entry?.drinkType || "").trim() || "whisky";
+								if (!rebuilt[category]) {
+									rebuilt[category] = { nose: [], palate: [], finish: [] };
+								}
+
+								for (const field of ["nose", "palate", "finish"]) {
+									const baseItems = this.getBaseTraitValues(category, field);
+									const values = this.normalizeTraitItems(this.parseTraits(entry?.[field] || "")).filter((item) => !baseItems.includes(item));
+									rebuilt[category][field] = [...new Set([...(rebuilt[category][field] || []), ...values])].filter((item) => !baseItems.includes(item));
+								}
+							}
+
+							this.customTraitCatalogs = rebuilt;
+							saveCustomTraitCatalogs(this.customTraitCatalogs);
+						},
 					getCalendarModalMetaChips(entry) {
 						const drinkType = this.getDrinkTypeLabel(this.getEntryDrinkCategory(entry));
 						const drinkCategory = this.getEntryDrinkCategory(entry);
@@ -5235,12 +5543,15 @@
 					},
 					parseTraits(text) {
 						return text
-							.split(",")
+								.split(/[\,\n\r;]+/)
 							.map((item) => item.trim())
 							.filter(Boolean);
 					},
-					isTraitSelected(field, trait) {
-						return this.parseTraits(this.form[field]).includes(trait);
+					normalizeTraitText(text) {
+						return this.normalizeTraitItems(this.parseTraits(text)).join(", ");
+					},
+						isTraitSelected(field, trait, formKey = "form") {
+							return this.getTraitValues(formKey, field).includes(trait);
 					},
 					isExpanded(id) {
 						return this.activeEntryId === id;
@@ -5251,13 +5562,29 @@
 						}
 						this.activeEntryId = this.activeEntryId === id ? null : id;
 					},
-					toggleTrait(field, trait) {
-						const list = this.parseTraits(this.form[field]);
+						toggleTrait(field, trait, formKey = "form") {
+						const list = this.getTraitValues(formKey, field);
 						const hasTrait = list.includes(trait);
 
-						this.form[field] = hasTrait
-							? list.filter((item) => item !== trait).join(", ")
-							: [...list, trait].join(", ");
+						this.setTraitValues(formKey, field, hasTrait ? list.filter((item) => item !== trait) : [...list, trait]);
+						},
+						addCustomTrait(formKey, field) {
+							const draftTarget = this.getTraitDraftTarget(formKey);
+							if (!draftTarget) {
+								return;
+							}
+
+							const rawValue = String(draftTarget[field] || "").trim();
+							if (!rawValue) {
+								return;
+							}
+
+							const currentValues = this.getTraitValues(formKey, field);
+							const newValues = this.parseTraits(rawValue);
+							const merged = [...currentValues, ...newValues];
+							this.setTraitValues(formKey, field, merged);
+							this.rememberCustomTraits(formKey, field, newValues);
+							draftTarget[field] = "";
 					},
 					moveCalendarMonth(delta) {
 						this.calendarMonthKey = addMonthKey(this.calendarMonthKey, delta);
@@ -5469,6 +5796,7 @@
 						try {
 							const loaded = await readEntriesFromRepo();
 							this.entries = loaded.map((entry) => normalizeEntry(entry));
+							this.rebuildCustomTraitCatalogsFromEntries();
 							this.saveEntriesToLocalCache();
 							this.activeEntryId = null;
 							this.cancelEditEntry();
@@ -5601,6 +5929,7 @@
 							}
 
 							this.entries = incoming.map((entry) => normalizeEntry(entry));
+							this.rebuildCustomTraitCatalogsFromEntries();
 							this.saveEntriesToLocalCache();
 							this.markPendingSync();
 							this.activeEntryId = null;
@@ -5611,6 +5940,45 @@
 							alert("JSON 파일을 읽지 못했어요.");
 						} finally {
 							event.target.value = "";
+						}
+					},
+					async cleanupTraitRecords() {
+						if (this.isTraitCleaning || this.isSaving || this.isImageUploading) {
+							return;
+						}
+
+						this.isTraitCleaning = true;
+						try {
+							const normalizedEntries = (this.entries || []).map((entry) => {
+								const normalized = normalizeEntry(entry || {});
+								return {
+									...normalized,
+									nose: this.normalizeTraitText(normalized.nose),
+									palate: this.normalizeTraitText(normalized.palate),
+									finish: this.normalizeTraitText(normalized.finish)
+								};
+							});
+
+							this.entries = normalizedEntries;
+							this.rebuildCustomTraitCatalogsFromEntries();
+							this.saveEntriesToLocalCache();
+							this.markPendingSync();
+							this.activeEntryId = null;
+							this.cancelEditEntry();
+
+							if (this.isOnline) {
+								this.syncMessage = "기존 기록의 태그를 정리하고 추천 목록도 다시 만들었어요. GitHub에 반영 중이에요...";
+								await this.saveToGitHub({ fromAutoSync: true });
+								return;
+							}
+
+							this.syncMessage = "기존 기록의 태그를 정리하고 추천 목록도 다시 만들었어요. 온라인이 되면 GitHub에 저장할 수 있어요.";
+							this.showToast("success", "태그 정리를 완료했어요. 온라인에서 저장 버튼을 누르면 GitHub에 반영돼요.");
+						} catch (error) {
+							this.syncMessage = `태그 정리 실패: ${error.message}`;
+							this.showToast("error", `태그 정리에 실패했어요. ${error.message}`);
+						} finally {
+							this.isTraitCleaning = false;
 						}
 					},
 					resetForm() {
@@ -5635,6 +6003,7 @@
 							finish: "",
 							memo: ""
 						};
+							this.formTraitDrafts = createEmptyTraitDrafts();
 						this.formPreviewUrl = "";
 						this.teaLeafPreviewUrl = "";
 						this.activeWriteTab = "whisky";
