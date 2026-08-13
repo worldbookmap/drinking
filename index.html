@@ -1724,6 +1724,46 @@
 				opacity: 0.7;
 			}
 
+			.trait-modal {
+				width: min(420px, calc(100vw - 28px));
+			}
+
+			.trait-modal-title {
+				margin: 0;
+				font-size: 0.95rem;
+				font-weight: 700;
+				color: #5f4638;
+			}
+
+			.trait-modal-hint {
+				margin: 6px 0 0;
+				font-size: 0.78rem;
+				color: #7a6254;
+			}
+
+			.trait-modal-input {
+				margin-top: 10px;
+			}
+
+			.trait-modal-actions {
+				display: flex;
+				justify-content: flex-end;
+				gap: 8px;
+				margin-top: 12px;
+			}
+
+			.traits.grouped.long-press-armed {
+				box-shadow: 0 0 0 2px rgba(196, 122, 82, 0.28) inset;
+				border-radius: 12px;
+				background: rgba(255, 241, 226, 0.62);
+			}
+
+			.trait-chip.long-press-armed {
+				transform: scale(0.98);
+				box-shadow: 0 0 0 2px rgba(195, 116, 77, 0.24) inset;
+				filter: saturate(1.08);
+			}
+
 			.china-province-section {
 				margin-top: 10px;
 				padding: 10px;
@@ -2521,7 +2561,13 @@
 						<div class="row">
 							<label for="nose">향 (Nose)</label>
 							<textarea id="nose" v-model.trim="form.nose" placeholder="예: 꿀, 사과, 바닐라"></textarea>
-							<div class="traits grouped">
+							<div
+								class="traits grouped"
+								@pointerdown="beginSectionLongPress($event, 'form', 'nose')"
+								@pointerup="clearTraitLongPress"
+								@pointerleave="clearTraitLongPress"
+								@pointercancel="clearTraitLongPress"
+							>
 								<div class="trait-group" v-for="group in getTraitGroups('nose')" :key="`nose-group-${group.key}`">
 									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
 									<div class="trait-group-chips">
@@ -2531,7 +2577,11 @@
 											:class="{ active: isTraitSelected('nose', trait) }"
 											v-for="trait in group.items"
 											:key="`nose-${group.key}-${trait}`"
-											@click="toggleTrait('nose', trait)"
+											@click="handleTraitChipClick('nose', trait, 'form')"
+											@pointerdown="beginTraitLongPress($event, 'form', 'nose', trait, group.key)"
+											@pointerup="clearTraitLongPress"
+											@pointerleave="clearTraitLongPress"
+											@pointercancel="clearTraitLongPress"
 										>
 											{{ trait }}
 										</button>
@@ -2543,7 +2593,11 @@
 										class="trait-chip active removable"
 										v-for="trait in getTraitValues('form', 'nose')"
 										:key="`nose-selected-${trait}`"
-										@click="toggleTrait('nose', trait)"
+										@click="handleTraitChipClick('nose', trait, 'form')"
+										@pointerdown="beginTraitLongPress($event, 'form', 'nose', trait, 'selected')"
+										@pointerup="clearTraitLongPress"
+										@pointerleave="clearTraitLongPress"
+										@pointercancel="clearTraitLongPress"
 									>
 										{{ trait }}<span class="trait-chip-remove">×</span>
 									</button>
@@ -2587,7 +2641,14 @@
 								placeholder="와인의 질감, 인상, 여운을 자유롭게 메모해 주세요"
 							></textarea>
 							<textarea v-else id="palate" v-model.trim="form.palate" placeholder="예: 몰트 단맛, 시나몬, 약한 스모크"></textarea>
-							<div v-if="activeWriteTab !== 'wine'" class="traits grouped">
+							<div
+								v-if="activeWriteTab !== 'wine'"
+								class="traits grouped"
+								@pointerdown="beginSectionLongPress($event, 'form', 'palate')"
+								@pointerup="clearTraitLongPress"
+								@pointerleave="clearTraitLongPress"
+								@pointercancel="clearTraitLongPress"
+							>
 								<div class="trait-group" v-for="group in getTraitGroups('palate')" :key="`palate-group-${group.key}`">
 									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
 									<div class="trait-group-chips">
@@ -2597,7 +2658,11 @@
 											:class="{ active: isTraitSelected('palate', trait) }"
 											v-for="trait in group.items"
 											:key="`palate-${group.key}-${trait}`"
-											@click="toggleTrait('palate', trait)"
+											@click="handleTraitChipClick('palate', trait, 'form')"
+											@pointerdown="beginTraitLongPress($event, 'form', 'palate', trait, group.key)"
+											@pointerup="clearTraitLongPress"
+											@pointerleave="clearTraitLongPress"
+											@pointercancel="clearTraitLongPress"
 										>
 											{{ trait }}
 										</button>
@@ -2609,7 +2674,11 @@
 										class="trait-chip active removable"
 										v-for="trait in getTraitValues('form', 'palate')"
 										:key="`palate-selected-${trait}`"
-										@click="toggleTrait('palate', trait)"
+										@click="handleTraitChipClick('palate', trait, 'form')"
+										@pointerdown="beginTraitLongPress($event, 'form', 'palate', trait, 'selected')"
+										@pointerup="clearTraitLongPress"
+										@pointerleave="clearTraitLongPress"
+										@pointercancel="clearTraitLongPress"
 									>
 										{{ trait }}<span class="trait-chip-remove">×</span>
 									</button>
@@ -2630,7 +2699,13 @@
 						<div class="row">
 							<label for="finish">피니시 (Finish)</label>
 							<textarea id="finish" v-model.trim="form.finish" placeholder="예: 길고 따뜻함, 오크 향 lingering"></textarea>
-							<div class="traits grouped">
+							<div
+								class="traits grouped"
+								@pointerdown="beginSectionLongPress($event, 'form', 'finish')"
+								@pointerup="clearTraitLongPress"
+								@pointerleave="clearTraitLongPress"
+								@pointercancel="clearTraitLongPress"
+							>
 								<div class="trait-group" v-for="group in getTraitGroups('finish')" :key="`finish-group-${group.key}`">
 									<p class="trait-group-title" v-if="group.label">{{ group.label }}</p>
 									<div class="trait-group-chips">
@@ -2640,7 +2715,11 @@
 											:class="{ active: isTraitSelected('finish', trait) }"
 											v-for="trait in group.items"
 											:key="`finish-${group.key}-${trait}`"
-											@click="toggleTrait('finish', trait)"
+											@click="handleTraitChipClick('finish', trait, 'form')"
+											@pointerdown="beginTraitLongPress($event, 'form', 'finish', trait, group.key)"
+											@pointerup="clearTraitLongPress"
+											@pointerleave="clearTraitLongPress"
+											@pointercancel="clearTraitLongPress"
 										>
 											{{ trait }}
 										</button>
@@ -2652,7 +2731,11 @@
 										class="trait-chip active removable"
 										v-for="trait in getTraitValues('form', 'finish')"
 										:key="`finish-selected-${trait}`"
-										@click="toggleTrait('finish', trait)"
+										@click="handleTraitChipClick('finish', trait, 'form')"
+										@pointerdown="beginTraitLongPress($event, 'form', 'finish', trait, 'selected')"
+										@pointerup="clearTraitLongPress"
+										@pointerleave="clearTraitLongPress"
+										@pointercancel="clearTraitLongPress"
 									>
 										{{ trait }}<span class="trait-chip-remove">×</span>
 									</button>
@@ -3003,7 +3086,11 @@
 														class="trait-chip active removable"
 														v-for="trait in getTraitValues('editForm', 'nose')"
 														:key="`edit-nose-selected-${trait}`"
-														@click="toggleTrait('nose', trait, 'editForm')"
+														@click="handleTraitChipClick('nose', trait, 'editForm')"
+														@pointerdown="beginTraitLongPress($event, 'editForm', 'nose', trait, 'selected')"
+														@pointerup="clearTraitLongPress"
+														@pointerleave="clearTraitLongPress"
+														@pointercancel="clearTraitLongPress"
 													>
 														{{ trait }}<span class="trait-chip-remove">×</span>
 													</button>
@@ -3043,7 +3130,11 @@
 														class="trait-chip active removable"
 														v-for="trait in getTraitValues('editForm', 'palate')"
 														:key="`edit-palate-selected-${trait}`"
-														@click="toggleTrait('palate', trait, 'editForm')"
+														@click="handleTraitChipClick('palate', trait, 'editForm')"
+														@pointerdown="beginTraitLongPress($event, 'editForm', 'palate', trait, 'selected')"
+														@pointerup="clearTraitLongPress"
+														@pointerleave="clearTraitLongPress"
+														@pointercancel="clearTraitLongPress"
 													>
 														{{ trait }}<span class="trait-chip-remove">×</span>
 													</button>
@@ -3062,7 +3153,11 @@
 														class="trait-chip active removable"
 														v-for="trait in getTraitValues('editForm', 'finish')"
 														:key="`edit-finish-selected-${trait}`"
-														@click="toggleTrait('finish', trait, 'editForm')"
+														@click="handleTraitChipClick('finish', trait, 'editForm')"
+														@pointerdown="beginTraitLongPress($event, 'editForm', 'finish', trait, 'selected')"
+														@pointerup="clearTraitLongPress"
+														@pointerleave="clearTraitLongPress"
+														@pointercancel="clearTraitLongPress"
 													>
 														{{ trait }}<span class="trait-chip-remove">×</span>
 													</button>
@@ -3248,6 +3343,28 @@
 						</svg>
 					</div>
 					<p class="china-province-selected">{{ hasWineRegions(wineRegionModal.country) ? `선택 산지: ${wineRegionModal.region || '없음'}` : `선택 국가: ${wineRegionModal.country || '없음'}` }}</p>
+				</div>
+			</div>
+
+			<div class="calendar-modal-backdrop" v-if="traitModal.visible" @click="closeTraitModal">
+				<div class="calendar-modal trait-modal" @click.stop>
+					<div class="calendar-modal-head">
+						<p class="layer-title" style="margin: 0">태그 추가</p>
+						<button class="modal-close" type="button" @click="closeTraitModal">X</button>
+					</div>
+					<p class="trait-modal-title">{{ getTraitFieldLabel(traitModal.field) }} 태그를 추가할까요?</p>
+					<p class="trait-modal-hint">쉼표로 여러 태그를 한 번에 입력할 수 있어요.</p>
+					<input
+						class="trait-custom-input trait-modal-input"
+						v-model.trim="traitModal.input"
+						type="text"
+						:placeholder="`${getTraitFieldLabel(traitModal.field)} 태그 입력`"
+						@keydown.enter.prevent="confirmTraitModal"
+					/>
+					<div class="trait-modal-actions">
+						<button class="tool-btn small" type="button" @click="closeTraitModal">취소</button>
+						<button class="tool-btn small" type="button" @click="confirmTraitModal">추가</button>
+					</div>
 				</div>
 			</div>
 			</div>
@@ -3975,6 +4092,17 @@
 							country: "",
 							region: ""
 						},
+						traitModal: {
+							visible: false,
+							formKey: "form",
+							field: "nose",
+							input: ""
+						},
+						traitLongPress: {
+							timer: null,
+							consumeClickUntil: 0,
+							armedElement: null
+						},
 						isInitialLoading: true,
 						isReadyToDismissLoading: false,
 						loadingProgress: 0,
@@ -4249,6 +4377,7 @@
 					this.finishInitialLoading();
 				},
 				beforeUnmount() {
+					this.clearTraitLongPress();
 					for (const key of ["write", "edit", "modal"]) {
 						const map = this.whiskyMapState?.[key];
 						if (map && typeof map.remove === "function") {
@@ -4294,6 +4423,154 @@
 					}
 				},
 				methods: {
+					setLongPressArmedElement(element) {
+						const nextElement = element?.classList ? element : null;
+						const prevElement = this.traitLongPress?.armedElement;
+						if (prevElement && prevElement !== nextElement && prevElement.classList) {
+							prevElement.classList.remove("long-press-armed");
+						}
+
+						if (nextElement?.classList) {
+							nextElement.classList.add("long-press-armed");
+						}
+
+						this.traitLongPress.armedElement = nextElement;
+					},
+					clearTraitLongPress() {
+						if (this.traitLongPress?.timer) {
+							clearTimeout(this.traitLongPress.timer);
+							this.traitLongPress.timer = null;
+						}
+
+						if (this.traitLongPress?.armedElement?.classList) {
+							this.traitLongPress.armedElement.classList.remove("long-press-armed");
+						}
+						this.traitLongPress.armedElement = null;
+					},
+					triggerLongPressFeedback() {
+						if (typeof navigator !== "undefined" && typeof navigator.vibrate === "function") {
+							navigator.vibrate(20);
+						}
+					},
+					consumeTraitClickOnce() {
+						const now = Date.now();
+						if (now <= Number(this.traitLongPress?.consumeClickUntil || 0)) {
+							this.traitLongPress.consumeClickUntil = 0;
+							return true;
+						}
+
+						return false;
+					},
+					getTraitFieldLabel(field) {
+						const labels = {
+							nose: "향",
+							palate: "맛",
+							finish: "피니시",
+							caskType: "캐스크"
+						};
+
+						return labels[field] || "태그";
+					},
+					openTraitModal(formKey, field) {
+						this.traitModal.visible = true;
+						this.traitModal.formKey = formKey || "form";
+						this.traitModal.field = field || "nose";
+						this.traitModal.input = "";
+					},
+					closeTraitModal() {
+						this.traitModal.visible = false;
+						this.traitModal.formKey = "form";
+						this.traitModal.field = "nose";
+						this.traitModal.input = "";
+					},
+					confirmTraitModal() {
+						const field = String(this.traitModal.field || "nose").trim();
+						const formKey = String(this.traitModal.formKey || "form").trim();
+						const values = this.parseTraits(this.traitModal.input || "");
+						if (!values.length) {
+							this.closeTraitModal();
+							return;
+						}
+
+						const currentValues = this.getTraitValues(formKey, field);
+						this.setTraitValues(formKey, field, [...currentValues, ...values]);
+						this.rememberCustomTraits(formKey, field, values);
+						this.closeTraitModal();
+					},
+					beginSectionLongPress(event, formKey, field) {
+						if (event?.button && event.button !== 0) {
+							return;
+						}
+
+						if (event?.target?.closest?.(".trait-chip")) {
+							return;
+						}
+
+						this.clearTraitLongPress();
+						this.setLongPressArmedElement(event?.currentTarget);
+						this.traitLongPress.timer = setTimeout(() => {
+							this.traitLongPress.consumeClickUntil = Date.now() + 420;
+							this.triggerLongPressFeedback();
+							this.openTraitModal(formKey, field);
+							this.clearTraitLongPress();
+						}, 550);
+					},
+					beginTraitLongPress(event, formKey, field, trait, groupKey = "") {
+						if (event?.button && event.button !== 0) {
+							return;
+						}
+
+						this.clearTraitLongPress();
+						this.setLongPressArmedElement(event?.currentTarget);
+						this.traitLongPress.timer = setTimeout(() => {
+							this.traitLongPress.consumeClickUntil = Date.now() + 420;
+							this.triggerLongPressFeedback();
+							this.onTraitLongPress(formKey, field, trait, groupKey);
+							this.clearTraitLongPress();
+						}, 550);
+					},
+					onTraitLongPress(formKey, field, trait, groupKey = "") {
+						const normalizedTrait = String(trait || "").trim();
+						if (!normalizedTrait) {
+							return;
+						}
+
+						if (groupKey === "custom") {
+							this.removeCustomTrait(formKey, field, normalizedTrait);
+							return;
+						}
+
+						const list = this.getTraitValues(formKey, field);
+						if (!list.includes(normalizedTrait)) {
+							return;
+						}
+
+						this.setTraitValues(formKey, field, list.filter((item) => item !== normalizedTrait));
+						this.showToast("success", `태그 '${normalizedTrait}'를 삭제했어요.`);
+					},
+					removeCustomTrait(formKey, field, trait) {
+						const category = this.getTraitCategory(formKey);
+						if (!this.customTraitCatalogs?.[category]?.[field]) {
+							return;
+						}
+
+						this.customTraitCatalogs[category][field] = (this.customTraitCatalogs[category][field] || []).filter((item) => item !== trait);
+						saveCustomTraitCatalogs(this.customTraitCatalogs);
+
+						const list = this.getTraitValues(formKey, field);
+						if (list.includes(trait)) {
+							this.setTraitValues(formKey, field, list.filter((item) => item !== trait));
+						}
+
+						this.showToast("success", `커스텀 태그 '${trait}'를 삭제했어요.`);
+					},
+					handleTraitChipClick(field, trait, formKey = "form") {
+						if (this.consumeTraitClickOnce()) {
+							return;
+						}
+
+						this.toggleTrait(field, trait, formKey);
+					},
 					getWhiskyMapRefName(mode) {
 						if (mode === "edit") {
 							return "whiskyEditMap";
@@ -4538,6 +4815,11 @@
 					},
 					onGlobalKeydown(event) {
 						if (event.key !== "Escape") {
+							return;
+						}
+
+						if (this.traitModal.visible) {
+							this.closeTraitModal();
 							return;
 						}
 
