@@ -3401,10 +3401,14 @@
 				const apiResponse = await fetch(`${RECORDS_API}?t=${Date.now()}`, { cache: "no-store" });
 				if (apiResponse.ok) {
 					const data = await apiResponse.json();
-					if (!Array.isArray(data.entries)) {
+					if (!Array.isArray(data?.entries)) {
 						throw new Error("api entries must be array");
 					}
-					return data.entries;
+					return {
+						entries: data.entries,
+						customTraitCatalogs: normalizeCustomTraitCatalogs(data.customTraitCatalogs),
+						hasCustomTraitCatalogs: Boolean(data && Object.prototype.hasOwnProperty.call(data, "customTraitCatalogs"))
+					};
 				}
 
 				// Local preview fallback when /api route is unavailable.
@@ -3414,11 +3418,23 @@
 				}
 
 				const parsed = await fileResponse.json();
-				if (!Array.isArray(parsed)) {
-					throw new Error("records.json must be array");
+				if (Array.isArray(parsed)) {
+					return {
+						entries: parsed,
+						customTraitCatalogs: createEmptyCustomTraitCatalogs(),
+						hasCustomTraitCatalogs: false
+					};
 				}
 
-				return parsed;
+				if (parsed && typeof parsed === "object" && Array.isArray(parsed.entries)) {
+					return {
+						entries: parsed.entries,
+						customTraitCatalogs: normalizeCustomTraitCatalogs(parsed.customTraitCatalogs),
+						hasCustomTraitCatalogs: Object.prototype.hasOwnProperty.call(parsed, "customTraitCatalogs")
+					};
+				}
+
+				throw new Error("records.json must be array or object with entries");
 			}
 
 			const { createApp } = Vue;
@@ -3703,6 +3719,17 @@
 				};
 			}
 
+			function normalizeCustomTraitCatalogs(source) {
+				const normalized = createEmptyCustomTraitCatalogs();
+				for (const drinkType of Object.keys(normalized)) {
+					for (const field of Object.keys(normalized[drinkType])) {
+						const items = Array.isArray(source?.[drinkType]?.[field]) ? source[drinkType][field] : [];
+						normalized[drinkType][field] = [...new Set(items.map((item) => String(item || "").trim()).filter(Boolean))];
+					}
+				}
+				return normalized;
+			}
+
 			function loadCustomTraitCatalogs() {
 				if (typeof localStorage === "undefined") {
 					return createEmptyCustomTraitCatalogs();
@@ -3715,14 +3742,7 @@
 					}
 
 					const parsed = JSON.parse(raw);
-					const normalized = createEmptyCustomTraitCatalogs();
-					for (const drinkType of Object.keys(normalized)) {
-						for (const field of Object.keys(normalized[drinkType])) {
-							const items = Array.isArray(parsed?.[drinkType]?.[field]) ? parsed[drinkType][field] : [];
-							normalized[drinkType][field] = [...new Set(items.map((item) => String(item || "").trim()).filter(Boolean))];
-						}
-					}
-					return normalized;
+					return normalizeCustomTraitCatalogs(parsed);
 				} catch {
 					return createEmptyCustomTraitCatalogs();
 				}
@@ -3734,7 +3754,7 @@
 				}
 
 				try {
-					localStorage.setItem(LOCAL_CUSTOM_TRAITS_KEY, JSON.stringify(catalogs || createEmptyCustomTraitCatalogs()));
+					localStorage.setItem(LOCAL_CUSTOM_TRAITS_KEY, JSON.stringify(normalizeCustomTraitCatalogs(catalogs)));
 				} catch {
 					// Ignore storage errors.
 				}
@@ -4535,6 +4555,10 @@
 							return;
 						}
 
+						if (!window.confirm("삭제하시겠습니까?")) {
+							return;
+						}
+
 						if (groupKey === "custom") {
 							this.removeCustomTrait(formKey, field, normalizedTrait);
 							return;
@@ -4556,6 +4580,7 @@
 
 						this.customTraitCatalogs[category][field] = (this.customTraitCatalogs[category][field] || []).filter((item) => item !== trait);
 						saveCustomTraitCatalogs(this.customTraitCatalogs);
+						this.markPendingSync();
 
 						const list = this.getTraitValues(formKey, field);
 						if (list.includes(trait)) {
@@ -5297,6 +5322,7 @@
 							const merged = [...existing, ...this.normalizeTraitItems(values || [])].filter((item) => !baseItems.includes(item));
 							this.customTraitCatalogs[category][field] = [...new Set(merged)];
 							saveCustomTraitCatalogs(this.customTraitCatalogs);
+							this.markPendingSync();
 						},
 						rebuildCustomTraitCatalogsFromEntries() {
 							const rebuilt = loadCustomTraitCatalogs();
@@ -6077,8 +6103,13 @@
 						const { silent = false, preserveOnError = false } = options;
 						try {
 							const loaded = await readEntriesFromRepo();
-							this.entries = loaded.map((entry) => normalizeEntry(entry));
-							this.rebuildCustomTraitCatalogsFromEntries();
+							this.entries = loaded.entries.map((entry) => normalizeEntry(entry));
+							if (loaded.hasCustomTraitCatalogs) {
+								this.customTraitCatalogs = normalizeCustomTraitCatalogs(loaded.customTraitCatalogs);
+								saveCustomTraitCatalogs(this.customTraitCatalogs);
+							} else {
+								this.rebuildCustomTraitCatalogsFromEntries();
+							}
 							this.saveEntriesToLocalCache();
 							this.activeEntryId = null;
 							this.cancelEditEntry();
@@ -6121,10 +6152,11 @@
 
 						try {
 							const payload = [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
+							const customTraitCatalogs = normalizeCustomTraitCatalogs(this.customTraitCatalogs);
 							const response = await fetch(RECORDS_API, {
 								method: "POST",
 								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({ entries: payload })
+								body: JSON.stringify({ entries: payload, customTraitCatalogs })
 							});
 							const responseText = await response.text();
 							let result = {};
