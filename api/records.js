@@ -165,49 +165,6 @@ function normalizeEntries(entries) {
 	});
 }
 
-function createEmptyCustomTraitCatalogs() {
-	return {
-		whisky: { nose: [], palate: [], finish: [] },
-		wine: { nose: [], palate: [], finish: [] },
-		tea: { nose: [], palate: [], finish: [] }
-	};
-}
-
-function normalizeCustomTraitCatalogs(source) {
-	const normalized = createEmptyCustomTraitCatalogs();
-	for (const drinkType of Object.keys(normalized)) {
-		for (const field of Object.keys(normalized[drinkType])) {
-			const items = Array.isArray(source?.[drinkType]?.[field]) ? source[drinkType][field] : [];
-			normalized[drinkType][field] = [...new Set(items.map((item) => String(item || "").trim()).filter(Boolean))];
-		}
-	}
-	return normalized;
-}
-
-function normalizeRecordsPayload(payload) {
-	if (Array.isArray(payload)) {
-		return {
-			entries: normalizeEntries(payload),
-			customTraitCatalogs: createEmptyCustomTraitCatalogs(),
-			hasCustomTraitCatalogs: false
-		};
-	}
-
-	if (payload && typeof payload === "object") {
-		return {
-			entries: normalizeEntries(payload.entries),
-			customTraitCatalogs: normalizeCustomTraitCatalogs(payload.customTraitCatalogs),
-			hasCustomTraitCatalogs: Object.prototype.hasOwnProperty.call(payload, "customTraitCatalogs")
-		};
-	}
-
-	return {
-		entries: [],
-		customTraitCatalogs: createEmptyCustomTraitCatalogs(),
-		hasCustomTraitCatalogs: false
-	};
-}
-
 async function githubRequest(path, options = {}) {
 	const response = await fetch(`${API_BASE}${path}`, options);
 	const text = await response.text();
@@ -239,23 +196,15 @@ async function readRecordsFromGithub(config) {
 
 	const raw = Buffer.from(file.content, "base64").toString("utf8");
 	const parsed = JSON.parse(raw);
-	const normalizedPayload = normalizeRecordsPayload(parsed);
 	return {
-		entries: normalizedPayload.entries,
-		customTraitCatalogs: normalizedPayload.customTraitCatalogs,
-		hasCustomTraitCatalogs: normalizedPayload.hasCustomTraitCatalogs,
+		entries: normalizeEntries(parsed),
 		sha: file.sha
 	};
 }
 
-async function writeRecordsToGithub(config, payload, previousSha) {
+async function writeRecordsToGithub(config, entries, previousSha) {
 	const path = `/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(config.path)}`;
-	const normalizedPayload = normalizeRecordsPayload(payload);
-	const fileBody = {
-		entries: normalizedPayload.entries,
-		customTraitCatalogs: normalizedPayload.customTraitCatalogs
-	};
-	const content = Buffer.from(JSON.stringify(fileBody, null, 2), "utf8").toString("base64");
+	const payload = Buffer.from(JSON.stringify(entries, null, 2), "utf8").toString("base64");
 
 	return githubRequest(path, {
 		method: "PUT",
@@ -266,7 +215,7 @@ async function writeRecordsToGithub(config, payload, previousSha) {
 		},
 		body: JSON.stringify({
 			message: `Update ${config.path} from Vercel app`,
-			content,
+			content: payload,
 			branch: config.branch,
 			sha: previousSha
 		})
@@ -451,8 +400,8 @@ export default async function handler(req, res) {
 
 	try {
 		if (req.method === "GET") {
-			const { entries, customTraitCatalogs, hasCustomTraitCatalogs } = await readRecordsFromGithub(config);
-			return sendJson(res, 200, { entries, customTraitCatalogs, hasCustomTraitCatalogs });
+			const { entries } = await readRecordsFromGithub(config);
+			return sendJson(res, 200, { entries });
 		}
 
 		if (req.method === "DELETE") {
@@ -464,10 +413,10 @@ export default async function handler(req, res) {
 			});
 		}
 
-		const incomingPayload = normalizeRecordsPayload(req.body || {});
+		const incomingEntries = normalizeEntries(req.body?.entries);
 		const { entries: previousEntries, sha } = await readRecordsFromGithub(config);
-		const result = await writeRecordsToGithub(config, incomingPayload, sha);
-		const removedUploadPaths = collectDeletedManagedUploadPaths(previousEntries, incomingPayload.entries, config);
+		const result = await writeRecordsToGithub(config, incomingEntries, sha);
+		const removedUploadPaths = collectDeletedManagedUploadPaths(previousEntries, incomingEntries, config);
 		const imageCleanup = await deleteUploadsFromGithub(config, removedUploadPaths);
 
 		return sendJson(res, 200, {
