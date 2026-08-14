@@ -7,10 +7,11 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@500;600;700&family=Petit+Formal+Script&family=Noto+Serif+KR:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 		<link
 			rel="stylesheet"
 			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -43,7 +44,7 @@
 				--page-fade-mid: rgba(245, 238, 228, 0.68);
 				--page-fade-end: rgba(228, 219, 208, 0.96);
 				--tab-active-bg: linear-gradient(135deg, #726b64, #5b564f, #988f85);
-				--tab-active-shadow: 0 10px 22px rgba(88, 56, 40, 0.24);
+				--tab-active-shadow: 0 5px 10px rgba(88, 56, 40, 0.16);
 			}
 
 			body.theme-wine {
@@ -60,7 +61,7 @@
 				--page-fade-mid: rgba(241, 216, 209, 0.7);
 				--page-fade-end: rgba(219, 172, 162, 0.95);
 				--tab-active-bg: linear-gradient(135deg, #a85045, #8a3a35, #cd7568);
-				--tab-active-shadow: 0 10px 22px rgba(121, 50, 42, 0.24);
+				--tab-active-shadow: 0 5px 10px rgba(121, 50, 42, 0.16);
 				--accent: #9a5148;
 				--accent-strong: #6f312c;
 			}
@@ -79,14 +80,14 @@
 				--page-fade-mid: rgba(230, 226, 216, 0.7);
 				--page-fade-end: rgba(206, 199, 188, 0.95);
 				--tab-active-bg: linear-gradient(135deg, #4a4948, #31312f, #6a6967);
-				--tab-active-shadow: 0 10px 22px rgba(26, 26, 26, 0.24);
+				--tab-active-shadow: 0 5px 10px rgba(26, 26, 26, 0.16);
 				--accent: #5b5956;
 				--accent-strong: #343230;
 			}
 
 			body.theme-whisky {
 				--tab-active-bg: linear-gradient(135deg, #f2ddb1, #dec28f, #c9a86e);
-				--tab-active-shadow: 0 10px 22px rgba(145, 114, 62, 0.22);
+				--tab-active-shadow: 0 5px 10px rgba(145, 114, 62, 0.16);
 				--accent: #9a7a45;
 				--accent-strong: #6d532b;
 			}
@@ -437,19 +438,21 @@
 
 			.title {
 				margin: 0;
-				font-family: "Noto Serif KR", serif;
+				font-family: "Petit Formal Script", "Noto Serif KR", serif;
 				font-weight: 700;
-				font-size: clamp(2rem, 4vw, 3rem);
-				letter-spacing: 0.03em;
-				line-height: 1.1;
+				font-size: clamp(2.2rem, 3.2vw, 3.5rem);
+				letter-spacing: 0.04em;
+				line-height: 1.05;
 				color: var(--hero-title);
 				text-shadow: 0 3px 14px rgba(0, 0, 0, 0.24);
+				white-space: nowrap;
 			}
 
 			.subtitle {
 				margin: 8px 0 0;
 				color: var(--hero-subtitle);
 				font-size: 1rem;
+				opacity: 0.62;
 				text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 			}
 
@@ -529,11 +532,58 @@
 				transform: translateY(0) scale(0.98);
 			}
 
+			header .tab-nav {
+				background: transparent;
+				border: 0;
+				box-shadow: none;
+				backdrop-filter: none;
+			}
+
+			header .tab-nav .tab-btn {
+				border-color: rgba(255, 255, 255, 0.3);
+				background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.025));
+				color: rgba(255, 255, 255, 0.96);
+				font-family: "Merriweather Sans", sans-serif;
+				font-weight: 500;
+				font-size: 0.86rem;
+				letter-spacing: 0.01em;
+				text-shadow: 0 1px 2px rgba(45, 35, 28, 0.36);
+				box-shadow:
+					inset 2px 2px 3px rgba(255, 255, 255, 0.54),
+					inset -2px -3px 5px rgba(86, 70, 58, 0.14),
+					0 3px 6px rgba(48, 42, 36, 0.06);
+				opacity: 0.66;
+				filter: saturate(0.78);
+			}
+
+			header .tab-nav .tab-btn:not(.active):hover {
+				background: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.06));
+				border-color: rgba(255, 255, 255, 0.48);
+				opacity: 0.9;
+				transform: translateY(-2px);
+				box-shadow:
+					inset 2px 2px 4px rgba(255, 255, 255, 0.7),
+					inset -2px -3px 5px rgba(86, 70, 58, 0.1),
+					0 4px 9px rgba(48, 42, 36, 0.08);
+			}
+
+			header .tab-nav .tab-btn.active {
+				background: linear-gradient(145deg, rgba(91, 183, 244, 0.82), rgba(24, 105, 190, 0.62));
+				border-color: rgba(191, 235, 255, 0.88);
+				color: rgba(255, 255, 255, 1);
+				box-shadow:
+					inset 2px 2px 4px rgba(235, 250, 255, 0.88),
+					inset -3px -4px 7px rgba(13, 62, 130, 0.34),
+					0 4px 10px rgba(19, 72, 145, 0.18),
+					0 0 10px rgba(63, 180, 255, 0.2);
+				text-shadow: 0 1px 2px rgba(20, 70, 112, 0.42);
+			}
+
 			.write-tab-nav .tab-btn.whisky-tab.active {
 				background: linear-gradient(135deg, #f2ddb1, #dec28f, #c9a86e);
 				color: #5c4724;
 				box-shadow:
-					0 10px 20px rgba(145, 114, 62, 0.2),
+					0 5px 10px rgba(145, 114, 62, 0.14),
 					inset 0 1px 0 rgba(255, 255, 255, 0.42);
 				text-shadow: none;
 			}
@@ -560,6 +610,27 @@
 
 			.write-tab-nav {
 				margin: 0 0 16px;
+			}
+
+			.category-tab-nav {
+				margin-left: auto;
+				margin-right: auto;
+				justify-content: center;
+				gap: 8px;
+				padding: 0;
+				border-radius: 0;
+				background: transparent;
+				border: 0;
+				box-shadow: none;
+			}
+
+			.category-tab-nav .tab-btn {
+				border-radius: 8px;
+				padding: 9px 16px;
+			}
+
+			.record-category-nav {
+				margin: 0 auto 16px;
 			}
 
 			.panel-title {
@@ -656,6 +727,129 @@
 				box-shadow: 0 0 0 3px rgba(111, 102, 95, 0.2);
 			}
 
+			.custom-select-shell {
+				position: relative;
+				width: 100%;
+			}
+
+			.custom-select-trigger {
+				position: relative;
+				width: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				padding: 11px 42px 11px 14px;
+				border: 1px solid rgba(152, 128, 112, 0.32);
+				border-radius: 14px;
+				font: inherit;
+				font-weight: 700;
+				color: #4a4039;
+				background: linear-gradient(180deg, #fffdfb 0%, #f8efe8 100%);
+				box-shadow: 0 8px 18px rgba(124, 102, 86, 0.09), inset 0 1px 0 rgba(255,255,255,0.8);
+				cursor: pointer;
+				transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+				text-align: left;
+			}
+
+			.custom-select-trigger:hover {
+				border-color: rgba(155, 120, 103, 0.52);
+				background: linear-gradient(180deg, #fffaf4 0%, #f5e9df 100%);
+			}
+
+			.custom-select-trigger::after {
+				content: "";
+				position: absolute;
+				right: 14px;
+				top: 50%;
+				width: 9px;
+				height: 9px;
+				border-right: 2px solid rgba(102, 88, 81, 0.95);
+				border-bottom: 2px solid rgba(102, 88, 81, 0.95);
+				transform: translateY(-68%) rotate(45deg);
+				pointer-events: none;
+				border-radius: 2px;
+				transition: transform 0.2s ease;
+			}
+
+			.custom-select-shell.open .custom-select-trigger {
+				border-color: #d39b7b;
+				box-shadow: 0 0 0 3px rgba(211, 155, 123, 0.18), 0 12px 22px rgba(124, 102, 86, 0.12);
+				background: linear-gradient(180deg, #fff8f3 0%, #f7e7dc 100%);
+			}
+
+			.custom-select-shell.open .custom-select-trigger::after {
+				transform: translateY(-35%) rotate(225deg);
+			}
+
+			.custom-select-menu {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: calc(100% + 10px);
+				z-index: 120;
+				display: block;
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+				padding: 8px;
+				border-radius: 18px;
+				border: 1px solid rgba(167, 146, 132, 0.2);
+				background: linear-gradient(180deg, rgba(255, 253, 249, 0.99), rgba(250, 242, 236, 0.99));
+				backdrop-filter: blur(12px);
+				box-shadow: 0 20px 34px rgba(115, 90, 71, 0.18), 0 4px 10px rgba(79, 63, 54, 0.08);
+				max-height: 260px;
+				overflow-y: auto;
+				transform: translateY(-8px) scale(0.98);
+				transform-origin: top center;
+				transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0.9, 0.2, 1), visibility 0.2s ease;
+			}
+
+			.custom-select-shell.open .custom-select-menu {
+				opacity: 1;
+				visibility: visible;
+				pointer-events: auto;
+				transform: translateY(0) scale(1);
+			}
+
+			.custom-select-menu::-webkit-scrollbar {
+				width: 8px;
+			}
+
+			.custom-select-menu::-webkit-scrollbar-thumb {
+				background: rgba(188, 154, 132, 0.45);
+				border-radius: 999px;
+			}
+
+			.custom-select-option {
+				width: 100%;
+				padding: 10px 12px;
+				border: 0;
+				border-radius: 12px;
+				background: transparent;
+				color: #4c413b;
+				font: inherit;
+				font-weight: 700;
+				text-align: left;
+				cursor: pointer;
+				transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+			}
+
+			.custom-select-option:hover,
+			.custom-select-option.active {
+				background: linear-gradient(90deg, rgba(245, 208, 186, 0.48), rgba(242, 228, 206, 0.65));
+				color: #3a2f2b;
+			}
+
+			.custom-select-shell select {
+				position: absolute;
+				left: -9999px;
+				width: 1px;
+				height: 1px;
+				opacity: 0;
+				pointer-events: none;
+			}
+
 			textarea {
 				resize: vertical;
 				min-height: 86px;
@@ -739,55 +933,131 @@
 			}
 
 			.calendar-panel {
-				padding: 14px 12px;
+				padding: 20px 18px;
+				background: rgba(255, 252, 247, 0.72);
+				border-color: rgba(78, 105, 125, 0.16);
 			}
 
 			.calendar-head {
 				display: flex;
 				align-items: center;
-				justify-content: flex-end;
-				gap: 10px;
+				justify-content: space-between;
+				gap: 14px;
 				margin-bottom: 12px;
 			}
 
 			.calendar-nav {
 				display: flex;
 				align-items: center;
-				gap: 8px;
+				gap: 6px;
+				margin-left: auto;
 			}
 
 			.calendar-title {
 				margin: 0;
-				font-family: "Noto Serif KR", serif;
-				font-size: 1.3rem;
+				font-family: "Merriweather Sans", sans-serif;
+				font-size: 1.18rem;
 				font-weight: 700;
-				letter-spacing: 0.01em;
-				color: #5d3f31;
+				letter-spacing: 0.02em;
+				color: #425a6b;
+				text-align: center;
+			}
+
+			.calendar-statistics {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 10px;
+				margin: 16px 0 18px;
+			}
+
+			.calendar-stat-card {
+				min-width: 0;
+				padding: 12px;
+				border: 1px solid rgba(93, 117, 133, 0.15);
+				border-radius: 12px;
+				background: rgba(255, 255, 255, 0.48);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+			}
+
+			.calendar-stat-head {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				margin-bottom: 9px;
+				color: #526d7d;
+				font-family: "Merriweather Sans", sans-serif;
+				font-size: 0.78rem;
+				font-weight: 700;
+			}
+
+			.calendar-stat-head i {
+				color: #6d9db8;
+				font-size: 0.9rem;
+			}
+
+			.calendar-stat-count {
+				margin: 0 0 8px;
+				color: #3f5868;
+				font-family: "Merriweather Sans", sans-serif;
+				font-size: 1.35rem;
+				font-weight: 700;
+				line-height: 1;
+			}
+
+			.calendar-stat-list {
+				display: grid;
+				gap: 5px;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.calendar-stat-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				color: #718592;
+				font-size: 0.7rem;
+			}
+
+			.calendar-stat-row strong {
+				color: #536d7b;
+				font-size: 0.72rem;
+			}
+
+			.calendar-stat-empty {
+				margin: 0;
+				color: #9aaab2;
+				font-size: 0.7rem;
 			}
 
 			.calendar-grid {
 				display: grid;
 				grid-template-columns: repeat(7, minmax(0, 1fr));
-				gap: 5px;
+				gap: 7px;
 			}
 
 			.calendar-weekday {
 				text-align: center;
-				font-size: 0.8rem;
-				color: #7b5f57;
+				font-size: 0.7rem;
+				color: #7890a0;
 				font-weight: 700;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
 			}
 
 			.calendar-day {
 				position: relative;
 				border: 1px solid #ecd3c4;
-				border: 1px solid rgba(109, 101, 94, 0.16);
-				border-radius: 14px;
-				background: rgba(250, 248, 244, 0.9);
+				border: 1px solid rgba(93, 117, 133, 0.14);
+				border-radius: 10px;
+				background: rgba(255, 255, 255, 0.52);
 				padding: 0;
 				min-height: 86px;
 				overflow: hidden;
-				transition: background-color 0.16s ease, border-color 0.16s ease;
+				transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
 			}
 
 			.calendar-day-button {
@@ -801,7 +1071,8 @@
 			}
 
 			.calendar-day-button:hover {
-				background: transparent;
+				background: rgba(255, 255, 255, 0.22);
+				transform: translateY(-1px);
 			}
 
 			.calendar-day.has-entry {
@@ -831,8 +1102,8 @@
 			}
 
 			.calendar-day.today {
-				border-color: #ff8f6f;
-				box-shadow: inset 0 0 0 1px rgba(110, 102, 96, 0.16);
+				border-color: #72a9c8;
+				box-shadow: inset 0 0 0 1px rgba(73, 137, 174, 0.2);
 			}
 
 			.day-top {
@@ -843,11 +1114,11 @@
 			.day-number {
 				position: absolute;
 				left: 50%;
-				top: 50%;
-				transform: translate(-50%, -50%);
+				top: 10px;
+				transform: translateX(-50%);
 				font-weight: 700;
 				font-size: 0.98rem;
-				color: #6f4e43;
+				color: #536b7a;
 				line-height: 1;
 				text-align: center;
 				z-index: 3;
@@ -856,27 +1127,33 @@
 
 			.day-icons {
 				position: absolute;
-				top: 50%;
+				bottom: 8px;
 				left: 0;
-				transform: translateY(-50%);
 				display: flex;
 				align-items: flex-start;
 				justify-content: center;
 				flex-wrap: wrap;
 				gap: 1px;
-				font-size: 0.96rem;
+				font-size: 0.82rem;
 				line-height: 1;
 				width: 100%;
 				padding: 0 1px;
 				overflow: hidden;
 				z-index: 1;
-				opacity: 0.6;
-				filter: saturate(0.85);
+				opacity: 0.72;
+				filter: saturate(0.82);
 			}
 
 			.day-icon {
 				display: inline-flex;
 				flex: 0 0 auto;
+				align-items: center;
+				justify-content: center;
+				width: 22px;
+				height: 22px;
+				border-radius: 7px;
+				background: rgba(255, 255, 255, 0.58);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
 			}
 
 			.calendar-modal-backdrop {
@@ -1499,6 +1776,33 @@
 				gap: 8px;
 			}
 
+			.custom-tag-entry {
+				display: flex;
+				gap: 6px;
+				margin-top: 8px;
+			}
+
+			.custom-tag-entry input {
+				min-width: 0;
+				flex: 1;
+				padding: 7px 9px;
+				border-radius: 8px;
+				background: rgba(255, 255, 255, 0.66);
+				border: 1px dashed rgba(126, 151, 163, 0.34);
+				font-size: 0.76rem;
+			}
+
+			.custom-tag-entry button {
+				flex: 0 0 auto;
+				padding: 7px 10px;
+				border-radius: 8px;
+				background: rgba(224, 239, 245, 0.8);
+				border: 1px solid rgba(103, 143, 160, 0.28);
+				color: #557584;
+				font-size: 0.72rem;
+				font-weight: 700;
+			}
+
 			.trait-group {
 				display: grid;
 				gap: 6px;
@@ -1956,6 +2260,10 @@
 			}
 
 			@media (max-width: 640px) {
+				.calendar-statistics {
+					grid-template-columns: 1fr;
+				}
+
 				.wine-map-wrap {
 					padding: 6px;
 				}
@@ -2231,18 +2539,18 @@
 			</div>
 
 			<header>
-				<h1 class="title">향과 맛을 즐기자</h1>
-				<p class="subtitle">위스키, 와인, 차</p>
+				<h1 class="title">A Slow, Lovely Pour</h1>
+				<p class="subtitle">Whisky, Wine & Tea</p>
 				<div class="tab-nav">
-					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'"><i class="lni lni-pencil-alt"></i>시음노트</button>
-					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'"><i class="lni lni-agenda"></i>기록</button>
-					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="activeTab = 'calendar'"><i class="lni lni-calendar"></i>달력</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'write' }" type="button" @click="activeTab = 'write'">TASTING NOTES</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'records' }" type="button" @click="activeTab = 'records'">ARCHIVE</button>
+					<button class="tab-btn" :class="{ active: activeTab === 'calendar' }" type="button" @click="activeTab = 'calendar'">CALENDAR</button>
 				</div>
 			</header>
 
 			<main class="grid">
 				<section class="panel form-panel" v-if="activeTab === 'write'">
-					<div class="tab-nav write-tab-nav">
+					<div class="tab-nav category-tab-nav write-tab-nav">
 							<button class="tab-btn whisky-tab" :class="{ active: activeWriteTab === 'whisky' }" type="button" @click="activeWriteTab = 'whisky'">위스키</button>
 						<button class="tab-btn" :class="{ active: activeWriteTab === 'wine' }" type="button" @click="activeWriteTab = 'wine'">와인</button>
 						<button class="tab-btn" :class="{ active: activeWriteTab === 'tea' }" type="button" @click="activeWriteTab = 'tea'">차</button>
@@ -2499,6 +2807,10 @@
 									</div>
 								</div>
 							</div>
+							<div class="custom-tag-entry">
+								<input v-model.trim="tagDrafts[activeWriteTab].nose" type="text" placeholder="새 향 태그 입력" @keyup.enter.prevent="addCustomTag('nose')" />
+								<button type="button" @click="addCustomTag('nose')">태그 추가</button>
+							</div>
 						</div>
 
 						<div class="row">
@@ -2544,6 +2856,10 @@
 									</div>
 								</div>
 							</div>
+							<div class="custom-tag-entry">
+								<input v-model.trim="tagDrafts[activeWriteTab].palate" type="text" placeholder="새 맛 태그 입력" @keyup.enter.prevent="addCustomTag('palate')" />
+								<button type="button" @click="addCustomTag('palate')">태그 추가</button>
+							</div>
 						</div>
 
 						<div class="row">
@@ -2566,6 +2882,10 @@
 									</div>
 								</div>
 							</div>
+							<div class="custom-tag-entry">
+								<input v-model.trim="tagDrafts[activeWriteTab].finish" type="text" placeholder="새 피니쉬 태그 입력" @keyup.enter.prevent="addCustomTag('finish')" />
+								<button type="button" @click="addCustomTag('finish')">태그 추가</button>
+							</div>
 						</div>
 
 						<div class="row">
@@ -2583,14 +2903,15 @@
 				</section>
 
 				<section class="panel list-panel" v-if="activeTab === 'records'">
+					<div class="tab-nav category-tab-nav record-category-nav">
+						<button class="tab-btn" :class="{ active: recordDrinkFilter === 'all' }" type="button" @click="recordDrinkFilter = 'all'">전체</button>
+						<button class="tab-btn" :class="{ active: recordDrinkFilter === 'whisky' }" type="button" @click="recordDrinkFilter = 'whisky'">위스키</button>
+						<button class="tab-btn" :class="{ active: recordDrinkFilter === 'wine' }" type="button" @click="recordDrinkFilter = 'wine'">와인</button>
+						<button class="tab-btn" :class="{ active: recordDrinkFilter === 'tea' }" type="button" @click="recordDrinkFilter = 'tea'">차</button>
+					</div>
+
 					<div class="record-primary-tools">
 						<span v-if="hasRecordFilters" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
-						<div class="record-type-filter">
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'all' }" type="button" @click="recordDrinkFilter = 'all'">전체</button>
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'whisky' }" type="button" @click="recordDrinkFilter = 'whisky'">위스키</button>
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'wine' }" type="button" @click="recordDrinkFilter = 'wine'">와인</button>
-							<button class="count-chip filter-btn" :class="{ active: recordDrinkFilter === 'tea' }" type="button" @click="recordDrinkFilter = 'tea'">차</button>
-						</div>
 						<button class="tool-btn save" type="button" @click="saveToGitHub" :disabled="isSaving">
 							<i class="lni lni-save"></i>{{ isSaving ? "저장 중..." : "저장" }}
 						</button>
@@ -2955,13 +3276,42 @@
 				<section class="panel calendar-panel" v-if="activeTab === 'calendar'">
 					<div class="calendar-head">
 						<div class="calendar-nav">
-							<button class="tool-btn small" type="button" @click="moveCalendarMonth(-1)"><i class="lni lni-chevron-left"></i>이전 달</button>
-							<button class="tool-btn small" type="button" @click="goToCurrentMonth"><i class="lni lni-target"></i>이번 달</button>
-							<button class="tool-btn small" type="button" @click="moveCalendarMonth(1)">다음 달<i class="lni lni-chevron-right"></i></button>
+							<button class="tool-btn small" type="button" @click="moveCalendarMonth(-1)" aria-label="이전 달"><i class="fa-solid fa-chevron-left"></i></button>
+							<button class="tool-btn small" type="button" @click="goToCurrentMonth"><i class="fa-solid fa-calendar-days"></i>이번 달</button>
+							<button class="tool-btn small" type="button" @click="moveCalendarMonth(1)" aria-label="다음 달"><i class="fa-solid fa-chevron-right"></i></button>
 						</div>
 					</div>
 
 					<p class="calendar-title">{{ calendarTitle }}</p>
+
+					<div class="calendar-statistics" aria-label="이번 달 음료 통계">
+						<article class="calendar-stat-card">
+							<div class="calendar-stat-head"><span>Whisky</span><i class="fa-solid fa-whiskey-glass" aria-hidden="true"></i></div>
+							<p class="calendar-stat-count">{{ calendarStats.whisky.total }}잔</p>
+							<ul v-if="calendarStats.whisky.items.length" class="calendar-stat-list">
+								<li class="calendar-stat-row" v-for="item in calendarStats.whisky.items" :key="`calendar-whisky-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
+							</ul>
+							<p v-else class="calendar-stat-empty">기록 없음</p>
+						</article>
+
+						<article class="calendar-stat-card">
+							<div class="calendar-stat-head"><span>Wine</span><i class="fa-solid fa-wine-glass" aria-hidden="true"></i></div>
+							<p class="calendar-stat-count">{{ calendarStats.wine.total }}잔</p>
+							<ul v-if="calendarStats.wine.items.length" class="calendar-stat-list">
+								<li class="calendar-stat-row" v-for="item in calendarStats.wine.items" :key="`calendar-wine-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
+							</ul>
+							<p v-else class="calendar-stat-empty">기록 없음</p>
+						</article>
+
+						<article class="calendar-stat-card">
+							<div class="calendar-stat-head"><span>Tea</span><i class="fa-solid fa-mug-hot" aria-hidden="true"></i></div>
+							<p class="calendar-stat-count">{{ calendarStats.tea.total }}잔</p>
+							<ul v-if="calendarStats.tea.items.length" class="calendar-stat-list">
+								<li class="calendar-stat-row" v-for="item in calendarStats.tea.items" :key="`calendar-tea-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
+							</ul>
+							<p v-else class="calendar-stat-empty">기록 없음</p>
+						</article>
+					</div>
 
 					<div class="calendar-grid" style="margin-top: 10px">
 						<div class="calendar-weekday" v-for="day in weekLabels" :key="day">{{ day }}</div>
@@ -2984,8 +3334,8 @@
 							>
 								<div class="day-top">
 									<span class="day-number">{{ cell.day }}</span>
-									<span v-if="cell.entries.length" class="day-icons">
-										<span class="day-icon" v-for="emoji in getCalendarDrinkEmojis(cell.entries)" :key="`${cell.dateKey}-${emoji}`">{{ emoji }}</span>
+										<span v-if="cell.entries.length" class="day-icons">
+											<i class="day-icon" v-for="icon in getCalendarDrinkEmojis(cell.entries)" :key="`${cell.dateKey}-${icon}`" :class="icon" aria-hidden="true"></i>
 									</span>
 								</div>
 							</button>
@@ -2996,7 +3346,7 @@
 						<div class="calendar-modal" @click.stop>
 							<div class="calendar-modal-head">
 								<p class="layer-title" style="margin: 0">{{ activeCalendarKey }} 시음 기록</p>
-								<button class="modal-close" type="button" @click="closeCalendarModal">X</button>
+								<button class="modal-close" type="button" @click="closeCalendarModal" aria-label="닫기"><i class="fa-solid fa-xmark"></i></button>
 							</div>
 							<div class="layer-list">
 											<div class="layer-item" v-for="entry in activeCalendarEntries.filter((item) => item && item.id)" :key="entry.id" @click="openRecordFromCalendar(entry.id)">
@@ -3131,15 +3481,37 @@
 			const LOCAL_PENDING_SYNC_KEY = "drinking.records.pendingSync.v1";
 			const WHISKY_DISTILLERY_DATA_FILE = "./assets/major_whisky_distilleries_100.json";
 
+			function normalizeCustomTraitCatalogs(source) {
+				const normalized = {
+					whisky: { nose: [], palate: [], finish: [] },
+					wine: { nose: [], palate: [], finish: [] },
+					tea: { nose: [], palate: [], finish: [] }
+				};
+
+				for (const drinkType of Object.keys(normalized)) {
+					for (const field of Object.keys(normalized[drinkType])) {
+						const items = Array.isArray(source?.[drinkType]?.[field]) ? source[drinkType][field] : [];
+						normalized[drinkType][field] = [...new Set(items.map((item) => String(item || "").trim()).filter(Boolean))];
+					}
+				}
+
+				return normalized;
+			}
+
+			function attachRecordsMetadata(entries, payload) {
+			entries.customTraitCatalogs = normalizeCustomTraitCatalogs(payload?.customTraitCatalogs);
+			return entries;
+		}
+
 			async function readEntriesFromRepo() {
 				const apiResponse = await fetch(`${RECORDS_API}?t=${Date.now()}`, { cache: "no-store" });
 				if (apiResponse.ok) {
 					const data = await apiResponse.json();
 					if (Array.isArray(data?.entries)) {
-						return data.entries;
+						return attachRecordsMetadata(data.entries, data);
 					}
 					if (Array.isArray(data)) {
-						return data;
+						return attachRecordsMetadata(data, data);
 					}
 					throw new Error("api entries must be array");
 				}
@@ -3152,15 +3524,124 @@
 
 				const parsed = await fileResponse.json();
 				if (Array.isArray(parsed?.entries)) {
-					return parsed.entries;
+					return attachRecordsMetadata(parsed.entries, parsed);
 				}
 				if (Array.isArray(parsed)) {
-					return parsed;
+					return attachRecordsMetadata(parsed, parsed);
 				}
 				throw new Error("records.json must be array or object with entries");
 			}
 
 			const { createApp } = Vue;
+
+			function closeAllCustomSelects(excludedShell = null) {
+				document.querySelectorAll(".custom-select-shell").forEach((shell) => {
+					if (shell !== excludedShell) {
+						shell.classList.remove("open");
+					}
+				});
+			}
+
+			function setupCustomSelects() {
+				if (!document.body) {
+					return;
+				}
+
+				if (!document.body.dataset.customSelectClickBound) {
+					document.addEventListener("click", (event) => {
+						if (!event.target.closest(".custom-select-shell")) {
+							closeAllCustomSelects();
+						}
+					}, { passive: true });
+					document.body.dataset.customSelectClickBound = "true";
+				}
+
+				document.querySelectorAll("select").forEach((select) => {
+					if (select.closest(".custom-select-shell") || select.dataset.customSelectReady === "true") {
+						return;
+					}
+
+					const parent = select.parentNode;
+					if (!parent) {
+						return;
+					}
+
+					const shell = document.createElement("div");
+					shell.className = "custom-select-shell";
+
+					const trigger = document.createElement("button");
+					trigger.type = "button";
+					trigger.className = "custom-select-trigger";
+					trigger.setAttribute("aria-haspopup", "listbox");
+					trigger.setAttribute("aria-expanded", "false");
+
+					const menu = document.createElement("div");
+					menu.className = "custom-select-menu";
+					menu.setAttribute("role", "listbox");
+
+					const syncTriggerLabel = () => {
+						const selectedOption = Array.from(select.options).find((option) => option.value === select.value) || select.options[0];
+						const label = selectedOption ? selectedOption.textContent.trim() : "선택해 주세요";
+						trigger.textContent = label;
+						trigger.setAttribute("aria-label", label);
+						Array.from(menu.children).forEach((optionButton) => {
+							const isActive = optionButton.dataset.value === select.value;
+							optionButton.classList.toggle("active", isActive);
+						});
+					};
+
+					Array.from(select.options).forEach((option) => {
+						const optionButton = document.createElement("button");
+						optionButton.type = "button";
+						optionButton.className = "custom-select-option";
+						optionButton.dataset.value = option.value;
+						optionButton.textContent = option.textContent;
+						optionButton.setAttribute("role", "option");
+						optionButton.setAttribute("aria-selected", option.selected ? "true" : "false");
+						optionButton.addEventListener("click", (event) => {
+							event.preventDefault();
+							select.value = option.value;
+							select.dispatchEvent(new Event("input", { bubbles: true }));
+							select.dispatchEvent(new Event("change", { bubbles: true }));
+							syncTriggerLabel();
+							closeAllCustomSelects();
+						});
+						menu.appendChild(optionButton);
+					});
+
+					trigger.addEventListener("click", (event) => {
+						event.preventDefault();
+						event.stopPropagation();
+						const isOpen = shell.classList.contains("open");
+						closeAllCustomSelects();
+						if (!isOpen) {
+							shell.classList.add("open");
+							trigger.setAttribute("aria-expanded", "true");
+						} else {
+							trigger.setAttribute("aria-expanded", "false");
+						}
+					});
+
+					shell.appendChild(trigger);
+					shell.appendChild(menu);
+					parent.insertBefore(shell, select);
+					shell.appendChild(select);
+					select.dataset.customSelectReady = "true";
+					select.addEventListener("change", syncTriggerLabel);
+					syncTriggerLabel();
+				});
+
+				if (typeof MutationObserver !== "undefined") {
+					if (!document.body.dataset.customSelectObserverBound) {
+						const observer = new MutationObserver(() => {
+							setupCustomSelects();
+						});
+						observer.observe(document.body, { childList: true, subtree: true });
+						document.body.dataset.customSelectObserverBound = "true";
+					}
+				}
+			}
+
 			const WEEK_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
 			const WRITE_TAB_CONFIGS = {
 				whisky: {
@@ -3617,6 +4098,12 @@
 				data() {
 					return {
 						activeWriteTab: "whisky",
+						tagDrafts: {
+							whisky: { nose: "", palate: "", finish: "" },
+							wine: { nose: "", palate: "", finish: "" },
+							tea: { nose: "", palate: "", finish: "" }
+						},
+						customTraitCatalogs: normalizeCustomTraitCatalogs(),
 						traitCatalogs: {
 							whisky: {
 								cask: {
@@ -3953,6 +4440,38 @@
 						const [yearText, monthText] = String(this.calendarMonthKey || "").split("-");
 						return `${yearText}년 ${Number(monthText)}월`;
 					},
+					calendarStats() {
+						const monthEntries = (this.entries || []).filter((entry) => String(entry?.date || "").slice(0, 7) === this.calendarMonthKey);
+						const buildItems = (entries, getLabel) => {
+							const counts = new Map();
+							for (const entry of entries) {
+								const label = getLabel(entry);
+								counts.set(label, (counts.get(label) || 0) + 1);
+							}
+
+							return [...counts.entries()]
+								.map(([label, count]) => ({ label, count }))
+								.sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+						};
+						const whiskyEntries = monthEntries.filter((entry) => this.getEntryDrinkCategory(entry) === "whisky");
+						const wineEntries = monthEntries.filter((entry) => this.getEntryDrinkCategory(entry) === "wine");
+						const teaEntries = monthEntries.filter((entry) => this.getEntryDrinkCategory(entry) === "tea");
+
+						return {
+							whisky: {
+								total: whiskyEntries.length,
+								items: buildItems(whiskyEntries, (entry) => entry.category || "지역 미입력")
+							},
+							wine: {
+								total: wineEntries.length,
+								items: buildItems(wineEntries, (entry) => `${entry.wineRegion || entry.wineCountry || "지역 미입력"} · ${entry.category || "종류 미입력"}`)
+							},
+							tea: {
+								total: teaEntries.length,
+								items: buildItems(teaEntries, (entry) => `${entry.category || "다류 미입력"} · ${entry.teaChinaProvince || "중국 지역 미입력"}`)
+							}
+						};
+					},
 					todayKey() {
 						const now = new Date();
 						return formatDateKey(now.getFullYear(), now.getMonth(), now.getDate());
@@ -4022,6 +4541,9 @@
 					this.syncWriteTheme();
 					this.updateProvinceMapLabelMode();
 					this.updateOnlineStatus();
+					this.$nextTick(() => {
+						setupCustomSelects();
+					});
 					const distilleryPromise = this.loadWhiskyDistilleryOptions();
 					this.loadFromLocalCache();
 					this.syncPendingStateFromStorage();
@@ -4041,6 +4563,7 @@
 						distilleryPromise
 					]);
 					this.$nextTick(() => {
+						setupCustomSelects();
 						this.updateWhiskyLeafletMap("write", this.form.whiskyDistillery, { keepWorldViewWhenEmpty: true });
 					});
 					this.completeInitialLoadingProgress();
@@ -4064,13 +4587,18 @@
 					}
 				},
 				watch: {
+					activeTab() {
+						this.$nextTick(() => {
+							setupCustomSelects();
+						});
+					},
 					activeWriteTab() {
 						this.syncWriteTheme();
 						this.$nextTick(() => {
+							setupCustomSelects();
 							this.updateWhiskyLeafletMap("write", this.form.whiskyDistillery, { keepWorldViewWhenEmpty: true });
 						});
-					}
-					,
+					},
 					"form.whiskyDistillery"() {
 						this.$nextTick(() => {
 							this.updateWhiskyLeafletMap("write", this.form.whiskyDistillery, { keepWorldViewWhenEmpty: true });
@@ -4548,9 +5076,9 @@
 					getCalendarDrinkEmojis(entries) {
 						const uniqueKinds = [...new Set((entries || []).map((entry) => this.getEntryDrinkCategory(entry)))];
 						const iconMap = {
-							whisky: "🥃",
-							wine: "🍷",
-							tea: "🍵"
+							whisky: "fa-solid fa-whiskey-glass",
+							wine: "fa-solid fa-wine-glass",
+							tea: "fa-solid fa-mug-hot"
 						};
 
 						return uniqueKinds
@@ -4696,13 +5224,18 @@
 					},
 					getTraitGroups(field) {
 						const source = this.currentTraitCatalog?.[field];
+						const customItems = this.normalizeTraitItems(this.customTraitCatalogs?.[this.activeWriteTab]?.[field]);
 						if (!source) {
-							return [];
+							return customItems.length ? [{ key: "custom", label: "내 태그", items: customItems }] : [];
 						}
 
 						if (Array.isArray(source)) {
 							const items = this.normalizeTraitItems(source);
-							return items.length ? [{ key: "all", label: "", items }] : [];
+							const groups = items.length ? [{ key: "all", label: "", items }] : [];
+							if (customItems.length) {
+								groups.push({ key: "custom", label: "내 태그", items: customItems });
+							}
+							return groups;
 						}
 
 						if (typeof source === "object") {
@@ -4718,6 +5251,9 @@
 									label: this.getTraitGroupLabel(field, groupKey),
 									items
 								});
+							}
+							if (customItems.length) {
+								groups.push({ key: "custom", label: "내 태그", items: customItems });
 							}
 							return groups;
 						}
@@ -5264,6 +5800,23 @@
 							? list.filter((item) => item !== trait).join(", ")
 							: [...list, trait].join(", ");
 					},
+					addCustomTag(field) {
+						const category = this.activeWriteTab;
+						const value = String(this.tagDrafts?.[category]?.[field] || "").trim();
+						if (!value) {
+							return;
+						}
+
+						const list = this.parseTraits(this.form[field]);
+						if (!list.includes(value)) {
+							this.form[field] = [...list, value].join(", ");
+						}
+						if (!this.customTraitCatalogs[category][field].includes(value)) {
+							this.customTraitCatalogs[category][field].push(value);
+						}
+
+						this.tagDrafts[category][field] = "";
+					},
 					moveCalendarMonth(delta) {
 						this.calendarMonthKey = addMonthKey(this.calendarMonthKey, delta);
 						this.activeCalendarKey = "";
@@ -5474,6 +6027,7 @@
 						try {
 							const loaded = await readEntriesFromRepo();
 							this.entries = loaded.map((entry) => normalizeEntry(entry));
+							this.customTraitCatalogs = normalizeCustomTraitCatalogs(loaded.customTraitCatalogs);
 							this.saveEntriesToLocalCache();
 							this.activeEntryId = null;
 							this.cancelEditEntry();
@@ -5519,7 +6073,7 @@
 							const response = await fetch(RECORDS_API, {
 								method: "POST",
 								headers: { "Content-Type": "application/json" },
-								body: JSON.stringify({ entries: payload })
+								body: JSON.stringify({ entries: payload, customTraitCatalogs: this.customTraitCatalogs })
 							});
 							const responseText = await response.text();
 							let result = {};
@@ -5642,6 +6196,11 @@
 						};
 						this.formPreviewUrl = "";
 						this.teaLeafPreviewUrl = "";
+						this.tagDrafts = {
+							whisky: { nose: "", palate: "", finish: "" },
+							wine: { nose: "", palate: "", finish: "" },
+							tea: { nose: "", palate: "", finish: "" }
+						};
 						this.activeWriteTab = "whisky";
 					}
 				}
