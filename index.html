@@ -3284,35 +3284,6 @@
 
 					<p class="calendar-title">{{ calendarTitle }}</p>
 
-					<div class="calendar-statistics" aria-label="이번 달 음료 통계">
-						<article class="calendar-stat-card">
-							<div class="calendar-stat-head"><span>Whisky</span><i class="fa-solid fa-whiskey-glass" aria-hidden="true"></i></div>
-							<p class="calendar-stat-count">{{ calendarStats.whisky.total }}잔</p>
-							<ul v-if="calendarStats.whisky.items.length" class="calendar-stat-list">
-								<li class="calendar-stat-row" v-for="item in calendarStats.whisky.items" :key="`calendar-whisky-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
-							</ul>
-							<p v-else class="calendar-stat-empty">기록 없음</p>
-						</article>
-
-						<article class="calendar-stat-card">
-							<div class="calendar-stat-head"><span>Wine</span><i class="fa-solid fa-wine-glass" aria-hidden="true"></i></div>
-							<p class="calendar-stat-count">{{ calendarStats.wine.total }}잔</p>
-							<ul v-if="calendarStats.wine.items.length" class="calendar-stat-list">
-								<li class="calendar-stat-row" v-for="item in calendarStats.wine.items" :key="`calendar-wine-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
-							</ul>
-							<p v-else class="calendar-stat-empty">기록 없음</p>
-						</article>
-
-						<article class="calendar-stat-card">
-							<div class="calendar-stat-head"><span>Tea</span><i class="fa-solid fa-mug-hot" aria-hidden="true"></i></div>
-							<p class="calendar-stat-count">{{ calendarStats.tea.total }}잔</p>
-							<ul v-if="calendarStats.tea.items.length" class="calendar-stat-list">
-								<li class="calendar-stat-row" v-for="item in calendarStats.tea.items" :key="`calendar-tea-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
-							</ul>
-							<p v-else class="calendar-stat-empty">기록 없음</p>
-						</article>
-					</div>
-
 					<div class="calendar-grid" style="margin-top: 10px">
 						<div class="calendar-weekday" v-for="day in weekLabels" :key="day">{{ day }}</div>
 					</div>
@@ -3340,6 +3311,35 @@
 								</div>
 							</button>
 						</div>
+					</div>
+
+					<div class="calendar-statistics" aria-label="이번 달 음료 통계">
+						<article class="calendar-stat-card">
+							<div class="calendar-stat-head"><span>Whisky</span><i class="fa-solid fa-whiskey-glass" aria-hidden="true"></i></div>
+							<p class="calendar-stat-count">{{ calendarStats.whisky.total }}잔</p>
+							<ul v-if="calendarStats.whisky.items.length" class="calendar-stat-list">
+								<li class="calendar-stat-row" v-for="item in calendarStats.whisky.items" :key="`calendar-whisky-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
+							</ul>
+							<p v-else class="calendar-stat-empty">기록 없음</p>
+						</article>
+
+						<article class="calendar-stat-card">
+							<div class="calendar-stat-head"><span>Wine</span><i class="fa-solid fa-wine-glass" aria-hidden="true"></i></div>
+							<p class="calendar-stat-count">{{ calendarStats.wine.total }}잔</p>
+							<ul v-if="calendarStats.wine.items.length" class="calendar-stat-list">
+								<li class="calendar-stat-row" v-for="item in calendarStats.wine.items" :key="`calendar-wine-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
+							</ul>
+							<p v-else class="calendar-stat-empty">기록 없음</p>
+						</article>
+
+						<article class="calendar-stat-card">
+							<div class="calendar-stat-head"><span>Tea</span><i class="fa-solid fa-mug-hot" aria-hidden="true"></i></div>
+							<p class="calendar-stat-count">{{ calendarStats.tea.total }}잔</p>
+							<ul v-if="calendarStats.tea.items.length" class="calendar-stat-list">
+								<li class="calendar-stat-row" v-for="item in calendarStats.tea.items" :key="`calendar-tea-${item.label}`"><span>{{ item.label }}</span><strong>{{ item.count }}</strong></li>
+							</ul>
+							<p v-else class="calendar-stat-empty">기록 없음</p>
+						</article>
 					</div>
 
 					<div class="calendar-modal-backdrop" v-if="activeCalendarEntries.length" @click="closeCalendarModal">
