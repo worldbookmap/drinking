@@ -102,6 +102,10 @@
 				overflow-x: hidden;
 			}
 
+			[v-cloak] {
+				display: none !important;
+			}
+
 			body {
 				margin: 0;
 				min-height: 100vh;
@@ -3451,7 +3455,7 @@
 				</section>
 			</main>
 
-			<div class="save-success-backdrop" v-if="saveSuccessModal.visible">
+			<div class="save-success-backdrop" v-cloak v-if="saveSuccessModal.visible">
 				<div class="save-success-modal" role="dialog" aria-modal="true" aria-labelledby="save-success-title">
 					<div class="save-success-icon"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
 					<h2 id="save-success-title">저장 완료되었습니다.</h2>
@@ -3654,7 +3658,14 @@
 				}
 
 				document.querySelectorAll("select").forEach((select) => {
-					if (select.closest(".custom-select-shell") || select.dataset.customSelectReady === "true") {
+					const existingShell = select.closest(".custom-select-shell");
+					if (existingShell) {
+						if (typeof existingShell.refreshOptions === "function") {
+							existingShell.refreshOptions();
+						}
+						return;
+					}
+					if (select.dataset.customSelectReady === "true") {
 						return;
 					}
 
@@ -3687,24 +3698,34 @@
 						});
 					};
 
-					Array.from(select.options).forEach((option) => {
-						const optionButton = document.createElement("button");
-						optionButton.type = "button";
-						optionButton.className = "custom-select-option";
-						optionButton.dataset.value = option.value;
-						optionButton.textContent = option.textContent;
-						optionButton.setAttribute("role", "option");
-						optionButton.setAttribute("aria-selected", option.selected ? "true" : "false");
-						optionButton.addEventListener("click", (event) => {
-							event.preventDefault();
-							select.value = option.value;
-							select.dispatchEvent(new Event("input", { bubbles: true }));
-							select.dispatchEvent(new Event("change", { bubbles: true }));
+					const refreshOptions = () => {
+						const optionsSignature = Array.from(select.options).map((option) => `${option.value}\u0000${option.textContent}`).join("\u0001");
+						if (optionsSignature === shell.optionsSignature) {
 							syncTriggerLabel();
-							closeAllCustomSelects();
+							return;
+						}
+						shell.optionsSignature = optionsSignature;
+						menu.replaceChildren();
+						Array.from(select.options).forEach((option) => {
+							const optionButton = document.createElement("button");
+							optionButton.type = "button";
+							optionButton.className = "custom-select-option";
+							optionButton.dataset.value = option.value;
+							optionButton.textContent = option.textContent;
+							optionButton.setAttribute("role", "option");
+							optionButton.setAttribute("aria-selected", option.value === select.value ? "true" : "false");
+							optionButton.addEventListener("click", (event) => {
+								event.preventDefault();
+								select.value = option.value;
+								select.dispatchEvent(new Event("input", { bubbles: true }));
+								select.dispatchEvent(new Event("change", { bubbles: true }));
+								syncTriggerLabel();
+								closeAllCustomSelects();
+							});
+							menu.appendChild(optionButton);
 						});
-						menu.appendChild(optionButton);
-					});
+						syncTriggerLabel();
+					};
 
 					trigger.addEventListener("click", (event) => {
 						event.preventDefault();
@@ -3721,11 +3742,12 @@
 
 					shell.appendChild(trigger);
 					shell.appendChild(menu);
+					shell.refreshOptions = refreshOptions;
 					parent.insertBefore(shell, select);
 					shell.appendChild(select);
 					select.dataset.customSelectReady = "true";
 					select.addEventListener("change", syncTriggerLabel);
-					syncTriggerLabel();
+					refreshOptions();
 				});
 
 				if (typeof MutationObserver !== "undefined") {
@@ -6112,6 +6134,8 @@
 						this.entries.push(newEntry);
 						this.saveEntriesToLocalCache();
 						this.markPendingSync();
+						this.saveSuccessModal.visible = false;
+						this.saveSuccessModal.entryId = "";
 						this.calendarMonthKey = String(newEntry.date || "").slice(0, 7) || this.calendarMonthKey;
 
 						this.resetForm();
@@ -6217,7 +6241,7 @@
 							this.syncMessage = commitSha
 								? `저장 완료되었습니다. GitHub 최신 내용을 반영했어요. (${commitSha})${cleanupText}`
 								: `저장 완료되었습니다. GitHub 최신 내용을 반영했어요.${cleanupText}`;
-							if (fromEntryAdd) {
+							if (fromEntryAdd && entryId) {
 								this.saveSuccessModal.entryId = entryId;
 								this.saveSuccessModal.visible = true;
 							}
