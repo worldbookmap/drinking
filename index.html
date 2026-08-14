@@ -99,6 +99,7 @@
 			body {
 				margin: 0;
 				min-height: 100vh;
+				overflow-x: hidden;
 				font-family: "Noto Serif KR", serif;
 				color: var(--ink);
 				position: relative;
@@ -934,6 +935,9 @@
 
 			.calendar-panel {
 				padding: 20px 18px;
+				min-width: 0;
+				max-width: 100%;
+				overflow: hidden;
 				background: rgba(255, 252, 247, 0.72);
 				border-color: rgba(78, 105, 125, 0.16);
 			}
@@ -1035,6 +1039,8 @@
 
 			.calendar-grid {
 				display: grid;
+				width: 100%;
+				min-width: 0;
 				grid-template-columns: repeat(7, minmax(0, 1fr));
 				gap: 7px;
 			}
@@ -1169,6 +1175,8 @@
 
 			.calendar-modal {
 				width: min(380px, calc(100vw - 28px));
+				min-width: 0;
+				box-sizing: border-box;
 				background: rgba(248, 245, 239, 0.98);
 				border: 1px solid rgba(102, 95, 88, 0.16);
 				border-radius: 16px;
@@ -1194,6 +1202,66 @@
 				padding: 4px 10px;
 				font-size: 0.86rem;
 				line-height: 1;
+			}
+
+			.save-success-backdrop {
+				position: fixed;
+				inset: 0;
+				z-index: 140;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 18px;
+				background: rgba(28, 39, 47, 0.38);
+				backdrop-filter: blur(5px);
+			}
+
+			.save-success-modal {
+				width: min(340px, calc(100vw - 36px));
+				box-sizing: border-box;
+				padding: 26px 22px 20px;
+				border: 1px solid rgba(178, 224, 245, 0.78);
+				border-radius: 18px;
+				background: rgba(246, 252, 255, 0.96);
+				box-shadow: 0 18px 42px rgba(30, 76, 103, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+				text-align: center;
+				animation: layerPop 0.18s ease-out;
+			}
+
+			.save-success-icon {
+				display: grid;
+				place-items: center;
+				width: 46px;
+				height: 46px;
+				margin: 0 auto 12px;
+				border-radius: 50%;
+				background: linear-gradient(145deg, #8ed8f5, #4b9fca);
+				color: #fff;
+				box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.7), 0 7px 14px rgba(53, 133, 171, 0.2);
+			}
+
+			.save-success-modal h2 {
+				margin: 0;
+				color: #365b6d;
+				font-family: "Merriweather Sans", sans-serif;
+				font-size: 1.1rem;
+			}
+
+			.save-success-modal p {
+				margin: 8px 0 18px;
+				color: #718996;
+				font-size: 0.82rem;
+			}
+
+			.save-success-confirm {
+				width: 100%;
+				padding: 10px 14px;
+				border: 1px solid rgba(70, 141, 177, 0.42);
+				border-radius: 9px;
+				background: linear-gradient(145deg, #83cceb, #4e9fc6);
+				color: #fff;
+				font-weight: 700;
+				box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.6), 0 4px 8px rgba(53, 133, 171, 0.16);
 			}
 
 			@keyframes layerPop {
@@ -1260,6 +1328,8 @@
 
 			.layer-chip {
 				display: inline-flex;
+				max-width: 100%;
+				box-sizing: border-box;
 				align-items: center;
 				padding: 4px 9px;
 				border-radius: 999px;
@@ -1269,6 +1339,8 @@
 				line-height: 1.15;
 				color: #5f5952;
 				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 
 			.list-head {
@@ -3363,6 +3435,15 @@
 				</section>
 			</main>
 
+			<div class="save-success-backdrop" v-if="saveSuccessModal.visible">
+				<div class="save-success-modal" role="dialog" aria-modal="true" aria-labelledby="save-success-title">
+					<div class="save-success-icon"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
+					<h2 id="save-success-title">저장 완료되었습니다.</h2>
+					<p>Archive에서 방금 저장한 기록을 확인할 수 있어요.</p>
+					<button class="save-success-confirm" type="button" @click="confirmSaveSuccess">확인</button>
+				</div>
+			</div>
+
 			<div class="calendar-modal-backdrop tea-leaf-backdrop" v-if="teaLeafModal.visible" @click="closeTeaLeafModal">
 				<div class="calendar-modal tea-leaf-modal" @click.stop>
 					<div class="calendar-modal-head">
@@ -4277,6 +4358,10 @@
 							visible: false,
 							type: "success",
 							message: ""
+						},
+						saveSuccessModal: {
+							visible: false,
+							entryId: ""
 						},
 						toastTimer: null,
 						isOnline: typeof navigator !== "undefined" ? navigator.onLine : true,
@@ -5922,6 +6007,12 @@
 							}
 						});
 					},
+					confirmSaveSuccess() {
+						const entryId = this.saveSuccessModal.entryId;
+						this.saveSuccessModal.visible = false;
+						this.saveSuccessModal.entryId = "";
+						this.openRecordFromCalendar(entryId);
+					},
 					async addEntry() {
 						if (this.isImageUploading) {
 							this.showToast("error", "이미지 업로드가 끝난 뒤에 기록을 추가해 주세요.");
@@ -6005,12 +6096,10 @@
 						this.entries.push(newEntry);
 						this.saveEntriesToLocalCache();
 						this.markPendingSync();
-						this.activeEntryId = newEntry.id;
-						this.activeTab = "records";
 						this.calendarMonthKey = String(newEntry.date || "").slice(0, 7) || this.calendarMonthKey;
 
 						this.resetForm();
-						await this.saveToGitHub({ fromAutoSync: true, fromEntryAdd: true });
+						await this.saveToGitHub({ fromAutoSync: true, fromEntryAdd: true, entryId: newEntry.id });
 					},
 					async removeEntry(id) {
 						this.entries = this.entries.filter((entry) => entry.id !== id);
@@ -6048,7 +6137,7 @@
 						}
 					},
 					async saveToGitHub(options = {}) {
-						const { fromAutoSync = false, fromEntryAdd = false } = options;
+						const { fromAutoSync = false, fromEntryAdd = false, entryId = "" } = options;
 						if (this.isSaving) {
 							return;
 						}
@@ -6112,7 +6201,11 @@
 							this.syncMessage = commitSha
 								? `저장 완료되었습니다. GitHub 최신 내용을 반영했어요. (${commitSha})${cleanupText}`
 								: `저장 완료되었습니다. GitHub 최신 내용을 반영했어요.${cleanupText}`;
-							if (!fromAutoSync || fromEntryAdd) {
+							if (fromEntryAdd) {
+								this.saveSuccessModal.entryId = entryId;
+								this.saveSuccessModal.visible = true;
+							}
+							if (!fromAutoSync && !fromEntryAdd) {
 								this.showToast(
 									"success",
 									commitSha
