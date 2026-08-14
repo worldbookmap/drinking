@@ -1,6 +1,42 @@
 {
   "entries": [
     {
+      "id": "f51d879c-4e6f-4a35-8621-0209418b1112",
+      "createdAt": "2026-08-14T03:07:45.380Z",
+      "date": "2026-08-14",
+      "place": "ㄹㄹㄹ",
+      "drinker": "진욱",
+      "whisky": "ㅇㅇㅇㅇ",
+      "drinkCategory": "whisky",
+      "drinkType": "whisky",
+      "category": "아메리칸",
+      "imageUrl": "",
+      "teaLeafImageUrl": "",
+      "labelImageUrl": "",
+      "whiskyDistillery": "",
+      "caskType": "버진 오크",
+      "wineCountry": "",
+      "wineCountryCustom": "",
+      "wineRegion": "",
+      "teaSubcategory": "",
+      "teaChinaProvince": "",
+      "detailLabel": "캐스크",
+      "detailValue": "버진 오크",
+      "nose": "바닐라",
+      "palate": "",
+      "rating": {
+        "body": "",
+        "acidity": "",
+        "tannin": "",
+        "alcohol": "",
+        "sweetness": "",
+        "complexity": "",
+        "balance": ""
+      },
+      "finish": "",
+      "memo": ""
+    },
+    {
       "id": "cced1226-a7c2-4721-97a3-fb5bf58fec07",
       "createdAt": "2026-08-10T10:55:05.332Z",
       "date": "2026-08-10",
