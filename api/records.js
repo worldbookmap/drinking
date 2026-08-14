@@ -196,8 +196,10 @@ async function readRecordsFromGithub(config) {
 
 	const raw = Buffer.from(file.content, "base64").toString("utf8");
 	const parsed = JSON.parse(raw);
+	const normalized = normalizeRecordsPayload(parsed);
 	return {
-		entries: normalizeEntries(parsed),
+		entries: normalized.entries,
+		customTraitCatalogs: normalized.customTraitCatalogs,
 		sha: file.sha
 	};
 }
@@ -400,8 +402,8 @@ export default async function handler(req, res) {
 
 	try {
 		if (req.method === "GET") {
-			const { entries } = await readRecordsFromGithub(config);
-			return sendJson(res, 200, { entries });
+			const { entries, customTraitCatalogs } = await readRecordsFromGithub(config);
+			return sendJson(res, 200, { entries, customTraitCatalogs });
 		}
 
 		if (req.method === "DELETE") {
