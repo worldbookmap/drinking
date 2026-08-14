@@ -6010,6 +6010,7 @@
 						this.calendarMonthKey = String(newEntry.date || "").slice(0, 7) || this.calendarMonthKey;
 
 						this.resetForm();
+						await this.saveToGitHub({ fromAutoSync: true, fromEntryAdd: true });
 					},
 					async removeEntry(id) {
 						this.entries = this.entries.filter((entry) => entry.id !== id);
@@ -6047,7 +6048,7 @@
 						}
 					},
 					async saveToGitHub(options = {}) {
-						const { fromAutoSync = false } = options;
+						const { fromAutoSync = false, fromEntryAdd = false } = options;
 						if (this.isSaving) {
 							return;
 						}
@@ -6109,14 +6110,14 @@
 
 							const cleanupText = deletedImageCount > 0 ? ` 삭제된 사진 ${deletedImageCount}장도 정리했어요.` : "";
 							this.syncMessage = commitSha
-								? `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요. (${commitSha})${cleanupText}`
-								: `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요.${cleanupText}`;
-							if (!fromAutoSync) {
+								? `저장 완료되었습니다. GitHub 최신 내용을 반영했어요. (${commitSha})${cleanupText}`
+								: `저장 완료되었습니다. GitHub 최신 내용을 반영했어요.${cleanupText}`;
+							if (!fromAutoSync || fromEntryAdd) {
 								this.showToast(
 									"success",
 									commitSha
-										? `GitHub 저장 후 최신 데이터를 자동 반영했어요. SHA ${commitSha}${cleanupText}`
-										: `GitHub 저장 후 최신 데이터를 자동 반영했어요.${cleanupText}`
+										? `저장 완료되었습니다. SHA ${commitSha}${cleanupText}`
+										: `저장 완료되었습니다.${cleanupText}`
 								);
 							}
 						} catch (error) {
