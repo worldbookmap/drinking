@@ -2535,7 +2535,13 @@
 				}
 
 				.calendar-modal-backdrop {
+					display: none;
 					padding: 10px;
+				}
+				.calendar-modal-backdrop[style*="display: flex"],
+				.calendar-modal-backdrop[style*="display: block"],
+				.calendar-modal-backdrop.is-visible {
+					display: flex;
 				}
 
 				.calendar-modal {
@@ -3105,11 +3111,7 @@
 						<span v-if="hasRecordFilters" class="count-chip">필터 {{ filteredEntries.length }}잔</span>
 						<span v-if="!isOnline" class="count-chip">오프라인 · 로컬 저장</span>
 						<span v-else-if="pendingSyncCount" class="count-chip">동기화 대기 {{ pendingSyncCount }}건</span>
-						<span v-if="lastCommitSha" class="sha-chip">최근 SHA {{ lastCommitSha }}</span>
-					</div>
 
-					<div class="record-filter-grid" v-if="entries.length">
-										<div class="row search-row" style="margin: 0">
 											<label for="recordMonth">월별 보기</label>
 											<div class="custom-select" :class="{ 'is-open': activeCustomSelect === 'record-month' }">
 												<button id="recordMonth" type="button" class="custom-select-trigger" @click.stop="toggleCustomSelect('record-month')">
@@ -3536,12 +3538,13 @@
 					</div>
 					<p v-else class="empty">검색 결과가 없어요. 다른 키워드로 찾아보세요.</p>
 
-					<p class="sync-status">{{ syncMessage }}</p>
+					<p class="sync-status" v-if="syncMessage">{{ syncMessage }}</p>
 					<div class="list-tools">
-						<button class="tool-btn small" type="button" @click="reloadFromRepo"><i class="lni lni-reload"></i>GitHub JSON 다시 불러오기</button>
+						<button class="tool-btn small" type="button" @click="reloadFromRepo"><i class="lni lni-reload"></i>다시 불러오기</button>
 						<button class="tool-btn small" type="button" @click="exportEntries"><i class="lni lni-download"></i>records.json 내보내기</button>
 						<button class="tool-btn small" type="button" @click="openImport"><i class="lni lni-upload"></i>로컬 JSON 미리보기</button>
 						<button class="tool-btn small" type="button" @click="cleanupTraitRecords" :disabled="isSaving || isTraitCleaning"><i class="lni lni-broom"></i>{{ isTraitCleaning ? "정리 중..." : "태그 정리" }}</button>
+						<button class="tool-btn small" type="button" @click="saveToGitHub" :disabled="isSaving || isImageUploading"><i class="lni lni-save"></i>{{ isSaving ? "저장 중..." : "최종 저장" }}</button>
 					</div>
 					<input ref="importInput" type="file" accept="application/json" @change="importEntries" style="display: none" />
 				</section>
@@ -3586,7 +3589,7 @@
 						</div>
 					</div>
 
-					<div class="calendar-modal-backdrop" v-if="activeCalendarEntries.length" @click="closeCalendarModal">
+					<div class="calendar-modal-backdrop" v-show="activeCalendarEntries.length" @click="closeCalendarModal">
 						<div class="calendar-modal" @click.stop>
 							<div class="calendar-modal-head">
 								<p class="layer-title" style="margin: 0">{{ activeCalendarKey }} 시음 기록</p>
@@ -3607,7 +3610,7 @@
 				</section>
 			</main>
 
-			<div class="calendar-modal-backdrop tea-leaf-backdrop" v-if="teaLeafModal.visible" @click="closeTeaLeafModal">
+			<div class="calendar-modal-backdrop tea-leaf-backdrop" v-show="!isInitialLoading && teaLeafModal.visible" @click="closeTeaLeafModal">
 				<div class="calendar-modal tea-leaf-modal" @click.stop>
 					<div class="calendar-modal-head">
 						<p class="layer-title" style="margin: 0">{{ teaLeafModal.label }} 사진</p>
@@ -3626,7 +3629,7 @@
 				</div>
 			</div>
 
-			<div class="calendar-modal-backdrop tea-region-backdrop" v-if="teaRegionModal.visible" @click="closeTeaRegionModal">
+			<div class="calendar-modal-backdrop tea-region-backdrop" v-show="!isInitialLoading && teaRegionModal.visible" @click="closeTeaRegionModal">
 				<div class="calendar-modal tea-region-modal" @click.stop>
 					<div class="calendar-modal-head">
 						<p class="layer-title" style="margin: 0">중국 주요 성 지도</p>
@@ -3653,7 +3656,7 @@
 				</div>
 			</div>
 
-			<div class="calendar-modal-backdrop tea-region-backdrop" v-if="whiskyDistilleryModal.visible" @click="closeWhiskyDistilleryModal">
+			<div class="calendar-modal-backdrop tea-region-backdrop" v-show="!isInitialLoading && whiskyDistilleryModal.visible" @click="closeWhiskyDistilleryModal">
 				<div class="calendar-modal tea-region-modal" @click.stop>
 					<div class="calendar-modal-head">
 						<p class="layer-title" style="margin: 0">{{ whiskyDistilleryModal.distilleryName }} 세계 지도</p>
@@ -3666,7 +3669,7 @@
 				</div>
 			</div>
 
-			<div class="calendar-modal-backdrop tea-region-backdrop" v-if="wineRegionModal.visible" @click="closeWineRegionModal">
+			<div class="calendar-modal-backdrop tea-region-backdrop" v-show="!isInitialLoading && wineRegionModal.visible" @click="closeWineRegionModal">
 				<div class="calendar-modal tea-region-modal" @click.stop>
 					<div class="calendar-modal-head">
 						<p class="layer-title" style="margin: 0">{{ wineRegionModal.country }} 지역 산지 지도</p>
@@ -3697,7 +3700,7 @@
 				</div>
 			</div>
 
-			<div class="calendar-modal-backdrop" v-if="traitModal.visible" @click="closeTraitModal">
+			<div class="calendar-modal-backdrop" v-show="!isInitialLoading && traitModal.visible" @click="closeTraitModal">
 				<div class="calendar-modal trait-modal" @click.stop>
 					<div class="calendar-modal-head">
 						<p class="layer-title" style="margin: 0">태그 추가</p>
@@ -4504,7 +4507,7 @@
 						whiskyDistilleryOptions: [],
 						whiskyDistilleryLookup: {},
 						pendingSyncCount: 0,
-						syncMessage: "GitHub에서 records.json을 불러왔어요."
+						syncMessage: "기록을 불러왔어요."
 					};
 				},
 				computed: {
@@ -4726,6 +4729,7 @@
 				async mounted() {
 					this.syncWriteTheme();
 					this.updateProvinceMapLabelMode();
+					this.resetAllModalState();
 					this.updateOnlineStatus();
 					const distilleryPromise = this.loadWhiskyDistilleryOptions();
 					this.loadFromLocalCache();
@@ -5141,12 +5145,12 @@
 						this.updateOnlineStatus();
 
 						if (!this.isOnline) {
-							this.syncMessage = "오프라인 상태예요. 변경 내용은 로컬에 저장하고 온라인이 되면 동기화할 수 있어요.";
+							this.syncMessage = "오프라인 상태예요. 변경 내용은 로컬에 저장되고, 온라인이 되면 자동으로 반영돼요.";
 							return;
 						}
 
 						if (!wasOnline && this.pendingSyncCount > 0) {
-							this.syncMessage = "온라인으로 전환되어 로컬 변경사항을 GitHub에 동기화 중이에요...";
+							this.syncMessage = "온라인으로 전환되어 변경사항을 반영 중이에요...";
 							await this.saveToGitHub({ fromAutoSync: true });
 						}
 					},
@@ -5191,6 +5195,18 @@
 
 						this.loadingProgress = 1;
 						this.isInitialLoading = false;
+					},
+					resetAllModalState() {
+						this.activeCustomSelect = "";
+						this.activeCalendarKey = "";
+						this.closeCalendarModal?.();
+						this.closeTeaLeafModal();
+						this.closeWhiskyDistilleryModal();
+						this.closeTeaRegionModal();
+						this.closeWineRegionModal();
+						this.closeTraitModal();
+						this.isWhiskyDistilleryWriteOpen = false;
+						this.isWhiskyDistilleryEditOpen = false;
 					},
 					skipInitialLoading() {
 						this.isReadyToDismissLoading = true;
@@ -5398,7 +5414,7 @@
 						this.editFormPreviewUrl = "";
 						this.editTeaLeafPreviewUrl = "";
 					},
-					saveEditedEntry(entryId) {
+async saveEditedEntry(entryId) {
 						if (!entryId || this.editingEntryId !== entryId || !this.editForm) {
 							return;
 						}
@@ -5487,6 +5503,7 @@
 						this.markPendingSync();
 						this.cancelEditEntry();
 						this.showToast("success", "기록을 수정했어요.");
+						await this.saveToGitHub();
 					},
 					syncWriteTheme() {
 						document.body.classList.remove("theme-wine", "theme-tea", "theme-whisky");
@@ -6356,12 +6373,30 @@
 					closeCalendarModal() {
 						this.activeCalendarKey = "";
 					},
+					closeMapModalGroup(except = "") {
+						if (except !== "teaLeaf") {
+							this.closeTeaLeafModal();
+						}
+						if (except !== "whiskyDistillery") {
+							this.closeWhiskyDistilleryModal();
+						}
+						if (except !== "teaRegion") {
+							this.closeTeaRegionModal();
+						}
+						if (except !== "wineRegion") {
+							this.closeWineRegionModal();
+						}
+						if (except !== "trait") {
+							this.closeTraitModal();
+						}
+					},
 					openTeaLeafModal(entry) {
 						const url = String(entry?.teaLeafImageUrl || "").trim();
 						if (!url) {
 							return;
 						}
 
+						this.closeMapModalGroup("teaLeaf");
 						this.teaLeafModal.visible = true;
 						this.teaLeafModal.url = url;
 						this.teaLeafModal.label = this.getLabelPhotoTerm(this.getEntryDrinkCategory(entry));
@@ -6377,6 +6412,7 @@
 							return;
 						}
 
+						this.closeMapModalGroup("whiskyDistillery");
 						this.whiskyDistilleryModal.visible = true;
 						this.whiskyDistilleryModal.distilleryName = distilleryName;
 					},
@@ -6390,6 +6426,7 @@
 							return;
 						}
 
+						this.closeMapModalGroup("teaRegion");
 						this.teaRegionModal.visible = true;
 						this.teaRegionModal.province = province;
 					},
@@ -6408,6 +6445,7 @@
 							return;
 						}
 
+						this.closeMapModalGroup("wineRegion");
 						this.wineRegionModal.visible = true;
 						this.wineRegionModal.country = country;
 						this.wineRegionModal.region = region;
@@ -6526,6 +6564,7 @@
 						this.calendarMonthKey = String(newEntry.date || "").slice(0, 7) || this.calendarMonthKey;
 
 						this.resetForm();
+						await this.saveToGitHub();
 					},
 					async removeEntry(id) {
 						this.entries = this.entries.filter((entry) => entry.id !== id);
@@ -6537,6 +6576,7 @@
 						if (this.editingEntryId === id) {
 							this.cancelEditEntry();
 						}
+						await this.saveToGitHub();
 					},
 					async reloadFromRepo(options = {}) {
 						const { silent = false, preserveOnError = false } = options;
@@ -6552,7 +6592,7 @@
 							this.saveEntriesToLocalCache();
 							this.activeEntryId = null;
 							this.cancelEditEntry();
-							this.syncMessage = "GitHub records.json 최신 내용을 불러왔어요.";
+							this.syncMessage = "최신 기록을 불러왔어요.";
 							return true;
 						} catch {
 							if (!preserveOnError) {
@@ -6577,18 +6617,17 @@
 						if (!this.isOnline) {
 							this.saveEntriesToLocalCache();
 							this.markPendingSync();
-							this.syncMessage = "오프라인 상태라 로컬에 저장했어요. 온라인이 되면 GitHub에 올릴 수 있어요.";
+							this.syncMessage = "오프라인 상태라 로컬에만 저장했어요. 온라인이 되면 자동으로 반영됩니다.";
 							if (!fromAutoSync) {
-								this.showToast("success", "오프라인 로컬 저장 완료. 온라인에서 저장 버튼을 누르면 GitHub에 반영돼요.");
+								this.showToast("success", "오프라인 저장 완료. 온라인에서 다시 저장하면 반영돼요.");
 							}
 							return;
 						}
 
 						this.isSaving = true;
 						this.syncMessage = fromAutoSync
-							? "대기 중인 로컬 변경사항을 GitHub에 동기화 중이에요..."
-							: "GitHub에 저장 중이에요...";
-
+								? "대기 중인 변경사항을 반영 중이에요..."
+								: "저장 중이에요...";
 						try {
 							const payload = [...this.entries].sort((a, b) => b.date.localeCompare(a.date));
 							const customTraitCatalogs = normalizeCustomTraitCatalogs(this.customTraitCatalogs);
@@ -6631,14 +6670,14 @@
 
 							const cleanupText = deletedImageCount > 0 ? ` 삭제된 사진 ${deletedImageCount}장도 정리했어요.` : "";
 							this.syncMessage = commitSha
-								? `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요. (${commitSha})${cleanupText}`
-								: `GitHub 저장 후 최신 내용을 자동으로 다시 불러왔어요.${cleanupText}`;
+								? `변경 사항을 반영했고 최신 내용을 다시 불러왔어요. (${commitSha})${cleanupText}`
+								: `변경 사항을 반영했고 최신 내용을 다시 불러왔어요.${cleanupText}`;
 							if (!fromAutoSync) {
 								this.showToast(
 									"success",
 									commitSha
-										? `GitHub 저장 후 최신 데이터를 자동 반영했어요. SHA ${commitSha}${cleanupText}`
-										: `GitHub 저장 후 최신 데이터를 자동 반영했어요.${cleanupText}`
+										? `변경 사항이 반영됐어요. SHA ${commitSha}${cleanupText}`
+										: `변경 사항이 반영됐어요.${cleanupText}`
 								);
 							}
 						} catch (error) {
@@ -6646,7 +6685,7 @@
 							this.markPendingSync();
 							this.syncMessage = `저장 실패: ${error.message}`;
 							if (!fromAutoSync) {
-								this.showToast("error", `GitHub 저장에 실패했어요. ${error.message} 로컬에는 저장했어요.`);
+								this.showToast("error", `저장에 실패했어요. ${error.message} 로컬에는 저장했어요.`);
 							}
 						} finally {
 							this.isSaving = false;
@@ -6687,7 +6726,7 @@
 							this.markPendingSync();
 							this.activeEntryId = null;
 							this.cancelEditEntry();
-							this.syncMessage = "로컬 JSON을 불러왔어요. GitHub에 저장 버튼으로 반영할 수 있어요.";
+							this.syncMessage = "로컬 JSON을 불러왔어요. 하단의 저장 버튼으로 반영할 수 있어요.";
 
 						} catch {
 							alert("JSON 파일을 읽지 못했어요.");
@@ -6720,13 +6759,13 @@
 							this.cancelEditEntry();
 
 							if (this.isOnline) {
-								this.syncMessage = "기존 기록의 태그를 정리하고 추천 목록도 다시 만들었어요. GitHub에 반영 중이에요...";
+								this.syncMessage = "기존 기록의 태그를 정리하고 추천 목록도 다시 만들었어요. 반영 중이에요...";
 								await this.saveToGitHub({ fromAutoSync: true });
 								return;
 							}
 
-							this.syncMessage = "기존 기록의 태그를 정리하고 추천 목록도 다시 만들었어요. 온라인이 되면 GitHub에 저장할 수 있어요.";
-							this.showToast("success", "태그 정리를 완료했어요. 온라인에서 저장 버튼을 누르면 GitHub에 반영돼요.");
+							this.syncMessage = "기존 기록의 태그를 정리하고 추천 목록도 다시 만들었어요. 온라인이 되면 저장할 수 있어요.";
+							this.showToast("success", "태그 정리를 완료했어요. 온라인에서 저장하면 반영돼요.");
 						} catch (error) {
 							this.syncMessage = `태그 정리 실패: ${error.message}`;
 							this.showToast("error", `태그 정리에 실패했어요. ${error.message}`);
